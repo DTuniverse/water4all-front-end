@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import { AuthContext } from "../context/authContext";
-import LoadingOverlay from "react-loading-overlay";
+// import LoadingOverlay from "react-loading-overlay";
 
 export default function Signup({ setUser }) {
   const [email, setEmail] = useState("");
@@ -38,33 +38,37 @@ export default function Signup({ setUser }) {
   };
 
   return (
-    <LoadingOverlay active={isLoading} spinner text="Signing in...">
-      <form className="signup" onSubmit={handleSubmit}>
-        <h3>Sign up</h3>
-        <label>username: </label>
-        <input
-          type="text"
-          onChange={(e) => setUsername(e.target.value)}
-          value={username}
-        />
+    <div>
+      //{" "}
+      <LoadingOverlay active={isLoading} spinner text="Signing in...">
+        <form className="signup" onSubmit={handleSubmit}>
+          <h3>Sign up</h3>
+          <label>username: </label>
+          <input
+            type="text"
+            onChange={(e) => setUsername(e.target.value)}
+            value={username}
+          />
 
-        <label>email: </label>
-        <input
-          type="email"
-          onChange={(e) => setEmail(e.target.value)}
-          value={email}
-        />
+          <label>email: </label>
+          <input
+            type="email"
+            onChange={(e) => setEmail(e.target.value)}
+            value={email}
+          />
 
-        <label>password: </label>
-        <input
-          type="password"
-          onChange={(e) => setPassword(e.target.value)}
-          value={password}
-        />
+          <label>password: </label>
+          <input
+            type="password"
+            onChange={(e) => setPassword(e.target.value)}
+            value={password}
+          />
 
-        <button>Sign up</button>
-        {error && <div className="error">{error}</div>}
-      </form>
-    </LoadingOverlay>
+          <button>Sign up</button>
+          {error && <div className="error">{error}</div>}
+        </form>
+        //{" "}
+      </LoadingOverlay>
+    </div>
   );
 }

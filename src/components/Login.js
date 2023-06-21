@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import { AuthContext } from "../context/authContext";
-import LoadingOverlay from "react-loading-overlay";
+// import LoadingOverlay from "react-loading-overlay";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -39,7 +39,8 @@ export default function Login() {
   };
 
   return (
-    <LoadingOverlay active={isLoading} spinner text="Logging in...">
+    // <LoadingOverlay active={isLoading} spinner text="Logging in...">
+    <div>
       <form className="login" onSubmit={handleSubmit}>
         <h3>Log in</h3>
         <label>email: </label>
@@ -59,6 +60,7 @@ export default function Login() {
         <button>Log in</button>
         {error && <div className="error">{error}</div>}
       </form>
-    </LoadingOverlay>
+    </div>
+    // </LoadingOverlay>
   );
 }

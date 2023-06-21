@@ -1,3 +1,12 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Roboto";
+}
+
+/* 
+
 body {
   font-family: sans-serif;
 }
@@ -75,4 +84,4 @@ form.login {
   padding: 20px;
   background: #fff;
   border-radius: 4px;
-}
+} */
