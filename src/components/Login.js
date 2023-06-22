@@ -64,7 +64,6 @@ export default function Login() {
           {error && <div className="error">{error}</div>}
         </form>
       </div>
-      //{" "}
     </LoadingOverlay>
   );
 }
