@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import { AuthContext } from "../context/authContext";
-// import LoadingOverlay from "react-loading-overlay";
+import LoadingOverlay from "react-loading-overlay";
 
 export default function Signup({ setUser }) {
   const [email, setEmail] = useState("");
@@ -17,11 +17,14 @@ export default function Signup({ setUser }) {
     setIsLoading(true);
     setError(null);
 
-    const response = await fetch("http://localhost:8080/user/signup", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password, username }),
-    });
+    const response = await fetch(
+      "https://water4all-backend.onrender.com/user/signup",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, username }),
+      }
+    );
 
     const data = await response.json();
 
@@ -39,7 +42,6 @@ export default function Signup({ setUser }) {
 
   return (
     <div>
-      //{" "}
       <LoadingOverlay active={isLoading} spinner text="Signing in...">
         <form className="signup" onSubmit={handleSubmit}>
           <h3>Sign up</h3>
@@ -67,7 +69,6 @@ export default function Signup({ setUser }) {
           <button>Sign up</button>
           {error && <div className="error">{error}</div>}
         </form>
-        //{" "}
       </LoadingOverlay>
     </div>
   );

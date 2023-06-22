@@ -10,11 +10,14 @@ export default function Home() {
   useEffect(() => {
     const getData = async () => {
       try {
-        const res = await fetch("http://localhost:8080/posts", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const res = await fetch(
+          "https://water4all-backend.onrender.com/posts",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         const data = await res.json();
         setPosts(data);
         setLoading(false);
@@ -41,7 +44,7 @@ export default function Home() {
                 style={{ border: "2px solid black", margin: "10px" }}
               >
                 <h2>{post.title}</h2>
-                <p>{post.body}</p>
+                <p>{post.description}</p>
               </div>
             ))
           ) : (
