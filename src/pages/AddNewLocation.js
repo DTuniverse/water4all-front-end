@@ -1,15 +1,17 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
-import { GoogleMap, InfoWindow, LoadScript, Marker, Autocomplete, DirectionsRenderer } from "@react-google-maps/api";
+import { GoogleMap, InfoWindow, LoadScript, Marker, Autocomplete, StandaloneSearchBox } from "@react-google-maps/api";
+import { getGeocode,  getLatLng } from "use-places-autocomplete";
 import Navbar from "../components/Navbar";
 import { AuthContext } from "../context/authContext";
 import { useJwt } from "react-jwt";
 import { FormControl, Input, InputLabel } from '@mui/material';
+import "./Map.css";
 
 
 export default function MapPage()  {
    
     // const google = window.google;
-    const [activeInfoWindow, setActiveInfoWindow] = useState("");
+    const [activeInfoWindow, setActiveInfoWindow] = useState(false);
     const [lat, setLat] = useState();
     const [lng, setLng] = useState();
     const [newLat, setNewLat] = useState(null);
@@ -19,14 +21,42 @@ export default function MapPage()  {
     const [isAdded, setIsAdded] = useState(false);
     const [addDescription, setAddDescription] = useState("");
     const [addTittle, setAddTittle] = useState("");
-    const [user, setUser] = useState({});
-    const [queryWord, setQueryWord] = useState("");
-    const queryRef = useRef();
+    const [username, setUsername] = useState("");
+    const [newCenter, setNewCenter] = useState(false);
+    const [value, setValue] = useState("");
+    const [newPlace, setNewPlace] = useState(null);
+    const [addSearch, setAddSearch] = useState(false);
     const center = { lat: lat, lng: lng };
     const { token } = useContext(AuthContext);
     const { decodedToken } = useJwt(token);
+    const [clickSomewhere, setClickSomewhere] = useState(false);
+  
 
-    // console.log(`google ${google}`)
+ // google search bar
+ const searchBoxRef = useRef(null);
+ const onLoad = ref => {
+   searchBoxRef.current = ref;
+ };
+
+ const onPlacesChanged = async () => {
+   try {
+     const places = await searchBoxRef.current?.getPlaces();
+     console.log(places);
+     const result =  getLatLng(places[0]);
+     console.log(result);
+     setClickSomewhere(false);
+     setNewCenter(true);
+     setNewPlace(result);
+     setValue("");
+     setAddSearch(true);
+     setUsername(decodedToken?.name);
+     setNewLat(result.lat);
+     setNewLng(result.lng);
+   } catch (error) {
+     console.error("Error retrieving places", error);
+   }
+ };
+ 
 
     // get user current location
     if (navigator.geolocation){
@@ -52,20 +82,10 @@ export default function MapPage()  {
         getNewLocation()
       },[]);  
 
-     // search water location
-     const handleSubmit = (e) => {
-        e.preventDefault();
-        // const search = new google.GoogleMap.places.SearchBox(queryWord);
-        // GoogleMap.controls[google.GoogleMap.ControlPosition.TOP_LEFT].push(queryWord);
-        // GoogleMap.addListener("bounds_changed", () => {
-        // search.setBounds(GoogleMap.getBounds());
-        //  });
-     };
-
 
     const containerStyle = {
-        width: "100%",
-        height: "400px",
+        width: "90%",
+        height: "450px",
     }
 
     // get acurate address
@@ -92,11 +112,13 @@ export default function MapPage()  {
         setAddLocation(true);
         setNewLat(lat);
         setNewLng(lng);
+        setUsername(decodedToken?.name);
+        setClickSomewhere(true)
     };
     console.log(`get or not? lat: ${newLat} lng: ${newLng} addLocation: ${addLocation}`);
     
     console.log(`token: ${token}`);
-    console.log(`user : ${decodedToken}`);
+    console.log(`username : ${decodedToken?._id}`);
    
 
    // add new location handler 
@@ -106,9 +128,9 @@ export default function MapPage()  {
         title: addTittle,
         lat: newLat,
         lng: newLng,
-        creator:user.username,
+        creator:decodedToken?.name,
         description:addDescription,
-        user_id: user._id,
+        user_id: decodedToken?._id,
       }
       try{
         const res = await fetch("https://water4all-backend.onrender.com/posts",{
@@ -121,17 +143,19 @@ export default function MapPage()  {
         });
         setAddLocation(false);
         setIsAdded(true);
+        setAddTittle(null);
+        setAddTittle(null);
       }catch(err){
         console.log(err)
       }
       };
 
+      const markerClicked = (marker, index) => {  
+        setActiveInfoWindow(index)
+        console.log(marker, index) 
+      }
+      
     // ***NEED IT LATER*****
-    // const markerClicked = (marker, index) => {  
-    //     setActiveInfoWindow(index)
-    //     console.log(marker, index) 
-    // }
-
     // const markerDragEnd = (event, index) => { 
     //     console.log(event.latLng.lat())
     //     console.log(event.latLng.lng())
@@ -139,44 +163,84 @@ export default function MapPage()  {
 
     return (
         <>
-        <Navbar />
-        <h1>ADD NEW LOCATION</h1>
-        
+        <h2>ADD NEW LOCATION</h2>
+        <div className="mapcontainer">
         <LoadScript 
         libraries={["places"]}
         googleMapsApiKey= {process.env.REACT_APP_MAP_API_KEY}>
-        <div>
-        <Autocomplete>
-        <input value={queryWord} onChange={(e)=> setQueryWord(e.target.value)} ref={queryRef}/>
-        </Autocomplete>
-        <button onSubmit={handleSubmit} onClick={handleSubmit}>SEARCH</button>
-        </div>
             <GoogleMap 
                 mapContainerStyle={containerStyle} 
-                center={center} 
+                center={newCenter? newPlace : center} 
                 zoom={15}
                 onClick={mapClicked}
+                options={{
+                  mapTypeControl: false,
+                  streetView: false
+                }}
             >
+            <StandaloneSearchBox
+                  onLoad={onLoad}
+                  onPlacesChanged={onPlacesChanged}
+                >
+                  <input
+                    onChange={(e)=>setValue(e.target.value)}
+                    value={value}
+                    type="text"
+                    placeholder="Search Here"
+                    style={{
+                      boxSizing: `border-box`,
+                      border: `1px solid transparent`,
+                      width: `240px`,
+                      height: `32px`,
+                      padding: `0 12px`,
+                      borderRadius: `3px`,
+                      boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
+                      fontSize: `14px`,
+                      outline: `none`,
+                      textOverflow: `ellipses`,
+                      position: "absolute",
+                      left: "50%",
+                      marginLeft: "-120px"
+                    }}
+                  />
+              </StandaloneSearchBox>
             <Marker style={{width:"50px"}} position={center} />
             {locale?.map((lo)=> <Marker key={lo._id} position={{lat: lo.lat, lng: lo.lng}} />)}
+            {newCenter && !clickSomewhere && <Marker onClick={markerClicked} position={newPlace}/>}
+            {addLocation && <Marker onClick={markerClicked} position={{lat: newLat, lng: newLng}}/>}
             {addLocation?
-              <FormControl>
+              <FormControl >
                 <button onClick={()=>setAddLocation(false)}>Close</button>
-                <InputLabel  >Tittle: </InputLabel>
+                <InputLabel >Tittle: </InputLabel>
                 <Input  value={addTittle} onChange={(e)=>setAddTittle(e.target.value)}/>
                 <InputLabel  >Your Name:</InputLabel>
-                <Input  disabled="true" value={user.username}/>
+                <Input  disabled="true" value={username}/>
                 <InputLabel  >Location: </InputLabel>
                 <Input  disabled="true" value={newLat} />
                 <Input  disabled="true" value={newLng} />
                 <InputLabel  >Description: </InputLabel>
                 <Input  value={addDescription} onChange={(e)=> setAddDescription(e.target.value)}/>
-                <button onClick={handleAdding}>Add Water Point</button>
+                <button disabled={!token && !addTittle}onClick={handleAdding}>Add Water Point</button>
               </FormControl> : null
+            }
+             {addSearch && !clickSomewhere &&
+              <FormControl>
+                <button onClick={()=>setAddSearch(false)}>Close</button>
+                <InputLabel  >Tittle: </InputLabel>
+                <Input  value={addTittle} onChange={(e)=>setAddTittle(e.target.value)}/>
+                <InputLabel  >Your Name:</InputLabel>
+                <Input  disabled="true" value={username}/>
+                <InputLabel  >Location: </InputLabel>
+                <Input  disabled="true" value={newLat} />
+                <Input  disabled="true" value={newLng} />
+                <InputLabel  >Description: </InputLabel>
+                <Input  value={addDescription} onChange={(e)=> setAddDescription(e.target.value)}/>
+                <button disabled={!token} onClick={handleAdding}>Add Water Point</button>
+              </FormControl>
             }
            </GoogleMap>
         </LoadScript>
-        <button>ADD NEW LOCATION</button>
+        </div>
         </>
     );
 };

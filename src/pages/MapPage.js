@@ -1,7 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
-import { GoogleMap, InfoWindow, LoadScript, Marker, Autocomplete, DirectionsRenderer } from "@react-google-maps/api";
+import React, { useState, useEffect, useRef, useContext } from "react";
+import { GoogleMap, InfoWindow, LoadScript, Marker, Autocomplete, StandaloneSearchBox  } from "@react-google-maps/api";
+import { getGeocode,  getLatLng } from "use-places-autocomplete";
 import Navbar from "../components/Navbar";
 import { Link, Navigate } from "react-router-dom";
+import { AuthContext } from "../context/authContext";
+import { AddLocation } from "@mui/icons-material";
+import "./Map.css";
+
 
 export default function MapPage()  {
    
@@ -11,10 +16,44 @@ export default function MapPage()  {
     const [lng, setLng] = useState();
     const [locale, setLocale] = useState([]);
     const center = { lat: lat, lng: lng };
-    const [queryWord, setQueryWord] = useState("");
-    const queryRef = useRef();
+    const [newCenter, setNewCenter] = useState(false);
+    const [value, setValue] = useState("");
+    const [newPlace, setNewPlace] = useState(null);
+    const { token } = useContext(AuthContext);
+    const [clickSomewhere, setClickSomewhere] = useState(false);
+    const [newLat, setNewLat] = useState(null);
+    const [newLng, setNewLng] = useState(null);
+  
+ 
+    
+    // google search bar
+    const searchBoxRef = useRef(null);
+    const onLoad = ref => {
+      searchBoxRef.current = ref;
+    };
 
-    // console.log(`google ${google}`)
+    const onPlacesChanged = async () => {
+      try {
+        const places = await searchBoxRef.current?.getPlaces();
+        console.log(places);
+        const result =  getLatLng(places[0]);
+        console.log(result);
+        setClickSomewhere(false);
+        setNewCenter(true);
+        setNewPlace(result);
+        setValue("");
+      } catch (error) {
+        console.error("Error retrieving places", error);
+      }
+    };
+    
+
+    const mapContainerStyle = {
+    height: "400px",
+    width: "800px"
+};
+
+   
 
     // get user current location
     if (navigator.geolocation){
@@ -40,27 +79,47 @@ export default function MapPage()  {
         getNewLocation()
       },[]);  
 
+
+       // get acurate address
+      const getAddress = (lat, lng) => {
+      const geocoder = new window.google.maps.Geocoder();
+      const latlng = new window.google.maps.LatLng(lat, lng);
+      const request = {
+          latLng: latlng
+      }
+      return new Promise((resolve, reject) => {
+          geocoder.geocode(request, results => {
+              results?.length ? resolve(results[0].formatted_address) : reject(null);
+          });
+      })
+      };
+      // get click location
+      const mapClicked =  async (event) => {
+        console.log(event.latLng.lat(), event.latLng.lng());
+        const lat = event.latLng.lat();
+        const lng = event.latLng.lng();
+        const address =  await getAddress(event.latLng.lat(), event.latLng.lng())
+        console.log(address)
+        setNewLat(lat);
+        setNewLng(lng);
+        setClickSomewhere(true)
+    };
+    console.log(`get or not? lat: ${newLat} lng: ${newLng} `);
+    
+
      // search water location
-     const handleSubmit = (e) => {
-        e.preventDefault();
-        // const search = new google.GoogleMap.places.SearchBox(queryWord);
-        // GoogleMap.controls[google.GoogleMap.ControlPosition.TOP_LEFT].push(queryWord);
-        // GoogleMap.addListener("bounds_changed", () => {
-        // search.setBounds(GoogleMap.getBounds());
-        //  });
-     };
-
-
-
+    
     const containerStyle = {
-        width: "100%",
-        height: "400px",
+        width: "90%",
+        height: "450px",
     }
 
 
-    const mapClicked = (event) => { 
-        console.log(event.latLng.lat(), event.latLng.lng()) 
-    }
+    // const mapClicked = (event) => { 
+    //     console.log(event.latLng.lat(), event.latLng.lng());
+    //     setClickSomewhere(true);
+    //     setClickLocation(true);
+    // }
     // ***NEED IT LATER*****
     // const markerClicked = (marker, index) => {  
     //     setActiveInfoWindow(index)
@@ -72,33 +131,62 @@ export default function MapPage()  {
     //     console.log(event.latLng.lng())
     // }
 
+    
     return (
-        <>
-        <Navbar />
-        <h1>WATER FINDER</h1>
-        
+        <div>
+        <h2>WATER FINDER</h2>
+        <div className="mapcontainer">
         <LoadScript 
         libraries={["places"]}
-        googleMapsApiKey= {process.env.REACT_APP_MAP_API_KEY}>
-        <div>
-        <Autocomplete>
-        <input value={queryWord} onChange={(e)=> setQueryWord(e.target.value)} ref={queryRef}/>
-        </Autocomplete>
-        <button onSubmit={handleSubmit} onClick={handleSubmit}>SEARCH</button>
-        </div>
+        googleMapsApiKey= {process.env.REACT_APP_MAP_API_KEY}>   
             <GoogleMap 
                 mapContainerStyle={containerStyle} 
-                center={center} 
+                center={newCenter? newPlace : center} 
                 zoom={15}
                 onClick={mapClicked}
+                options={{
+                  mapTypeControl: false,
+                  streetView: false
+                }}
             >
+               <StandaloneSearchBox
+                  onLoad={onLoad}
+                  onPlacesChanged={onPlacesChanged}
+                >
+                  <input
+                    onChange={(e)=>setValue(e.target.value)}
+                    value={value}
+                    type="text"
+                    placeholder="Search Here"
+                    style={{
+                      boxSizing: `border-box`,
+                      border: `1px solid transparent`,
+                      width: `240px`,
+                      height: `32px`,
+                      padding: `0 12px`,
+                      borderRadius: `3px`,
+                      boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
+                      fontSize: `14px`,
+                      outline: `none`,
+                      textOverflow: `ellipses`,
+                      position: "absolute",
+                      left: "50%",
+                      marginLeft: "-120px"
+                    }}
+                  />
+              </StandaloneSearchBox>
             <Marker style={{width:"50px"}} position={center} />
             {locale?.map((lo)=> <Marker key={lo._id} position={{lat: lo.lat, lng: lo.lng}} />)}
+            {newCenter && !clickSomewhere && <Marker position={newPlace}/>}
+            {clickSomewhere && <Marker position={{lat: newLat, lng: newLng}}/>}      
             </GoogleMap>
         </LoadScript>
-        <button>ADD NEW LOCATION</button>
-        </>
+        </div>
+        <div className="addnewlocation-container">
+       <button className="addnewlocation-btn" onClick={()=>{<Navigate to={!token ? "/logintoadd" : "/addnewlocation"}/>}}>ADD NEW LOCATION</button>
+       </div>
+        </div>
     );
-};
+}
 
 

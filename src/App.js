@@ -13,14 +13,15 @@ import AddNewLocation from "./pages/AddNewLocation";
 
 
 
+
 function App() {
   const { token } = useContext(AuthContext);
 
   return (
     <div className="App">
       <Navbar />
-      <MapPage />
-      {/* <AddNewLocation /> */}
+      {/* <MapPage /> */}
+      <AddNewLocation />
       {/* <LoginToAdd /> */}
       <Routes>
         <Route path="/" element={token ? <Home /> : <Navigate to="/login" />} />
@@ -33,6 +34,7 @@ function App() {
           element={!token ? <Signup /> : <Navigate to="/" />}
         />
         <Route path="/mappage" element={<MapPage />}/>
+        <Route path="/addnewlocation" element={<AddNewLocation />}/>
         <Route path="/logintoadd" element={<LoginToAdd />}/>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
