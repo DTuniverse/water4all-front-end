@@ -40,7 +40,7 @@ export default function Signup({ setUser }) {
   return (
     <div>
       //{" "}
-      <LoadingOverlay active={isLoading} spinner text="Signing in...">
+      {/* <LoadingOverlay active={isLoading} spinner text="Signing in..."> */}
         <form className="signup" onSubmit={handleSubmit}>
           <h3>Sign up</h3>
           <label>username: </label>
@@ -68,7 +68,7 @@ export default function Signup({ setUser }) {
           {error && <div className="error">{error}</div>}
         </form>
         //{" "}
-      </LoadingOverlay>
+      {/* </LoadingOverlay> */}
     </div>
   );
 }
