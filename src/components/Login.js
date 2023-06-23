@@ -7,7 +7,6 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-
   const { login } = useContext(AuthContext);
 
   const handleSubmit = async (e) => {
