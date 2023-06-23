@@ -17,7 +17,6 @@ import { Link } from "react-router-dom";
 import { useJwt } from "react-jwt";
 
 const pages = ["WaterBlog", "WaterShop"];
-// const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -188,7 +187,7 @@ function ResponsiveAppBar() {
                 </MenuItem>
               )}
               {token === null && (
-                <>
+                <div>
                   <Typography textAlign="center">
                     <Link
                       to="login"
@@ -213,7 +212,7 @@ function ResponsiveAppBar() {
                       Signup
                     </Link>
                   </Typography>
-                </>
+                </div>
               )}
             </Menu>
           </Box>

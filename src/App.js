@@ -4,16 +4,11 @@ import Home from "./components/Home";
 import Navbar from "./components/Navbar";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
+import AddNewLocation from "./pages/AddNewLocation";
 import Footer from "./components/Footer";
 import { AuthContext } from "./context/authContext";
 import "./App.css";
 import MapPage from "./pages/MapPage";
-import LoginToAdd from "./pages/LoginToAdd";
-import AddNewLocation from "./pages/AddNewLocation";
-
-
-
-
 
 function App() {
   const { token } = useContext(AuthContext);
@@ -22,10 +17,15 @@ function App() {
     <div className="App">
       <Navbar />
       {/* <MapPage /> */}
-      <AddNewLocation />
-      {/* <LoginToAdd /> */}
+      {/* <AddNewLocation /> */}
+
       <Routes>
-        <Route path="/" element={token ? <Home /> : <Navigate to="/login" />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/mappage" element={<MapPage />} />
+        <Route path="/addnewlocation" element={<AddNewLocation />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        {/* <Route path="/" element={token ? <Home /> : <Navigate to="/login" />} />
         <Route
           path="/login"
           element={!token ? <Login /> : <Navigate to="/" />}
@@ -33,10 +33,7 @@ function App() {
         <Route
           path="/signup"
           element={!token ? <Signup /> : <Navigate to="/" />}
-        />
-        <Route path="/mappage" element={<MapPage />}/>
-        <Route path="/addnewlocation" element={<AddNewLocation />}/>
-        <Route path="/logintoadd" element={<LoginToAdd />}/>
+        /> */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
       <Footer />
