@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import Home from "./components/Home";
+import LandingPage from "./pages/LandingPage";
 import Navbar from "./components/Navbar";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
@@ -20,7 +20,7 @@ function App() {
       {/* <AddNewLocation /> */}
 
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<LandingPage />} />
         <Route path="/mappage" element={<MapPage />} />
         <Route path="/addnewlocation" element={<AddNewLocation />} />
         <Route path="/login" element={<Login />} />

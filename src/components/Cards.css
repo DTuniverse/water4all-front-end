@@ -1,64 +1,43 @@
-
 .landingBlogP {
     text-align: center;
 }
 
-h1 {
-    text-align: center;
+.waterBlogH1 {
+    padding-top: 13px;
     color: #2669BA;
+    margin-bottom: 16px;
+    font-weight: bold;
 }
+
+.waterShopH1 {
+    padding-top: 13px;
+    color: #2669BA;
+    margin-bottom: 16px;
+    font-weight: bold;
+}
+
+.yellowButtonContainer {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 20px;
+}
+
 .yellowButton {
     margin: 10px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding: 12px 40px;
+    font-size: 16px;
     border: 0;
-    border-radius:10px;
+    border-radius:20px;
     color: black;
     font-weight: bold;
     background-color: #fec82f;
     box-shadow: none;
-    /* display: flex; */
     text-align: center;
     position: relative;
     overflow: hidden;
     transition: transform 0.3s ease-in-out;
-    * {
-        background: #E9FBFF;
-        margin: 10px;
-    }
-
-    .yellowButtonContainer {
-        display: flex;
-        justify-content: center;
-    }
-    
-    .yellowButton::before {
-        content: '';
-        position: absolute;
-        top: -100%;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(255, 255, 255, 0.2);
-        transform: translateY(100%);
-        transition: transform 0.1s ease-in-out, background-color 0.3s ease-in-out;
-        z-index: -1;
-    }
-    
-    .yellowButton:hover,
-    .yellowButton:focus {
-        transform: scale(1.1);
-        background-color: #24589A;
-    }
-    
-    .yellowButton:hover::before,
-    .yellowButton:focus::before {
-        transform: translateY(0);
-        background-color: rgba(255, 255, 255, 0);
-    }
 }
+
 .yellowButton::before {
     content: '';
     position: absolute;
@@ -81,3 +60,15 @@ h1 {
 .yellowButton:focus::before {
     transform: translateY(0);
 }
+
+.cardImage {
+    width: 100%;
+    height: auto;
+    margin-bottom: 25px;
+  }
+  
+  @media (min-width: 600px) {
+    .cardImage {
+      height: 200px;
+    }
+  }
