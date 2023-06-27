@@ -1,15 +1,24 @@
-* {
-    background: #E9FBFF;
-    margin: 10px;
+.landingHeadlineContainer {
+    padding-top: 40px;
+    padding-bottom: 15px;
 }
 
-h1 {
-    text-align: center;
+.landingHeadline {
     color: #2669BA;
+    font-weight: bold;
+    font-size: xx-large;
+    display: flex;
+    justify-content: center;
+}
+
+.heroPContainer {
+    padding-bottom: 15px;
 }
 
 .heroP {
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    font-weight: 405;
 }
 
 .blueButtonContainer {
@@ -19,59 +28,27 @@ h1 {
 
 .blueButton {
     margin: 10px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding: 9px 38px;
+    font-size: 16px;
     border: 0;
-    border-radius:10px;
+    border-radius:20px;
     color: white;
     background-color: #2669BA;
     box-shadow: none;
-    /* display: flex; */
     text-align: center;
     position: relative;
     overflow: hidden;
     transition: transform 0.3s ease-in-out;
-    * {
-        background: #E9FBFF;
-        margin: 10px;
-    }
-    
-    .blueButton::before {
-        content: '';
-        position: absolute;
-        top: -100%;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(255, 255, 255, 0.2);
-        transform: translateY(100%);
-        transition: transform 0.1s ease-in-out, background-color 0.3s ease-in-out;
-        z-index: -1;
-    }
-    
-    .blueButton:hover,
-    .blueButton:focus {
-        transform: scale(1.1);
-        background-color: #24589A;
-    }
-    
-    .blueButton:hover::before,
-    .blueButton:focus::before {
-        transform: translateY(0);
-        background-color: rgba(255, 255, 255, 0);
-    }
 }
     
-    .heroImage {
-        max-width: 100%;
-        height: auto;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        margin-bottom: 35px;
-    }
+.heroImage {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 35px;
+}
 
 .blueButton::before {
     content: '';
@@ -96,14 +73,33 @@ h1 {
     transform: translateY(0);
 }
 
-.missionH1 {
-    text-align: center;
-    color: #2669BA;
+.ourMission {
+    display: flex;
+    flex-direction: column;
 }
 
-.missionP {
+.missionH1 {
     text-align: center;
+    padding-top: 50px;
+    padding-bottom: 20px;
+    color: #2669BA;
+    font-weight: bold;
+    font-size: xx-large;
 }
+
+.missionPContainer {
+    padding-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: left;
+    margin: 0 auto;
+  }
+  
+  .missionP {
+    font-weight: 405;
+    width: 100%;
+  }
 
 .missionImage {
     max-width: 100%;
@@ -118,6 +114,7 @@ h1 {
 .howH1 {
     text-align: center;
     color: #2669BA;
+    padding-bottom: 20px;
 }
 
 .howImage {
@@ -128,4 +125,9 @@ h1 {
     margin-right: auto;
     margin-bottom: 35px;
     margin-top: 35px;
+    padding-bottom: 90px;
+}
+
+.cardWrapper {
+    margin-bottom: 70px;
 }
