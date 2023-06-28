@@ -9,6 +9,7 @@ import Footer from "./components/Footer";
 import { AuthContext } from "./context/authContext";
 import "./App.css";
 import MapPage from "./pages/MapPage";
+import ShopPage from "./pages/ShopPage";
 
 function App() {
   const { token } = useContext(AuthContext);
@@ -25,6 +26,7 @@ function App() {
         <Route path="/addnewlocation" element={<AddNewLocation />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/shoppage" element={<ShopPage />} />
         {/* <Route path="/" element={token ? <Home /> : <Navigate to="/login" />} />
         <Route
           path="/login"
