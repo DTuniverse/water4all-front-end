@@ -1,45 +1,51 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
-import {
-  GoogleMap,
-  InfoWindow,
-  LoadScript,
-  Marker,
-  Autocomplete,
-  StandaloneSearchBox,
-} from "@react-google-maps/api";
+import { GoogleMap, InfoWindow, LoadScript, Marker, Autocomplete, StandaloneSearchBox } from "@react-google-maps/api";
 import { getGeocode, getLatLng } from "use-places-autocomplete";
 import { Link, Navigate } from "react-router-dom";
 import { AuthContext } from "../context/authContext";
-import { AddLocation } from "@mui/icons-material";
 import "./Map.css";
 
 //
 import AddNewLocationModal from "../components/AddNewLocationModal";
 import IconButton from "@mui/material/IconButton";
 import AddLocationAltRoundedIcon from "@mui/icons-material/AddLocationAltRounded";
+
 //
 
 export default function MapPage() {
   // const google = window.google;
-  const [activeInfoWindow, setActiveInfoWindow] = useState("");
-  const [lat, setLat] = useState();
-  const [lng, setLng] = useState();
-  const [locale, setLocale] = useState([]);
-  const center = { lat: lat, lng: lng };
+  // const [activeInfoWindow, setActiveInfoWindow] = useState("");
   const [newCenter, setNewCenter] = useState(false);
   const [value, setValue] = useState("");
+  const [locale, setLocale] = useState([]);
   const [newPlace, setNewPlace] = useState(null);
   const { token } = useContext(AuthContext);
   const [clickSomewhere, setClickSomewhere] = useState(false);
   const [newLat, setNewLat] = useState(null);
   const [newLng, setNewLng] = useState(null);
+  const { lat, lng,  } = useContext(AuthContext);
+  const center = { lat: lat, lng: lng };
+
+// get all added locations 
+const getNewLocation = async () => {
+  try {
+    const res = await fetch("https://water4all-backend.onrender.com/posts");
+    const data = await res.json();
+    setLocale(data.data);
+    console.log(locale);
+  } catch (err) {
+    console.log(err);
+  }
+};
+useEffect(() => {
+getNewLocation()
+}, []);
 
   // google search bar
   const searchBoxRef = useRef(null);
   const onLoad = (ref) => {
     searchBoxRef.current = ref;
   };
-
   const onPlacesChanged = async () => {
     try {
       const places = await searchBoxRef.current?.getPlaces();
@@ -55,34 +61,7 @@ export default function MapPage() {
     }
   };
 
-  const mapContainerStyle = {
-    height: "400px",
-    width: "800px",
-  };
-
-  // get user current location
-  if (navigator.geolocation) {
-    navigator.geolocation.watchPosition((position) => {
-      setLat(position.coords.latitude);
-      setLng(position.coords.longitude);
-    });
-  }
-
-  // get exist water point
-  const getNewLocation = async () => {
-    try {
-      const res = await fetch("https://water4all-backend.onrender.com/posts");
-      const data = await res.json();
-      setLocale(data.data);
-      console.log(locale);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  useEffect(() => {
-    getNewLocation();
-  }, []);
+ 
 
   // get acurate address
   const getAddress = (lat, lng) => {
@@ -98,19 +77,18 @@ export default function MapPage() {
     });
   };
   // get click location
-  const mapClicked = async (event) => {
+    const mapClicked = async (event) => {
     console.log(event.latLng.lat(), event.latLng.lng());
-    const lat = event.latLng.lat();
-    const lng = event.latLng.lng();
+    const newLat = event.latLng.lat();
+    const newLng = event.latLng.lng();
     const address = await getAddress(event.latLng.lat(), event.latLng.lng());
     console.log(address);
-    setNewLat(lat);
-    setNewLng(lng);
+    setNewLat(newLat);
+    setNewLng(newLng);
     setClickSomewhere(true);
   };
   console.log(`get or not? lat: ${newLat} lng: ${newLng} `);
 
-  // search water location
 
   const containerStyle = {
     width: "90%",
@@ -177,7 +155,7 @@ export default function MapPage() {
                 }}
               />
             </StandaloneSearchBox>
-            <Marker style={{ width: "50px" }} position={center} />
+            <Marker position={center} />
             {locale?.map((lo) => (
               <Marker key={lo._id} position={{ lat: lo.lat, lng: lo.lng }} />
             ))}

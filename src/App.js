@@ -11,6 +11,7 @@ import { AuthContext } from "./context/authContext";
 import "./App.css";
 import MapPage from "./pages/MapPage";
 
+
 function App() {
   const { token } = useContext(AuthContext);
 
