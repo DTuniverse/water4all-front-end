@@ -29,7 +29,7 @@ export default function ShopPage() {
               paddingTop: "50px",
             }}
           >
-            Water Shop
+            WATER SHOP
           </h1>
           <p style={{ textAlign: "center", paddingTop: "15px" }}>
             Owning a refillable bottle means you always have a drink with you,

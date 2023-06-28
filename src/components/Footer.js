@@ -9,9 +9,9 @@ export default function Footer() {
   return (
     <div>
       <div className="flex-container-links">
-        <Link>Map</Link>
-        <Link>Water blog</Link>
-        <Link>Water shop</Link>
+        <Link to="/mappage">Water Finder</Link>
+        <Link to="/blogpage">Water Blog</Link>
+        <Link to="/shoppage">Water Shop</Link>
       </div>
       <h2
         style={{
