@@ -4,6 +4,21 @@ export const AuthContext = createContext();
 
 export default function AuthContextProvider(props) {
   const [token, setToken] = useState(null);
+  const [lat, setLat] = useState(null);
+  const [lng, setLng] = useState(null);
+
+  // get user current location
+  
+   useEffect(() => {
+  if (navigator.geolocation) {
+    navigator.geolocation.watchPosition((position) => {
+      console.log("NAV GEO", position.coords.latitude)
+      setLat(position.coords.latitude);
+      setLng(position.coords.longitude);
+    }); 
+  }
+}, []);
+
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
@@ -30,7 +45,7 @@ export default function AuthContextProvider(props) {
   };
 
   return (
-    <AuthContext.Provider value={{ token, login, logout }}>
+    <AuthContext.Provider value={{ token, login, logout, lat, lng }}>
       {props.children}
     </AuthContext.Provider>
   );

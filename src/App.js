@@ -1,9 +1,10 @@
 import { useContext } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import Home from "./components/Home";
+import LandingPage from "./pages/LandingPage";
 import Navbar from "./components/Navbar";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
+import BlogPage from "./pages/BlogPage";
 import AddNewLocation from "./pages/AddNewLocation";
 import Footer from "./components/Footer";
 import { AuthContext } from "./context/authContext";
@@ -21,11 +22,12 @@ function App() {
       {/* <AddNewLocation /> */}
 
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<LandingPage />} />
         <Route path="/mappage" element={<MapPage />} />
         <Route path="/addnewlocation" element={<AddNewLocation />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/blog" element={<BlogPage />} />
         <Route path="/shoppage" element={<ShopPage />} />
         {/* <Route path="/" element={token ? <Home /> : <Navigate to="/login" />} />
         <Route
