@@ -129,5 +129,7 @@
 }
 
 .cardWrapper {
+    width: 100%;
+    max-width: 345px;
     margin-bottom: 70px;
 }

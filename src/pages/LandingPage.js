@@ -2,9 +2,9 @@ import "../pages/LandingPage.css";
 import React from "react";
 import { Link } from 'react-router-dom';
 import MapPage from './MapPage';
+import Container from '@mui/material/Container';
 import LandingPageBlogCard from "../components/LandingPageBlogCard";
 import LandingPageShopCard from "../components/LandingPageShopCard";
-import Container from '@mui/material/Container';
 
 export default function LandingPage () {
     return(
@@ -46,7 +46,6 @@ export default function LandingPage () {
             </div>
         </div>
         <div>
-
             <img  className="missionImage" src={process.env.PUBLIC_URL + "/resources/Group 22@1x.svg"} 
             alt="A cartoon person holding a drop of water"/>
         </div>
