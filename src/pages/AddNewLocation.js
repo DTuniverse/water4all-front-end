@@ -1,40 +1,32 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
-import {
-  GoogleMap,
-  InfoWindow,
-  LoadScript,
-  Marker,
-  Autocomplete,
-  StandaloneSearchBox,
-} from "@react-google-maps/api";
+import {  GoogleMap, InfoWindow, LoadScript, Marker, StandaloneSearchBox, } from "@react-google-maps/api";
 import { getGeocode, getLatLng } from "use-places-autocomplete";
-import Navbar from "../components/Navbar";
 import { AuthContext } from "../context/authContext";
 import { useJwt } from "react-jwt";
-import { FormControl, Input, InputLabel } from "@mui/material";
+import { Button, FormControl, TextField, Box, Input } from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';
 import "./Map.css";
 
 export default function AddNewLocation() {
   // const google = window.google;
   const [activeInfoWindow, setActiveInfoWindow] = useState(false);
-  const [lat, setLat] = useState();
-  const [lng, setLng] = useState();
   const [newLat, setNewLat] = useState(null);
   const [newLng, setNewLng] = useState(null);
   const [locale, setLocale] = useState([]);
   const [addLocation, setAddLocation] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
-  const [addDescription, setAddDescription] = useState("");
-  const [addTittle, setAddTittle] = useState("");
+  const [addDescription, setAddDescription] = useState(null);
+  const [addTittle, setAddTittle] = useState(null);
   const [username, setUsername] = useState("");
   const [newCenter, setNewCenter] = useState(false);
   const [value, setValue] = useState("");
   const [newPlace, setNewPlace] = useState(null);
   const [addSearch, setAddSearch] = useState(false);
-  const center = { lat: lat, lng: lng };
   const { token } = useContext(AuthContext);
   const { decodedToken } = useJwt(token);
   const [clickSomewhere, setClickSomewhere] = useState(false);
+  const { lat, lng } = useContext(AuthContext);
+  const center = { lat: lat, lng: lng };
 
   // google search bar
   const searchBoxRef = useRef(null);
@@ -61,16 +53,10 @@ export default function AddNewLocation() {
     }
   };
 
-  // get user current location
-  if (navigator.geolocation) {
-    navigator.geolocation.watchPosition((position) => {
-      setLat(position.coords.latitude);
-      setLng(position.coords.longitude);
-    });
-  }
 
   // get exist water point
   const getNewLocation = async () => {
+    console.log("get new location running")
     try {
       const res = await fetch("https://water4all-backend.onrender.com/posts");
       const data = await res.json();
@@ -83,19 +69,20 @@ export default function AddNewLocation() {
 
   useEffect(() => {
     getNewLocation();
-  }, []);
+  }, [isAdded]);
 
   const containerStyle = {
     width: "90%",
     height: "450px",
   };
 
+
   // get acurate address
   const getAddress = (lat, lng) => {
     const geocoder = new window.google.maps.Geocoder();
     const latlng = new window.google.maps.LatLng(lat, lng);
     const request = {
-      latLng: latlng,
+    latLng: latlng,
     };
     return new Promise((resolve, reject) => {
       geocoder.geocode(request, (results) => {
@@ -107,18 +94,21 @@ export default function AddNewLocation() {
   // get click location
   const mapClicked = async (event) => {
     console.log(event.latLng.lat(), event.latLng.lng());
+
     const lat = event.latLng.lat();
     const lng = event.latLng.lng();
+    console.log("MAP CLICKED", lat, lng )
     const address = await getAddress(event.latLng.lat(), event.latLng.lng());
     console.log(address);
     setAddLocation(true);
+    setIsAdded(false);
     setNewLat(lat);
     setNewLng(lng);
     setUsername(decodedToken?.name);
     setClickSomewhere(true);
   };
   console.log(
-    `get or not? lat: ${newLat} lng: ${newLng} addLocation: ${addLocation}`
+    `get or not? lat: ${newLat} lng: ${newLng} addLocation: ${addLocation}`, typeof(newLat)
   );
 
   console.log(`token: ${token}`);
@@ -144,10 +134,12 @@ export default function AddNewLocation() {
         },
         body: JSON.stringify(newPost),
       });
+      console.log(`res: ${res.ok}`);
       setAddLocation(false);
+      setAddSearch(false);
       setIsAdded(true);
       setAddTittle(null);
-      setAddTittle(null);
+      setAddDescription(null);
     } catch (err) {
       console.log(err);
     }
@@ -163,7 +155,10 @@ export default function AddNewLocation() {
   //     console.log(event.latLng.lat())
   //     console.log(event.latLng.lng())
   // }
-
+console.log(`description: ${addDescription}`)
+console.log("NEWCENTER ", newCenter )
+console.log("NEWPLACE ", newPlace )
+console.log("CENTER ", center )
   return (
     <>
       <h2>ADD NEW LOCATION</h2>
@@ -174,7 +169,7 @@ export default function AddNewLocation() {
         >
           <GoogleMap
             mapContainerStyle={containerStyle}
-            center={newCenter ? newPlace : center}
+            center={ newCenter ? newPlace :center }
             zoom={15}
             onClick={mapClicked}
             options={{
@@ -222,50 +217,82 @@ export default function AddNewLocation() {
               />
             )}
             {addLocation ? (
-              <FormControl>
-                <button onClick={() => setAddLocation(false)}>Close</button>
-                <InputLabel>Tittle: </InputLabel>
-                <Input
+              <Box
+              sx={{
+                marginLeft:"15%",
+                marginTop:"15%",
+              }}
+              noValidate
+              autoComplete="off"
+            >
+               <FormControl sx={{
+                backgroundColor:"#e0e0e0"
+              }}>
+              <Button  
+               sx={{
+                display:"flex",
+                justifyContent:"start"
+              }}
+              variant="contained" onClick={() => setAddLocation(false)}><CloseIcon/>Close</Button>
+             
+                <TextField
+                  label="Tittle: "
                   value={addTittle}
                   onChange={(e) => setAddTittle(e.target.value)}
                 />
-                <InputLabel>Your Name:</InputLabel>
-                <Input disabled="true" value={username} />
-                <InputLabel>Location: </InputLabel>
+                <Input  label="User Name: " disabled="true" value={username} />
                 <Input disabled="true" value={newLat} />
                 <Input disabled="true" value={newLng} />
-                <InputLabel>Description: </InputLabel>
-                <Input
+                <TextField
+                  label="Description: "
                   value={addDescription}
                   onChange={(e) => setAddDescription(e.target.value)}
                 />
-                <button disabled={!token && !addTittle} onClick={handleAdding}>
+                <Button variant="contained" disabled={!token || addTittle === null || addDescription === null} onClick={handleAdding}>
                   Add Water Point
-                </button>
+                </Button>
               </FormControl>
+              </Box>
             ) : null}
             {addSearch && !clickSomewhere && (
-              <FormControl>
-                <button onClick={() => setAddSearch(false)}>Close</button>
-                <InputLabel>Tittle: </InputLabel>
-                <Input
+              <Box
+              sx={{
+                marginLeft:"15%",
+                marginTop:"15%"
+              }}
+              noValidate
+              autoComplete="off"
+            >
+              <FormControl
+              sx={{
+                backgroundColor:"#e0e0e0"
+              }}>
+              
+                <Button 
+                 sx={{
+                  display:"flex",
+                  justifyContent:"start"
+                }}
+                variant="contained"
+                onClick={() => setAddSearch(false)}><CloseIcon/>Close</Button>
+                <TextField
+                  label="Tittle: "
                   value={addTittle}
                   onChange={(e) => setAddTittle(e.target.value)}
                 />
-                <InputLabel>Your Name:</InputLabel>
                 <Input disabled="true" value={username} />
-                <InputLabel>Location: </InputLabel>
                 <Input disabled="true" value={newLat} />
                 <Input disabled="true" value={newLng} />
-                <InputLabel>Description: </InputLabel>
-                <Input
+                <TextField
+                  label="Description: "
                   value={addDescription}
                   onChange={(e) => setAddDescription(e.target.value)}
                 />
-                <button disabled={!token} onClick={handleAdding}>
+                <Button  variant="contained" disabled={!token || addTittle === null || addDescription === null} onClick={handleAdding}>
                   Add Water Point
-                </button>
+                </Button>
               </FormControl>
+              </Box>
             )}
           </GoogleMap>
         </LoadScript>
