@@ -60,7 +60,7 @@ function ResponsiveAppBar() {
             variant="h6"
             noWrap
             component="a"
-            href="/"
+            href=""
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -103,11 +103,48 @@ function ResponsiveAppBar() {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem onClick={handleCloseNavMenu}>
+                <Typography textAlign="center">
+                  <Link
+                    to="/mappage"
+                    style={{
+                      textDecoration: "none",
+                      color: "inherit",
+                      padding: "6px 16px",
+                    }}
+                  >
+                    Water Finder
+                  </Link>
+                </Typography>
+              </MenuItem>
+              <MenuItem onClick={handleCloseNavMenu}>
+                <Typography textAlign="center">
+                  <Link
+                    to="/blogpage"
+                    style={{
+                      textDecoration: "none",
+                      color: "inherit",
+                      padding: "6px 16px",
+                    }}
+                  >
+                    Water Blog
+                  </Link>
+                </Typography>
+              </MenuItem>
+              <MenuItem onClick={handleCloseNavMenu}>
+                <Typography textAlign="center">
+                  <Link
+                    to="/shoppage"
+                    style={{
+                      textDecoration: "none",
+                      color: "inherit",
+                      padding: "6px 16px",
+                    }}
+                  >
+                    Water Shop
+                  </Link>
+                </Typography>
+              </MenuItem>
             </Menu>
           </Box>
           <Avatar
