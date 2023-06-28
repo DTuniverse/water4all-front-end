@@ -12,7 +12,7 @@ export default function AuthContextProvider(props) {
    useEffect(() => {
   if (navigator.geolocation) {
     navigator.geolocation.watchPosition((position) => {
-      console.log("NAV GEO", position.coords.latitude)
+      // console.log("NAV GEO", position.coords.latitude)
       setLat(position.coords.latitude);
       setLng(position.coords.longitude);
     }); 

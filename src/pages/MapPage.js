@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
-import { GoogleMap, InfoWindow, LoadScript, Marker, Autocomplete, StandaloneSearchBox } from "@react-google-maps/api";
-import { getGeocode, getLatLng } from "use-places-autocomplete";
-import { Link, Navigate } from "react-router-dom";
+import { GoogleMap, InfoWindow, LoadScript, Marker, StandaloneSearchBox } from "@react-google-maps/api";
+import { getLatLng } from "use-places-autocomplete";
+import { Link } from "react-router-dom";
 import { AuthContext } from "../context/authContext";
 import "./Map.css";
 
@@ -14,7 +14,8 @@ import AddLocationAltRoundedIcon from "@mui/icons-material/AddLocationAltRounded
 
 export default function MapPage() {
   // const google = window.google;
-  // const [activeInfoWindow, setActiveInfoWindow] = useState("");
+  const [clickMarker, setClickMarker] = useState(false);
+  const [activeInfoWindow, setActiveInfoWindow] = useState("");
   const [newCenter, setNewCenter] = useState(false);
   const [value, setValue] = useState("");
   const [locale, setLocale] = useState([]);
@@ -25,6 +26,7 @@ export default function MapPage() {
   const [newLng, setNewLng] = useState(null);
   const { lat, lng,  } = useContext(AuthContext);
   const center = { lat: lat, lng: lng };
+  const defaultCenter = { lat: 52.519432315072166, lng: 13.401147636877893 };
 
 // get all added locations 
 const getNewLocation = async () => {
@@ -95,21 +97,19 @@ getNewLocation()
     height: "450px",
   };
 
-  // const mapClicked = (event) => {
-  //     console.log(event.latLng.lat(), event.latLng.lng());
-  //     setClickSomewhere(true);
-  //     setClickLocation(true);
-  // }
-  // ***NEED IT LATER*****
-  // const markerClicked = (marker, index) => {
-  //     setActiveInfoWindow(index)
-  //     console.log(marker, index)
-  // }
+  const markerClicked = (lo, index) => {
+    setActiveInfoWindow(index);
+    console.log(lo, "index" + index);
+    setClickMarker(true);
+  };
 
-  // const markerDragEnd = (event, index) => {
-  //     console.log(event.latLng.lat())
-  //     console.log(event.latLng.lng())
-  // }
+
+  const markerDragEnd = (event, index) => {
+      console.log(event.latLng.lat())
+      console.log(event.latLng.lng())
+  }
+
+  console.log(Boolean(center.lat))
 
   return (
     <div>
@@ -121,8 +121,8 @@ getNewLocation()
         >
           <GoogleMap
             mapContainerStyle={containerStyle}
-            center={newCenter ? newPlace : center}
-            zoom={15}
+            center={newCenter ? newPlace : (center.lat ? center : defaultCenter )}
+            zoom={10}
             onClick={mapClicked}
             options={{
               mapTypeControl: false,
@@ -155,9 +155,27 @@ getNewLocation()
                 }}
               />
             </StandaloneSearchBox>
-            <Marker position={center} />
-            {locale?.map((lo) => (
-              <Marker key={lo._id} position={{ lat: lo.lat, lng: lo.lng }} />
+            <Marker position={center}/>
+            {locale?.map((lo, index) => (
+              <Marker key={lo._id} 
+              position={{ lat: lo.lat, lng: lo.lng }} 
+              onClick={e=>markerClicked(lo, index)}
+              onDragEnd={e=>markerDragEnd(e, index)}
+              >
+                 { (activeInfoWindow === index) &&
+                <InfoWindow
+                onLoad={onLoad}
+                position={{ lat: lo.lat, lng: lo.lng }}
+                >
+                  <div>
+                    <h2>Info</h2>
+                    <p>Tittle: {lo.title}</p>
+                    <p>Creator: {lo.creator}</p>
+                    <p>Description: {lo.description}</p>
+                  </div>
+                </InfoWindow>
+            }
+              </Marker>
             ))}
             {newCenter && !clickSomewhere && <Marker position={newPlace} />}
             {clickSomewhere && (
