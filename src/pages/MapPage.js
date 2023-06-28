@@ -26,6 +26,7 @@ export default function MapPage() {
   const [newLng, setNewLng] = useState(null);
   const { lat, lng,  } = useContext(AuthContext);
   const center = { lat: lat, lng: lng };
+  const defaultCenter = { lat: 52.519432315072166, lng: 13.401147636877893 };
 
 // get all added locations 
 const getNewLocation = async () => {
@@ -108,6 +109,8 @@ getNewLocation()
       console.log(event.latLng.lng())
   }
 
+  console.log(Boolean(center.lat))
+
   return (
     <div>
       <h2>WATER FINDER</h2>
@@ -118,8 +121,8 @@ getNewLocation()
         >
           <GoogleMap
             mapContainerStyle={containerStyle}
-            center={newCenter ? newPlace : center}
-            zoom={15}
+            center={newCenter ? newPlace : (center.lat ? center : defaultCenter )}
+            zoom={10}
             onClick={mapClicked}
             options={{
               mapTypeControl: false,
@@ -152,7 +155,7 @@ getNewLocation()
                 }}
               />
             </StandaloneSearchBox>
-            <Marker position={center ? center : {lat:25.034326259910248, lng: 121.56395679812098}} />
+            <Marker position={center}/>
             {locale?.map((lo, index) => (
               <Marker key={lo._id} 
               position={{ lat: lo.lat, lng: lo.lng }} 

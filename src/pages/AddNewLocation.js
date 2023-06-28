@@ -27,6 +27,7 @@ export default function AddNewLocation() {
   const [clickSomewhere, setClickSomewhere] = useState(false);
   const { lat, lng } = useContext(AuthContext);
   const center = { lat: lat, lng: lng };
+  const defaultCenter = { lat: 52.519432315072166, lng: 13.401147636877893 };
 
   // google search bar
   const searchBoxRef = useRef(null);
@@ -168,8 +169,8 @@ export default function AddNewLocation() {
         >
           <GoogleMap
             mapContainerStyle={containerStyle}
-            center={ newCenter ? newPlace :center || {lat:25.034326259910248, lng: 121.56395679812098} }
-            zoom={15}
+            center={newCenter ? newPlace : (center.lat ? center : defaultCenter)}
+            zoom={10}
             onClick={mapClicked}
             options={{
               mapTypeControl: false,
