@@ -13,7 +13,6 @@ import { Button, FormControl, Box, Input, TextField } from "@mui/material";
 
 import CloseIcon from "@mui/icons-material/Close";
 import "./Map.css";
-import IconButton from "@mui/material/IconButton";
 import AddLocationAltRoundedIcon from "@mui/icons-material/AddLocationAltRounded";
 
 export default function AddNewLocation() {
@@ -131,7 +130,7 @@ export default function AddNewLocation() {
     setClickSomewhere(true);
     setCurrentZoom(15);
     setAddDescription(null);
-    setAddTittle(null)
+    setAddTittle(null);
   };
   console.log(
     `get or not? lat: ${newLat} lng: ${newLng} addLocation: ${addLocation} `,
@@ -153,6 +152,7 @@ export default function AddNewLocation() {
       address: address,
       user_id: decodedToken?._id,
     };
+    console.log("CONSOLE LOG NEW POST", newPost);
     try {
       const res = await fetch("https://water4all-backend.onrender.com/posts", {
         method: "POST",
@@ -181,15 +181,14 @@ export default function AddNewLocation() {
   };
 
   const markerDragEnd = (event, index) => {
-      console.log(event.latLng.lat())
-      console.log(event.latLng.lng())
+    console.log(event.latLng.lat());
+    console.log(event.latLng.lng());
   };
 
-  
- const handleZoom = () => {
-     setCurrentZoom(15);
-};
-console.log(`zoom: ${currentZoom}`)
+  const handleZoom = () => {
+    setCurrentZoom(15);
+  };
+  console.log(`zoom: ${currentZoom}`);
   // console.log(`description: ${addDescription}`)
   // console.log("NEWCENTER ", newCenter )
   // console.log("NEWPLACE ", newPlace )
@@ -205,7 +204,7 @@ console.log(`zoom: ${currentZoom}`)
         >
           <GoogleMap
             mapContainerStyle={containerStyle}
-            center={newCenter ? newPlace : (center.lat ? center : defaultCenter)}
+            center={newCenter ? newPlace : center.lat ? center : defaultCenter}
             zoom={currentZoom}
             onCenterChanged={handleZoom}
             onClick={mapClicked}
@@ -252,7 +251,9 @@ console.log(`zoom: ${currentZoom}`)
                 position={{ lat: lo.lat, lng: lo.lng }}
                 onClick={(e) => markerClicked(lo, index)}
                 onDragEnd={(e) => markerDragEnd(e, index)}
-                icon={process.env.PUBLIC_URL + '/resources/ph_drop-filldrop.svg'}
+                icon={
+                  process.env.PUBLIC_URL + "/resources/ph_drop-filldrop.svg"
+                }
               >
                 {activeInfoWindow === index && (
                   <InfoWindow
@@ -264,8 +265,18 @@ console.log(`zoom: ${currentZoom}`)
                       <p>Tittle: {lo.title}</p>
                       <p>Creator: {lo.creator}</p>
                       <p>Description: {lo.description}</p>
-                      <a className="google-link" href={`https://www.google.com/maps?z=12&t=m&q=loc:${lo.lat}+${lo.lng}`}> Search on GoogleMap</a>
-                    {lo.verified != true ? <Button disabled>Not Verified</Button> : <Button>Verified</Button> }
+                      <a
+                        className="google-link"
+                        href={`https://www.google.com/maps?z=12&t=m&q=loc:${lo.lat}+${lo.lng}`}
+                      >
+                        {" "}
+                        Search on GoogleMap
+                      </a>
+                      {lo.verified != true ? (
+                        <Button disabled>Not Verified</Button>
+                      ) : (
+                        <Button>Verified</Button>
+                      )}
                     </div>
                   </InfoWindow>
                 )}
