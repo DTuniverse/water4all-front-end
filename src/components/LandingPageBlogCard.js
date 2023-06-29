@@ -18,7 +18,7 @@ export default function LandingPageBlogCard() {
         </CardContent>
         <CardActions>
         <div className="yellowButtonContainer">
-            <Link to="/map" className="buttonLink">  
+            <Link to="/blogpage" className="buttonLink">  
                 <button className="yellowButton">DIVE IN</button>
             </Link>
         </div>

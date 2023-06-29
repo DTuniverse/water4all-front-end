@@ -19,7 +19,7 @@ return (
         </CardContent>
         <CardActions>
             <div className="yellowButtonContainer">
-                <Link to="/map" className="buttonLink"> 
+                <Link to="/shoppage" className="buttonLink"> 
                     <button className="yellowButton">SHOP NOW</button>
                 </Link>
             </div>
