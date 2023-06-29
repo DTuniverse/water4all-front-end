@@ -19,8 +19,9 @@ export default function AddNewLocation() {
   const [addDescription, setAddDescription] = useState(null);
   const [addTittle, setAddTittle] = useState(null);
   const [username, setUsername] = useState("");
+  const [searchAddress, setSearchAddress] = useState(" ");
   const [newCenter, setNewCenter] = useState(false);
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(null);
   const [newPlace, setNewPlace] = useState(null);
   const [addSearch, setAddSearch] = useState(false);
   const { token } = useContext(AuthContext);
@@ -32,16 +33,17 @@ export default function AddNewLocation() {
 
   // google search bar
   const searchBoxRef = useRef(null);
-  const onLoad = (ref) => {
-    searchBoxRef.current = ref;
-  };
+    const onLoad = (ref) => {
+      searchBoxRef.current = ref;
+      console.log(`ref: ${ref}`)
+    };
+
 
   const onPlacesChanged = async () => {
     try {
-      const places = await searchBoxRef.current?.getPlaces();
-      console.log(places);
+      const places = await searchBoxRef.current.getPlaces();
+      console.log(`place: ${places[0]}`);
       const result = getLatLng(places[0]);
-      console.log(result);
       setClickSomewhere(false);
       setNewCenter(true);
       setNewPlace(result);
@@ -51,6 +53,14 @@ export default function AddNewLocation() {
       setNewLat(result.lat);
       setNewLng(result.lng);
       setAddLocation(false);
+      console.log(`new lat: ${newLat}`)
+      const geocoder = new window.google.maps.Geocoder();
+      geocoder.geocode({location:{lat: result.lat, lng:result.lng}}, (results)=>{
+        if(results?.length){
+          setSearchAddress(results[0].formatted_address);
+        }
+      })
+      console.log(`searchAddress: ${searchAddress}`);
     } catch (error) {
       console.error("Error retrieving places", error);
     }
@@ -78,7 +88,6 @@ export default function AddNewLocation() {
     width: "90%",
     height: "450px",
   };
-
 
   // get acurate address
   const getAddress = (lat, lng) => {
@@ -228,7 +237,7 @@ export default function AddNewLocation() {
                     <p>Address: {lo?.address}</p>
                     <p>Description: {lo.description}</p>
                     <a className="google-link" href={`https://www.google.com/maps?z=12&t=m&q=loc:${lo.lat}+${lo.lng}`}> Search on GoogleMap</a>
-                    {lo.verified != true ? <Button disabled="true">Not Verified</Button> : <Button>Verified</Button> }
+                    {lo.verified != true ? <Button disabled>Not Verified</Button> : <Button>Verified</Button> }
                   </div>
                 </InfoWindow>
             }
@@ -237,7 +246,7 @@ export default function AddNewLocation() {
             {newCenter && !clickSomewhere && (
               <Marker onClick={()=>setAddSearch(true)} position={newPlace} />
             )}
-            {addLocation && (
+            {addLocation && !addSearch && (
               <Marker
                 onClick={()=>setAddLocation(true)}
                 position={{ lat: newLat, lng: newLng }}
@@ -261,9 +270,7 @@ export default function AddNewLocation() {
                   value={addTittle}
                   onChange={(e) => setAddTittle(e.target.value)}
                 />
-                {/* <Input label="User Name: " disabled="true" value={username} /> */}
-                {/* <Input disabled="true" value={newLat} />
-                <Input disabled="true" value={newLng} /> */}
+                <TextField label="Address: " disabled="true" value={address} />
                 <TextField
                   label="Description: "
                   value={addDescription}
@@ -308,9 +315,7 @@ export default function AddNewLocation() {
                   value={addTittle}
                   onChange={(e) => setAddTittle(e.target.value)}
                 />
-                {/* <Input disabled="true" value={username} />
-                <Input disabled="true" value={newLat} />
-                <Input disabled="true" value={newLng} /> */}
+                <TextField label="Address: " disabled value={searchAddress} />
                 <TextField
                   label="Description: "
                   value={addDescription}

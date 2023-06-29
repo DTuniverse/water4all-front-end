@@ -53,6 +53,7 @@ getNewLocation()
   const onPlacesChanged = async () => {
     try {
       const places = await searchBoxRef.current?.getPlaces();
+      console.log(`ref: ${searchBoxRef.current}`);
       console.log(places);
       const result = getLatLng(places[0]);
       console.log(result);
