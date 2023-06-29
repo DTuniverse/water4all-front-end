@@ -28,7 +28,7 @@ function App() {
         <Route path="/addnewlocation" element={<AddNewLocation />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/blog" element={<BlogPage />} />
+        <Route path="/blogpage" element={<BlogPage />} />
         <Route path="/shoppage" element={<ShopPage />} />
         <Route path="/article" element={<BlogArticlePage />} />
         {/* <Route path="/" element={token ? <Home /> : <Navigate to="/login" />} />

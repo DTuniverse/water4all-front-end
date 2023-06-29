@@ -6,21 +6,21 @@ import Container from '@mui/material/Container';
 import LandingPageBlogCard from "../components/LandingPageBlogCard";
 import LandingPageShopCard from "../components/LandingPageShopCard";
 
-export default function LandingPage () {
-    return(
+export default function LandingPage() {
+  return (
     <div>
-        <div className="landingHeadlineContainer">
-            <span className="landingHeadline">LOCATING FREE</span> 
-            <span className="landingHeadline"> WATER SOURCES</span>
-        </div>
-        <div className="heroPContainer">
-            <span className="heroP">Start your Journey with us today</span>
-            <span className="heroP"> and let´s make water accessible.</span> 
-            <span className="heroP">One drop at a time.</span>
-        </div>
-        <div className="blueButtonContainer">
-        <Link to="/map" className="buttonLink">
-            <button className="blueButton">SHOW MAP ⛯</button>
+      <div className="landingHeadlineContainer">
+        <span className="landingHeadline">LOCATING FREE</span>
+        <span className="landingHeadline"> WATER SOURCES</span>
+      </div>
+      <div className="heroPContainer">
+        <span className="heroP">Start your Journey with us today</span>
+        <span className="heroP"> and let´s make water accessible.</span>
+        <span className="heroP">One drop at a time.</span>
+      </div>
+      <div className="blueButtonContainer">
+        <Link to="/mappage" className="buttonLink">
+          <button className="blueButton">SHOW MAP ⛯</button>
         </Link>
         </div>
         <div>
@@ -46,6 +46,7 @@ export default function LandingPage () {
             </div>
         </div>
         <div>
+
             <img  className="missionImage" src={process.env.PUBLIC_URL + "/resources/Group 22@1x.svg"} 
             alt="A cartoon person holding a drop of water"/>
         </div>
@@ -65,6 +66,3 @@ export default function LandingPage () {
     </div>    
     )
 } ;
-
-//↗
-// style={{ marginBottom: '20px' }}

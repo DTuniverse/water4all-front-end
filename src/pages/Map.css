@@ -25,3 +25,12 @@ h2{
     font-weight: bold;
     padding: 5px;
 }
+.button-container{
+    display: flex;
+    flex-direction: row;   
+}
+
+.google-link{
+    text-decoration: none;
+    color:#2669BA;
+}

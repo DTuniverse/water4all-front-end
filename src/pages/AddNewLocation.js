@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
-import {  GoogleMap, InfoWindow, LoadScript, Marker, StandaloneSearchBox, } from "@react-google-maps/api";
+import {  GoogleMap, InfoWindow, LoadScript, Marker, StandaloneSearchBox } from "@react-google-maps/api";
 import { getGeocode, getLatLng } from "use-places-autocomplete";
 import { AuthContext } from "../context/authContext";
 import { useJwt } from "react-jwt";
@@ -12,6 +12,7 @@ export default function AddNewLocation() {
   const [activeInfoWindow, setActiveInfoWindow] = useState(false);
   const [newLat, setNewLat] = useState(null);
   const [newLng, setNewLng] = useState(null);
+  const [address, setAddress] = useState(null);
   const [locale, setLocale] = useState([]);
   const [addLocation, setAddLocation] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
@@ -27,6 +28,7 @@ export default function AddNewLocation() {
   const [clickSomewhere, setClickSomewhere] = useState(false);
   const { lat, lng } = useContext(AuthContext);
   const center = { lat: lat, lng: lng };
+  const defaultCenter = { lat: 52.519432315072166, lng: 13.401147636877893 };
 
   // google search bar
   const searchBoxRef = useRef(null);
@@ -48,6 +50,7 @@ export default function AddNewLocation() {
       setUsername(decodedToken?.name);
       setNewLat(result.lat);
       setNewLng(result.lng);
+      setAddLocation(false);
     } catch (error) {
       console.error("Error retrieving places", error);
     }
@@ -94,12 +97,11 @@ export default function AddNewLocation() {
   // get click location
   const mapClicked = async (event) => {
     console.log(event.latLng.lat(), event.latLng.lng());
-
     const lat = event.latLng.lat();
     const lng = event.latLng.lng();
-    console.log("MAP CLICKED", lat, lng )
+    console.log("MAP CLICKED"+ lat, lng )
     const address = await getAddress(event.latLng.lat(), event.latLng.lng());
-    console.log(address);
+    setAddress(address);
     setAddLocation(true);
     setIsAdded(false);
     setNewLat(lat);
@@ -108,9 +110,9 @@ export default function AddNewLocation() {
     setClickSomewhere(true);
   };
   console.log(
-    `get or not? lat: ${newLat} lng: ${newLng} addLocation: ${addLocation}`, typeof(newLat)
+    `get or not? lat: ${newLat} lng: ${newLng} addLocation: ${addLocation} `, typeof(newLat)
   );
-
+  console.log(`address: ${address}`)
   console.log(`token: ${token}`);
   console.log(`username : ${decodedToken?._id}`);
 
@@ -123,6 +125,7 @@ export default function AddNewLocation() {
       lng: newLng,
       creator: decodedToken?.name,
       description: addDescription,
+      address: address,
       user_id: decodedToken?._id,
     };
     try {
@@ -147,34 +150,36 @@ export default function AddNewLocation() {
 
   const markerClicked = (marker, index) => {
     setActiveInfoWindow(index);
+    setAddLocation(false);
+    setAddSearch(false);
     console.log(marker, index);
   };
 
-  // ***NEED IT LATER*****
-  // const markerDragEnd = (event, index) => {
-  //     console.log(event.latLng.lat())
-  //     console.log(event.latLng.lng())
-  // }
-console.log(`description: ${addDescription}`)
-console.log("NEWCENTER ", newCenter )
-console.log("NEWPLACE ", newPlace )
-console.log("CENTER ", center )
+  const markerDragEnd = (event, index) => {
+      console.log(event.latLng.lat())
+      console.log(event.latLng.lng())
+  }
+  // console.log(`description: ${addDescription}`)
+  // console.log("NEWCENTER ", newCenter )
+  // console.log("NEWPLACE ", newPlace )
+  // console.log("CENTER ", center )
+
   return (
     <>
       <h2>ADD NEW LOCATION</h2>
       <div className="mapcontainer">
         <LoadScript
-          libraries={["places"]}
+          libraries={["places", "streetView"]}
           googleMapsApiKey={process.env.REACT_APP_MAP_API_KEY}
         >
           <GoogleMap
             mapContainerStyle={containerStyle}
-            center={ newCenter ? newPlace :center }
-            zoom={15}
+            center={newCenter ? newPlace : (center.lat ? center : defaultCenter)}
+            zoom={10}
             onClick={mapClicked}
             options={{
               mapTypeControl: false,
-              streetView: false,
+              streetViewControl: true,
             }}
           >
             <StandaloneSearchBox
@@ -203,20 +208,42 @@ console.log("CENTER ", center )
                 }}
               />
             </StandaloneSearchBox>
-            <Marker style={{ width: "50px" }} position={center} />
-            {locale?.map((lo) => (
-              <Marker key={lo._id} position={{ lat: lo.lat, lng: lo.lng }} />
+            <Marker icon={process.env.PUBLIC_URL + '/resources/person.png'} position={center} />
+            {locale?.map((lo, index) => (
+              <Marker key={lo._id} 
+              position={{ lat: lo.lat, lng: lo.lng }} 
+              onClick={e=>markerClicked(lo, index)}
+              onDragEnd={e=>markerDragEnd(e, index)}
+              icon={process.env.PUBLIC_URL + '/resources/ph_drop-filldrop.svg'}
+              >
+                 { (activeInfoWindow === index) && !addSearch && !addLocation &&
+                <InfoWindow
+                onLoad={onLoad}
+                position={{ lat: lo.lat, lng: lo.lng }}
+                >
+                  <div>
+                    <h2>Info</h2>
+                    <p>Tittle: {lo.title}</p>
+                    <p>Creator: {lo.creator}</p>
+                    <p>Address: {lo?.address}</p>
+                    <p>Description: {lo.description}</p>
+                    <a className="google-link" href={`https://www.google.com/maps?z=12&t=m&q=loc:${lo.lat}+${lo.lng}`}> Search on GoogleMap</a>
+                    {lo.verified != true ? <Button disabled="true">Not Verified</Button> : <Button>Verified</Button> }
+                  </div>
+                </InfoWindow>
+            }
+              </Marker>
             ))}
             {newCenter && !clickSomewhere && (
-              <Marker onClick={markerClicked} position={newPlace} />
+              <Marker onClick={()=>setAddSearch(true)} position={newPlace} />
             )}
             {addLocation && (
               <Marker
-                onClick={markerClicked}
+                onClick={()=>setAddLocation(true)}
                 position={{ lat: newLat, lng: newLng }}
               />
             )}
-            {addLocation ? (
+            {addLocation && (
               <Box
               sx={{
                 marginLeft:"15%",
@@ -226,34 +253,36 @@ console.log("CENTER ", center )
               autoComplete="off"
             >
                <FormControl sx={{
-                backgroundColor:"#e0e0e0"
+                backgroundColor:"#e0e0e0",
+                opacity:"80%"
               }}>
-              <Button  
-               sx={{
-                display:"flex",
-                justifyContent:"start"
-              }}
-              variant="contained" onClick={() => setAddLocation(false)}><CloseIcon/>Close</Button>
-             
                 <TextField
                   label="Tittle: "
                   value={addTittle}
                   onChange={(e) => setAddTittle(e.target.value)}
                 />
-                <Input  label="User Name: " disabled="true" value={username} />
-                <Input disabled="true" value={newLat} />
-                <Input disabled="true" value={newLng} />
+                {/* <Input label="User Name: " disabled="true" value={username} /> */}
+                {/* <Input disabled="true" value={newLat} />
+                <Input disabled="true" value={newLng} /> */}
                 <TextField
                   label="Description: "
                   value={addDescription}
                   onChange={(e) => setAddDescription(e.target.value)}
                 />
-                <Button variant="contained" disabled={!token || addTittle === null || addDescription === null} onClick={handleAdding}>
+                <div className="button-container">
+              <Button variant="contained" disabled={!token || addTittle === null || addDescription === null} onClick={handleAdding}>
                   Add Water Point
                 </Button>
+                <Button  
+               sx={{
+                display:"flex",
+                justifyContent:"start"
+              }}
+              variant="contained" onClick={() => setAddLocation(false)}><CloseIcon/>Close</Button>
+             </div>
               </FormControl>
               </Box>
-            ) : null}
+            ) }
             {addSearch && !clickSomewhere && (
               <Box
               sx={{
@@ -267,7 +296,6 @@ console.log("CENTER ", center )
               sx={{
                 backgroundColor:"#e0e0e0"
               }}>
-              
                 <Button 
                  sx={{
                   display:"flex",
@@ -280,9 +308,9 @@ console.log("CENTER ", center )
                   value={addTittle}
                   onChange={(e) => setAddTittle(e.target.value)}
                 />
-                <Input disabled="true" value={username} />
+                {/* <Input disabled="true" value={username} />
                 <Input disabled="true" value={newLat} />
-                <Input disabled="true" value={newLng} />
+                <Input disabled="true" value={newLng} /> */}
                 <TextField
                   label="Description: "
                   value={addDescription}
