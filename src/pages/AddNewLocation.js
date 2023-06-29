@@ -12,6 +12,7 @@ export default function AddNewLocation() {
   const [activeInfoWindow, setActiveInfoWindow] = useState(false);
   const [newLat, setNewLat] = useState(null);
   const [newLng, setNewLng] = useState(null);
+  const [address, setAddress] = useState(null);
   const [locale, setLocale] = useState([]);
   const [addLocation, setAddLocation] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
@@ -49,6 +50,7 @@ export default function AddNewLocation() {
       setUsername(decodedToken?.name);
       setNewLat(result.lat);
       setNewLng(result.lng);
+      setAddLocation(false);
     } catch (error) {
       console.error("Error retrieving places", error);
     }
@@ -97,9 +99,9 @@ export default function AddNewLocation() {
     console.log(event.latLng.lat(), event.latLng.lng());
     const lat = event.latLng.lat();
     const lng = event.latLng.lng();
-    console.log("MAP CLICKED", lat, lng )
+    console.log("MAP CLICKED"+ lat, lng )
     const address = await getAddress(event.latLng.lat(), event.latLng.lng());
-    console.log(address);
+    setAddress(address);
     setAddLocation(true);
     setIsAdded(false);
     setNewLat(lat);
@@ -108,9 +110,9 @@ export default function AddNewLocation() {
     setClickSomewhere(true);
   };
   console.log(
-    `get or not? lat: ${newLat} lng: ${newLng} addLocation: ${addLocation}`, typeof(newLat)
+    `get or not? lat: ${newLat} lng: ${newLng} addLocation: ${addLocation} `, typeof(newLat)
   );
-
+  console.log(`address: ${address}`)
   console.log(`token: ${token}`);
   console.log(`username : ${decodedToken?._id}`);
 
@@ -123,10 +125,11 @@ export default function AddNewLocation() {
       lng: newLng,
       creator: decodedToken?.name,
       description: addDescription,
+      address: address,
       user_id: decodedToken?._id,
     };
     try {
-      const res = await fetch("https://water4all-backend.onrender.com/posts", {
+      const res = await fetch("http://localhost:8080/posts", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -147,6 +150,8 @@ export default function AddNewLocation() {
 
   const markerClicked = (marker, index) => {
     setActiveInfoWindow(index);
+    setAddLocation(false);
+    setAddSearch(false);
     console.log(marker, index);
   };
 
@@ -164,7 +169,7 @@ export default function AddNewLocation() {
       <h2>ADD NEW LOCATION</h2>
       <div className="mapcontainer">
         <LoadScript
-          libraries={["places"]}
+          libraries={["places", "streetView"]}
           googleMapsApiKey={process.env.REACT_APP_MAP_API_KEY}
         >
           <GoogleMap
@@ -174,7 +179,7 @@ export default function AddNewLocation() {
             onClick={mapClicked}
             options={{
               mapTypeControl: false,
-              streetViewControl: false,
+              streetViewControl: true,
             }}
           >
             <StandaloneSearchBox
@@ -203,14 +208,15 @@ export default function AddNewLocation() {
                 }}
               />
             </StandaloneSearchBox>
-            <Marker style={{ width: "50px" }} position={center} />
+            <Marker icon={process.env.PUBLIC_URL + '/resources/person.png'} position={center} />
             {locale?.map((lo, index) => (
               <Marker key={lo._id} 
               position={{ lat: lo.lat, lng: lo.lng }} 
               onClick={e=>markerClicked(lo, index)}
               onDragEnd={e=>markerDragEnd(e, index)}
+              icon={process.env.PUBLIC_URL + '/resources/ph_drop-filldrop.svg'}
               >
-                 { (activeInfoWindow === index) &&
+                 { (activeInfoWindow === index) && !addSearch && !addLocation &&
                 <InfoWindow
                 onLoad={onLoad}
                 position={{ lat: lo.lat, lng: lo.lng }}
@@ -219,22 +225,25 @@ export default function AddNewLocation() {
                     <h2>Info</h2>
                     <p>Tittle: {lo.title}</p>
                     <p>Creator: {lo.creator}</p>
+                    <p>Address: {lo?.address}</p>
                     <p>Description: {lo.description}</p>
+                    <a className="google-link" href={`https://www.google.com/maps?z=12&t=m&q=loc:${lo.lat}+${lo.lng}`}> Search on GoogleMap</a>
+                    {lo.verified != true ? <Button disabled="true">Not Verified</Button> : <Button>Verified</Button> }
                   </div>
                 </InfoWindow>
             }
               </Marker>
             ))}
             {newCenter && !clickSomewhere && (
-              <Marker onClick={markerClicked} position={newPlace} />
+              <Marker onClick={()=>setAddSearch(true)} position={newPlace} />
             )}
             {addLocation && (
               <Marker
-                onClick={markerClicked}
+                onClick={()=>setAddLocation(true)}
                 position={{ lat: newLat, lng: newLng }}
               />
             )}
-            {addLocation ? (
+            {addLocation && (
               <Box
               sx={{
                 marginLeft:"15%",
@@ -273,7 +282,7 @@ export default function AddNewLocation() {
              </div>
               </FormControl>
               </Box>
-            ) : null}
+            ) }
             {addSearch && !clickSomewhere && (
               <Box
               sx={{
@@ -287,7 +296,6 @@ export default function AddNewLocation() {
               sx={{
                 backgroundColor:"#e0e0e0"
               }}>
-              
                 <Button 
                  sx={{
                   display:"flex",
@@ -300,9 +308,9 @@ export default function AddNewLocation() {
                   value={addTittle}
                   onChange={(e) => setAddTittle(e.target.value)}
                 />
-                <Input disabled="true" value={username} />
+                {/* <Input disabled="true" value={username} />
                 <Input disabled="true" value={newLat} />
-                <Input disabled="true" value={newLng} />
+                <Input disabled="true" value={newLng} /> */}
                 <TextField
                   label="Description: "
                   value={addDescription}
