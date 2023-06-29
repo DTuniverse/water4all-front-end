@@ -3,12 +3,14 @@ import { GoogleMap, InfoWindow, LoadScript, Marker, StandaloneSearchBox } from "
 import { getLatLng } from "use-places-autocomplete";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/authContext";
+import { Button } from "@mui/material";
 import "./Map.css";
 
 //
 import AddNewLocationModal from "../components/AddNewLocationModal";
 import IconButton from "@mui/material/IconButton";
 import AddLocationAltRoundedIcon from "@mui/icons-material/AddLocationAltRounded";
+import { Transform } from "@mui/icons-material";
 
 //
 
@@ -101,6 +103,7 @@ getNewLocation()
     setActiveInfoWindow(index);
     console.log(lo, "index" + index);
     setClickMarker(true);
+    setClickSomewhere(false);
   };
 
 
@@ -109,14 +112,16 @@ getNewLocation()
       console.log(event.latLng.lng())
   }
 
-  console.log(Boolean(center.lat))
+  // console.log(Boolean(center.lat))
+
+
 
   return (
     <div>
       <h2>WATER FINDER</h2>
       <div className="mapcontainer">
         <LoadScript
-          libraries={["places"]}
+          libraries={["places", "streetView"]}
           googleMapsApiKey={process.env.REACT_APP_MAP_API_KEY}
         >
           <GoogleMap
@@ -126,7 +131,7 @@ getNewLocation()
             onClick={mapClicked}
             options={{
               mapTypeControl: false,
-              streetView: false,
+              streetViewControl: true,
             }}
           >
             <StandaloneSearchBox
@@ -155,14 +160,15 @@ getNewLocation()
                 }}
               />
             </StandaloneSearchBox>
-            <Marker position={center}/>
+            <Marker icon={process.env.PUBLIC_URL + '/resources/person.png'} position={center}/>
             {locale?.map((lo, index) => (
               <Marker key={lo._id} 
               position={{ lat: lo.lat, lng: lo.lng }} 
               onClick={e=>markerClicked(lo, index)}
               onDragEnd={e=>markerDragEnd(e, index)}
+              icon={process.env.PUBLIC_URL + '/resources/ph_drop-filldrop.svg'}
               >
-                 { (activeInfoWindow === index) &&
+                 { (activeInfoWindow === index) && !clickSomewhere &&
                 <InfoWindow
                 onLoad={onLoad}
                 position={{ lat: lo.lat, lng: lo.lng }}
@@ -171,7 +177,10 @@ getNewLocation()
                     <h2>Info</h2>
                     <p>Tittle: {lo.title}</p>
                     <p>Creator: {lo.creator}</p>
+                    <p>Address: {lo?.address}</p>
                     <p>Description: {lo.description}</p>
+                    <a className="google-link" href={`https://www.google.com/maps?z=12&t=m&q=loc:${lo.lat}+${lo.lng}`}> Search on GoogleMap</a>
+                    {lo.verified != true ? <Button disabled="true">Not Verified</Button> : <Button>Verified</Button>}
                   </div>
                 </InfoWindow>
             }

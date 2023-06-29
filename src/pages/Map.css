@@ -29,3 +29,8 @@ h2{
     display: flex;
     flex-direction: row;   
 }
+
+.google-link{
+    text-decoration: none;
+    color:#2669BA;
+}
