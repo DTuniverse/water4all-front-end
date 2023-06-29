@@ -129,7 +129,7 @@ export default function AddNewLocation() {
       user_id: decodedToken?._id,
     };
     try {
-      const res = await fetch("http://localhost:8080/posts", {
+      const res = await fetch("https://water4all-backend.onrender.com/posts", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
