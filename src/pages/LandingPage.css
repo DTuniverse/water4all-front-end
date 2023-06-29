@@ -30,7 +30,7 @@
 .blueButton {
     margin: 10px;
     padding: 9px 38px;
-    font-size: 16px;
+    font-size: 20px;
     border: 0;
     border-radius:20px;
     color: white;
@@ -135,3 +135,8 @@
     max-width: 345px;
     margin-bottom: 70px;
 }
+
+.emptyLine {
+    display: block;
+    margin-bottom: 1em; /* Adjust the value to control the spacing */
+  }

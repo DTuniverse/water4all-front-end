@@ -20,7 +20,7 @@ export default function LandingPage() {
       </div>
       <div className="blueButtonContainer">
         <Link to="/mappage" className="buttonLink">
-          <button className="blueButton">SHOW MAP ⛯</button>
+          <button className="blueButton">SHOW MAP</button>
         </Link>
         </div>
         <div>
@@ -32,10 +32,12 @@ export default function LandingPage() {
             <div className="missionPContainer">
                 <span className="missionP">Our mission is to ensure easy access to</span> 
                 <span className="missionP">clean drinking water for everyone.</span>
+                <span className="emptyLine" />
                 <span className="missionP">Through our interactive map, we provide</span>
                 <span className="missionP">locations of drinking fountains, restaurants,</span> 
                 <span className="missionP">cafés and other places where people can</span>
                 <span className="missionP">find free drinking water. </span>
+                <span className="emptyLine" />
                 <span className="missionP">YOU can contribute by adding more places</span>
                 <span className="missionP">and ratings to the existing ones.</span>
             </div>
@@ -47,7 +49,7 @@ export default function LandingPage() {
         </div>
         <h1 className="howH1">HOW WE DO IT</h1>
         <div>
-            <img  className="howImage" src={process.env.PUBLIC_URL + "/resources/Group 19.svg"} 
+            <img  className="howImage" src={process.env.PUBLIC_URL + "/resources/HowWeDoItNew.svg"} 
             alt="A graphic of our values and goals"/>
         </div>
             <Container maxWidth="md" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
