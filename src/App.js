@@ -11,6 +11,7 @@ import { AuthContext } from "./context/authContext";
 import "./App.css";
 import MapPage from "./pages/MapPage";
 import ShopPage from "./pages/ShopPage";
+import BlogArticlePage from "./pages/BlogArticlePage";
 
 function App() {
   const { token } = useContext(AuthContext);
@@ -29,6 +30,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/blogpage" element={<BlogPage />} />
         <Route path="/shoppage" element={<ShopPage />} />
+        <Route path="/article" element={<BlogArticlePage />} />
         {/* <Route path="/" element={token ? <Home /> : <Navigate to="/login" />} />
         <Route
           path="/login"

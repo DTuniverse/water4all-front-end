@@ -29,6 +29,7 @@ h2 {
   flex-direction: row;
 }
 
-.sizeSmall {
-  color: "red";
+.google-link {
+  text-decoration: none;
+  color: #2669ba;
 }

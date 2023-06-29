@@ -21,14 +21,16 @@ export default function AddNewLocation() {
   const [activeInfoWindow, setActiveInfoWindow] = useState(false);
   const [newLat, setNewLat] = useState(null);
   const [newLng, setNewLng] = useState(null);
+  const [address, setAddress] = useState(null);
   const [locale, setLocale] = useState([]);
   const [addLocation, setAddLocation] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
   const [addDescription, setAddDescription] = useState(null);
   const [addTittle, setAddTittle] = useState(null);
   const [username, setUsername] = useState("");
+  const [searchAddress, setSearchAddress] = useState(" ");
   const [newCenter, setNewCenter] = useState(false);
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(null);
   const [newPlace, setNewPlace] = useState(null);
   const [addSearch, setAddSearch] = useState(false);
   const { token } = useContext(AuthContext);
@@ -42,14 +44,14 @@ export default function AddNewLocation() {
   const searchBoxRef = useRef(null);
   const onLoad = (ref) => {
     searchBoxRef.current = ref;
+    console.log(`ref: ${ref}`);
   };
 
   const onPlacesChanged = async () => {
     try {
-      const places = await searchBoxRef.current?.getPlaces();
-      console.log(places);
+      const places = await searchBoxRef.current.getPlaces();
+      console.log(`place: ${places[0]}`);
       const result = getLatLng(places[0]);
-      console.log(result);
       setClickSomewhere(false);
       setNewCenter(true);
       setNewPlace(result);
@@ -58,6 +60,18 @@ export default function AddNewLocation() {
       setUsername(decodedToken?.name);
       setNewLat(result.lat);
       setNewLng(result.lng);
+      setAddLocation(false);
+      console.log(`new lat: ${newLat}`);
+      const geocoder = new window.google.maps.Geocoder();
+      geocoder.geocode(
+        { location: { lat: result.lat, lng: result.lng } },
+        (results) => {
+          if (results?.length) {
+            setSearchAddress(results[0].formatted_address);
+          }
+        }
+      );
+      console.log(`searchAddress: ${searchAddress}`);
     } catch (error) {
       console.error("Error retrieving places", error);
     }
@@ -109,7 +123,7 @@ export default function AddNewLocation() {
     const lng = event.latLng.lng();
     console.log("MAP CLICKED", lat, lng);
     const address = await getAddress(event.latLng.lat(), event.latLng.lng());
-    console.log(address);
+    setAddress(address);
     setAddLocation(true);
     setIsAdded(false);
     setNewLat(lat);
@@ -118,10 +132,10 @@ export default function AddNewLocation() {
     setClickSomewhere(true);
   };
   console.log(
-    `get or not? lat: ${newLat} lng: ${newLng} addLocation: ${addLocation}`,
+    `get or not? lat: ${newLat} lng: ${newLng} addLocation: ${addLocation} `,
     typeof newLat
   );
-
+  console.log(`address: ${address}`);
   console.log(`token: ${token}`);
   console.log(`username : ${decodedToken?._id}`);
 
@@ -134,6 +148,7 @@ export default function AddNewLocation() {
       lng: newLng,
       creator: decodedToken?.name,
       description: addDescription,
+      address: address,
       user_id: decodedToken?._id,
     };
     try {
@@ -158,6 +173,8 @@ export default function AddNewLocation() {
 
   const markerClicked = (marker, index) => {
     setActiveInfoWindow(index);
+    setAddLocation(false);
+    setAddSearch(false);
     console.log(marker, index);
   };
 
@@ -175,7 +192,7 @@ export default function AddNewLocation() {
       <h2>ADD NEW LOCATION</h2>
       <div className="mapcontainer">
         <LoadScript
-          libraries={["places"]}
+          libraries={["places", "streetView"]}
           googleMapsApiKey={process.env.REACT_APP_MAP_API_KEY}
         >
           <GoogleMap
@@ -185,7 +202,7 @@ export default function AddNewLocation() {
             onClick={mapClicked}
             options={{
               mapTypeControl: false,
-              streetViewControl: false,
+              streetViewControl: true,
             }}
           >
             <StandaloneSearchBox
@@ -216,7 +233,10 @@ export default function AddNewLocation() {
                 }}
               />
             </StandaloneSearchBox>
-            <Marker style={{ width: "50px" }} position={center} />
+            <Marker
+              icon={process.env.PUBLIC_URL + "/resources/person.png"}
+              position={center}
+            />
             {locale?.map((lo, index) => (
               <Marker
                 key={lo._id}
@@ -240,50 +260,33 @@ export default function AddNewLocation() {
               </Marker>
             ))}
             {newCenter && !clickSomewhere && (
-              <Marker onClick={markerClicked} position={newPlace} />
+              <Marker onClick={() => setAddSearch(true)} position={newPlace} />
             )}
-            {addLocation && (
+            {addLocation && !addSearch && (
               <Marker
-                onClick={markerClicked}
+                onClick={() => setAddLocation(true)}
                 position={{ lat: newLat, lng: newLng }}
               />
             )}
-            {addLocation ? (
+            {addLocation && (
               <Box
-                position="absolute"
-                bottom="23px"
-                left="10px"
-                width="200px"
+                sx={{
+                  marginLeft: "15%",
+                  marginTop: "15%",
+                }}
                 noValidate
                 autoComplete="off"
               >
                 <FormControl
                   sx={{
-                    backgroundColor: "white",
-                    opacity: "90%",
+                    backgroundColor: "#e0e0e0",
+                    opacity: "80%",
                   }}
                 >
                   <TextField
-                    label="Name/Type: "
+                    label="Tittle: "
                     value={addTittle}
                     onChange={(e) => setAddTittle(e.target.value)}
-                    inputProps={{
-                      style: {
-                        height: "40px",
-                        padding: "0 12px",
-                      },
-                    }}
-                  />
-                  <TextField
-                    label="Address: "
-                    // value={address}
-                    disabled="true"
-                    inputProps={{
-                      style: {
-                        height: "40px",
-                        padding: "0 12px",
-                      },
-                    }}
                   />
                   {/* <Input label="User Name: " disabled="true" value={username} /> */}
                   {/* <Input disabled="true" value={newLat} />
@@ -292,52 +295,32 @@ export default function AddNewLocation() {
                     label="Description: "
                     value={addDescription}
                     onChange={(e) => setAddDescription(e.target.value)}
-                    inputProps={{
-                      style: {
-                        height: "40px",
-                        padding: "0 12px",
-                      },
-                    }}
                   />
                   <div className="button-container">
                     <Button
-                      // className="close-button-form"
-                      // sx={{
-                      //   display: "flex",
-                      //   justifyContent: "start",
-                      // }}
-                      style={{
-                        width: "100px",
-                        height: "40px",
-                        lineHeight: "40px",
-                      }}
                       variant="contained"
-                      color="error"
-                      onClick={() => setAddLocation(false)}
-                    >
-                      <CloseIcon />
-                      Close
-                    </Button>
-                    <Button
-                      style={{
-                        width: "100px",
-                        height: "40px",
-                        lineHeight: "40px",
-                      }}
-                      variant="contained"
-                      color="success"
                       disabled={
                         !token || addTittle === null || addDescription === null
                       }
                       onClick={handleAdding}
                     >
-                      <AddLocationAltRoundedIcon />
-                      Add
+                      Add Water Point
+                    </Button>
+                    <Button
+                      sx={{
+                        display: "flex",
+                        justifyContent: "start",
+                      }}
+                      variant="contained"
+                      onClick={() => setAddLocation(false)}
+                    >
+                      <CloseIcon />
+                      Close
                     </Button>
                   </div>
                 </FormControl>
               </Box>
-            ) : null}
+            )}
             {addSearch && !clickSomewhere && (
               <Box
                 sx={{
