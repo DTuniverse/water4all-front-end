@@ -13,7 +13,6 @@ import { Button, FormControl, Box, Input, TextField } from "@mui/material";
 
 import CloseIcon from "@mui/icons-material/Close";
 import "./Map.css";
-import IconButton from "@mui/material/IconButton";
 import AddLocationAltRoundedIcon from "@mui/icons-material/AddLocationAltRounded";
 
 export default function AddNewLocation() {
@@ -30,15 +29,17 @@ export default function AddNewLocation() {
   const [username, setUsername] = useState("");
   const [searchAddress, setSearchAddress] = useState(" ");
   const [newCenter, setNewCenter] = useState(false);
-  const [value, setValue] = useState(null);
+  const [value, setValue] = useState("");
   const [newPlace, setNewPlace] = useState(null);
   const [addSearch, setAddSearch] = useState(false);
+  const [currentZoom, setCurrentZoom] = useState(10);
   const { token } = useContext(AuthContext);
   const { decodedToken } = useJwt(token);
   const [clickSomewhere, setClickSomewhere] = useState(false);
   const { lat, lng } = useContext(AuthContext);
   const center = { lat: lat, lng: lng };
   const defaultCenter = { lat: 52.519432315072166, lng: 13.401147636877893 };
+  const libraries = ["places", "streetView"];
 
   // google search bar
   const searchBoxRef = useRef(null);
@@ -127,6 +128,9 @@ export default function AddNewLocation() {
     setNewLng(lng);
     setUsername(decodedToken?.name);
     setClickSomewhere(true);
+    setCurrentZoom(15);
+    setAddDescription(null);
+    setAddTittle(null);
   };
   console.log(
     `get or not? lat: ${newLat} lng: ${newLng} addLocation: ${addLocation} `,
@@ -148,6 +152,7 @@ export default function AddNewLocation() {
       address: address,
       user_id: decodedToken?._id,
     };
+    console.log("CONSOLE LOG NEW POST", newPost);
     try {
       const res = await fetch("https://water4all-backend.onrender.com/posts", {
         method: "POST",
@@ -179,6 +184,11 @@ export default function AddNewLocation() {
     console.log(event.latLng.lat());
     console.log(event.latLng.lng());
   };
+
+  const handleZoom = () => {
+    setCurrentZoom(15);
+  };
+  console.log(`zoom: ${currentZoom}`);
   // console.log(`description: ${addDescription}`)
   // console.log("NEWCENTER ", newCenter )
   // console.log("NEWPLACE ", newPlace )
@@ -189,13 +199,14 @@ export default function AddNewLocation() {
       <h2>ADD NEW LOCATION</h2>
       <div className="mapcontainer">
         <LoadScript
-          libraries={["places", "streetView"]}
+          libraries={libraries}
           googleMapsApiKey={process.env.REACT_APP_MAP_API_KEY}
         >
           <GoogleMap
             mapContainerStyle={containerStyle}
             center={newCenter ? newPlace : center.lat ? center : defaultCenter}
-            zoom={10}
+            zoom={currentZoom}
+            onCenterChanged={handleZoom}
             onClick={mapClicked}
             options={{
               mapTypeControl: false,
@@ -240,6 +251,9 @@ export default function AddNewLocation() {
                 position={{ lat: lo.lat, lng: lo.lng }}
                 onClick={(e) => markerClicked(lo, index)}
                 onDragEnd={(e) => markerDragEnd(e, index)}
+                icon={
+                  process.env.PUBLIC_URL + "/resources/ph_drop-filldrop.svg"
+                }
               >
                 {activeInfoWindow === index && (
                   <InfoWindow
@@ -251,6 +265,18 @@ export default function AddNewLocation() {
                       <p>Tittle: {lo.title}</p>
                       <p>Creator: {lo.creator}</p>
                       <p>Description: {lo.description}</p>
+                      <a
+                        className="google-link"
+                        href={`https://www.google.com/maps?z=12&t=m&q=loc:${lo.lat}+${lo.lng}`}
+                      >
+                        {" "}
+                        Search on GoogleMap
+                      </a>
+                      {lo.verified != true ? (
+                        <Button disabled>Not Verified</Button>
+                      ) : (
+                        <Button>Verified</Button>
+                      )}
                     </div>
                   </InfoWindow>
                 )}
@@ -280,7 +306,24 @@ export default function AddNewLocation() {
                     opacity: "90%",
                   }}
                 >
-                  <TextField
+                  <input
+                    onChange={(e) => setAddTittle(e.target.value)}
+                    value={addTittle}
+                    type="text"
+                    placeholder="Name / Type"
+                    style={{
+                      width: `200px`,
+                      height: `40px`,
+                      padding: `0 12px`,
+                      margin: "0",
+                      borderRadius: `3px`,
+
+                      fontSize: `14px`,
+                      outline: `none`,
+                      textOverflow: `ellipses`,
+                    }}
+                  />
+                  {/* <TextField
                     label="Name/Type: "
                     value={addTittle}
                     onChange={(e) => setAddTittle(e.target.value)}
@@ -290,7 +333,7 @@ export default function AddNewLocation() {
                         padding: "0 12px",
                       },
                     }}
-                  />
+                  /> */}
                   {/* <Input label="User Name: " disabled="true" value={username} /> */}
                   {/* <Input disabled="true" value={newLat} />
                 <Input disabled="true" value={newLng} /> */}
@@ -302,10 +345,30 @@ export default function AddNewLocation() {
                       style: {
                         height: "40px",
                         padding: "0 12px",
+                        background: "transparent",
                       },
                     }}
+                    maxRows={3}
+                    variant="filled"
+                    multiline
                   />
-                  <TextField
+                  <input
+                    onChange={(e) => setAddDescription(e.target.value)}
+                    value={addDescription}
+                    type="text"
+                    placeholder="Description"
+                    style={{
+                      width: `200px`,
+                      height: `40px`,
+                      padding: `0 12px`,
+                      margin: "0",
+                      borderRadius: `3px`,
+                      fontSize: `14px`,
+                      outline: `none`,
+                      textOverflow: `ellipses`,
+                    }}
+                  />
+                  {/* <TextField
                     label="Description: "
                     value={addDescription}
                     onChange={(e) => setAddDescription(e.target.value)}
@@ -315,16 +378,12 @@ export default function AddNewLocation() {
                         padding: "0 12px",
                       },
                     }}
-                  />
+                    variant="filled"
+                  /> */}
                   <div className="button-container">
                     <Button
-                      // className="close-button-form"
-                      // sx={{
-                      //   display: "flex",
-                      //   justifyContent: "start",
-                      // }}
                       style={{
-                        width: "100px",
+                        width: "30px",
                         height: "40px",
                         lineHeight: "40px",
                       }}
@@ -333,11 +392,10 @@ export default function AddNewLocation() {
                       onClick={() => setAddLocation(false)}
                     >
                       <CloseIcon />
-                      Close
                     </Button>
                     <Button
                       style={{
-                        width: "100px",
+                        width: "136px",
                         height: "40px",
                         lineHeight: "40px",
                       }}
@@ -357,19 +415,108 @@ export default function AddNewLocation() {
             )}
             {addSearch && !clickSomewhere && (
               <Box
-                sx={{
-                  marginLeft: "15%",
-                  marginTop: "15%",
-                }}
+                position="absolute"
+                bottom="23px"
+                left="10px"
+                width="200px"
                 noValidate
                 autoComplete="off"
               >
                 <FormControl
                   sx={{
-                    backgroundColor: "#e0e0e0",
+                    backgroundColor: "white",
+                    opacity: "90%",
                   }}
                 >
-                  <Button
+                  <input
+                    onChange={(e) => setAddTittle(e.target.value)}
+                    value={addTittle}
+                    type="text"
+                    placeholder="Name / Type"
+                    style={{
+                      width: `200px`,
+                      height: `40px`,
+                      padding: `0 12px`,
+                      margin: "0",
+                      borderRadius: `3px`,
+
+                      fontSize: `14px`,
+                      outline: `none`,
+                      textOverflow: `ellipses`,
+                    }}
+                  />
+                  {/* <TextField
+                    label="Tittle: "
+                    value={addTittle}
+                    onChange={(e) => setAddTittle(e.target.value)}
+                  /> */}
+                  <TextField
+                    label="Address: "
+                    value={searchAddress}
+                    disabled="true"
+                    inputProps={{
+                      style: {
+                        height: "40px",
+                        padding: "0 12px",
+                        background: "transparent",
+                      },
+                    }}
+                    maxRows={3}
+                    variant="filled"
+                    multiline
+                  />
+                  <input
+                    onChange={(e) => setAddDescription(e.target.value)}
+                    value={addDescription}
+                    type="text"
+                    placeholder="Description"
+                    style={{
+                      width: `200px`,
+                      height: `40px`,
+                      padding: `0 12px`,
+                      margin: "0",
+                      borderRadius: `3px`,
+                      fontSize: `14px`,
+                      outline: `none`,
+                      textOverflow: `ellipses`,
+                    }}
+                  />
+                  {/* <TextField
+                    label="Description: "
+                    value={addDescription}
+                    onChange={(e) => setAddDescription(e.target.value)}
+                  /> */}
+                  <div className="button-container">
+                    <Button
+                      style={{
+                        width: "30px",
+                        height: "40px",
+                        lineHeight: "40px",
+                      }}
+                      variant="contained"
+                      color="error"
+                      onClick={() => setAddSearch(false)}
+                    >
+                      <CloseIcon />
+                    </Button>
+                    <Button
+                      style={{
+                        width: "136px",
+                        height: "40px",
+                        lineHeight: "40px",
+                      }}
+                      variant="contained"
+                      color="success"
+                      disabled={
+                        !token || addTittle === null || addDescription === null
+                      }
+                      onClick={handleAdding}
+                    >
+                      <AddLocationAltRoundedIcon />
+                      Add
+                    </Button>
+                  </div>
+                  {/* <Button
                     sx={{
                       display: "flex",
                       justifyContent: "start",
@@ -380,19 +527,6 @@ export default function AddNewLocation() {
                     <CloseIcon />
                     Close
                   </Button>
-                  <TextField
-                    label="Tittle: "
-                    value={addTittle}
-                    onChange={(e) => setAddTittle(e.target.value)}
-                  />
-                  <Input disabled="true" value={username} />
-                  <Input disabled="true" value={newLat} />
-                  <Input disabled="true" value={newLng} />
-                  <TextField
-                    label="Description: "
-                    value={addDescription}
-                    onChange={(e) => setAddDescription(e.target.value)}
-                  />
                   <Button
                     variant="contained"
                     disabled={
@@ -401,7 +535,7 @@ export default function AddNewLocation() {
                     onClick={handleAdding}
                   >
                     Add Water Point
-                  </Button>
+                  </Button> */}
                 </FormControl>
               </Box>
             )}
