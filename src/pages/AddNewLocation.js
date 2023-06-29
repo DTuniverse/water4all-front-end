@@ -94,9 +94,6 @@ export default function AddNewLocation() {
     getNewLocation();
   }, [isAdded]);
 
-  /**
-   * This variable contains width and height of the container
-   */
   const containerStyle = {
     width: "90vw",
     height: "70vh",
@@ -270,52 +267,89 @@ export default function AddNewLocation() {
             )}
             {addLocation && (
               <Box
-                sx={{
-                  marginLeft: "15%",
-                  marginTop: "15%",
-                }}
+                position="absolute"
+                bottom="23px"
+                left="10px"
+                width="200px"
                 noValidate
                 autoComplete="off"
               >
                 <FormControl
                   sx={{
-                    backgroundColor: "#e0e0e0",
-                    opacity: "80%",
+                    backgroundColor: "white",
+                    opacity: "90%",
                   }}
                 >
                   <TextField
-                    label="Tittle: "
+                    label="Name/Type: "
                     value={addTittle}
                     onChange={(e) => setAddTittle(e.target.value)}
+                    inputProps={{
+                      style: {
+                        height: "40px",
+                        padding: "0 12px",
+                      },
+                    }}
                   />
                   {/* <Input label="User Name: " disabled="true" value={username} /> */}
                   {/* <Input disabled="true" value={newLat} />
                 <Input disabled="true" value={newLng} /> */}
                   <TextField
+                    label="Address: "
+                    value={address}
+                    disabled="true"
+                    inputProps={{
+                      style: {
+                        height: "40px",
+                        padding: "0 12px",
+                      },
+                    }}
+                  />
+                  <TextField
                     label="Description: "
                     value={addDescription}
                     onChange={(e) => setAddDescription(e.target.value)}
+                    inputProps={{
+                      style: {
+                        height: "40px",
+                        padding: "0 12px",
+                      },
+                    }}
                   />
                   <div className="button-container">
                     <Button
+                      // className="close-button-form"
+                      // sx={{
+                      //   display: "flex",
+                      //   justifyContent: "start",
+                      // }}
+                      style={{
+                        width: "100px",
+                        height: "40px",
+                        lineHeight: "40px",
+                      }}
                       variant="contained"
+                      color="error"
+                      onClick={() => setAddLocation(false)}
+                    >
+                      <CloseIcon />
+                      Close
+                    </Button>
+                    <Button
+                      style={{
+                        width: "100px",
+                        height: "40px",
+                        lineHeight: "40px",
+                      }}
+                      variant="contained"
+                      color="success"
                       disabled={
                         !token || addTittle === null || addDescription === null
                       }
                       onClick={handleAdding}
                     >
-                      Add Water Point
-                    </Button>
-                    <Button
-                      sx={{
-                        display: "flex",
-                        justifyContent: "start",
-                      }}
-                      variant="contained"
-                      onClick={() => setAddLocation(false)}
-                    >
-                      <CloseIcon />
-                      Close
+                      <AddLocationAltRoundedIcon />
+                      Add
                     </Button>
                   </div>
                 </FormControl>
