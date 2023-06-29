@@ -9,9 +9,9 @@ export default function LandingPageBlogCard() {
     return(
     <Card sx={{  maxWidth: "345px", width: "100%", borderRadius: 8 }}>
         <CardContent>
-            <h1 className='waterBlogH1'>WATER BLOG</h1>
+            <h1 className='waterBlogH1'>WATER HUB</h1>
             <p className="missionP">
-            Discover the fascinating world of water and explore its wonders on our insightful blog. 
+            Discover the fascinating world of water and explore its wonders with our insightful hub. 
             Dive into captivating articles, tips for conservation, and the latest discoveries in 
             water-related topics.
             </p>
@@ -19,7 +19,7 @@ export default function LandingPageBlogCard() {
         <CardActions>
         <div className="yellowButtonContainer">
             <Link to="/map" className="buttonLink">  
-                <button className="yellowButton">GO TO BLOG</button>
+                <button className="yellowButton">DIVE IN</button>
             </Link>
         </div>
         </CardActions>

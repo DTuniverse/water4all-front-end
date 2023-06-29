@@ -77,3 +77,9 @@
       height: 200px;
     }
   }
+
+.missionP {
+    font-weight: 405;
+    width: 100%;
+    font-size: large;
+}
