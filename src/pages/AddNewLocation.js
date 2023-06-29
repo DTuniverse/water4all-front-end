@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
-import {  GoogleMap, InfoWindow, LoadScript, Marker, StandaloneSearchBox } from "@react-google-maps/api";
+import {  GoogleMap, InfoWindow, LoadScript, Marker, StandaloneSearchBox, useLoadScript } from "@react-google-maps/api";
 import { getGeocode, getLatLng } from "use-places-autocomplete";
 import { AuthContext } from "../context/authContext";
 import { useJwt } from "react-jwt";
@@ -21,15 +21,17 @@ export default function AddNewLocation() {
   const [username, setUsername] = useState("");
   const [searchAddress, setSearchAddress] = useState(" ");
   const [newCenter, setNewCenter] = useState(false);
-  const [value, setValue] = useState(null);
+  const [value, setValue] = useState("");
   const [newPlace, setNewPlace] = useState(null);
   const [addSearch, setAddSearch] = useState(false);
+  const [currentZoom, setCurrentZoom] = useState(10);
   const { token } = useContext(AuthContext);
   const { decodedToken } = useJwt(token);
   const [clickSomewhere, setClickSomewhere] = useState(false);
   const { lat, lng } = useContext(AuthContext);
   const center = { lat: lat, lng: lng };
   const defaultCenter = { lat: 52.519432315072166, lng: 13.401147636877893 };
+  const libraries = ["places", "streetView"];
 
   // google search bar
   const searchBoxRef = useRef(null);
@@ -117,6 +119,9 @@ export default function AddNewLocation() {
     setNewLng(lng);
     setUsername(decodedToken?.name);
     setClickSomewhere(true);
+    setCurrentZoom(15);
+    setAddDescription(null);
+    setAddTittle(null)
   };
   console.log(
     `get or not? lat: ${newLat} lng: ${newLng} addLocation: ${addLocation} `, typeof(newLat)
@@ -167,7 +172,13 @@ export default function AddNewLocation() {
   const markerDragEnd = (event, index) => {
       console.log(event.latLng.lat())
       console.log(event.latLng.lng())
-  }
+  };
+
+  
+ const handleZoom = () => {
+     setCurrentZoom(15);
+};
+console.log(`zoom: ${currentZoom}`)
   // console.log(`description: ${addDescription}`)
   // console.log("NEWCENTER ", newCenter )
   // console.log("NEWPLACE ", newPlace )
@@ -178,13 +189,14 @@ export default function AddNewLocation() {
       <h2>ADD NEW LOCATION</h2>
       <div className="mapcontainer">
         <LoadScript
-          libraries={["places", "streetView"]}
+          libraries={libraries}
           googleMapsApiKey={process.env.REACT_APP_MAP_API_KEY}
         >
           <GoogleMap
             mapContainerStyle={containerStyle}
             center={newCenter ? newPlace : (center.lat ? center : defaultCenter)}
-            zoom={10}
+            zoom={currentZoom}
+            onCenterChanged={handleZoom}
             onClick={mapClicked}
             options={{
               mapTypeControl: false,
