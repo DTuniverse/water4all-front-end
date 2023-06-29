@@ -2,7 +2,6 @@ import "../pages/BlogPage.css";
 import React from "react";
 import { Link } from 'react-router-dom';
 import Container from '@mui/material/Container';
-import BlogPageHeadCard from '../components/BlogPageHeadCard';
 import BlogPageQualityCard from '../components/BlogPageQualityCard';
 import BlogPageProtectionCard from '../components/BlogPageProtectionCard';
 import BlogPageEducationCard from "../components/BlogPageEducationCard";

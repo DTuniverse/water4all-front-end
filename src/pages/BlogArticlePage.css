@@ -1,0 +1,98 @@
+.articleHeroImage {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 40px;
+    margin-bottom: 10px;
+}
+
+.articleHeadlineContainer {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    text-align: left; 
+    max-width: 340px; 
+    margin: 0 auto;
+}
+
+.articleHeadline {
+    color: #2669BA;
+    font-weight: bold;
+    font-size: xx-large;
+    display: flex;
+    justify-content: left;
+}
+
+.articleTextContainer {
+    text-align: left; 
+    max-width: 360px; 
+    margin: 0 auto;
+    padding-bottom: 40px;
+  }
+  
+  .articleText {
+    font-size: large;
+  }
+  
+  @media (max-width: 767px) {
+    .articleTextContainer {
+      text-align: left;
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
+  
+  .emptyLine {
+    display: block;
+    margin-bottom: 1em;
+  }
+
+  .boldText {
+    font-weight: bold;
+  }
+
+.backToHubButtonContainer {
+    display: flex;
+    justify-content: center;
+    padding-top: 30px;
+    padding-bottom: 60px;
+}
+
+.backToHubButton {
+    margin: 10px;
+    padding: 9px 38px;
+    font-size: 20px;
+    border: 0;
+    border-radius:20px;
+    color: white;
+    background-color: #2669BA;
+    box-shadow: none;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
+}
+
+.backToHubButton::before {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(100%);
+    transition: transform 0.1s ease-in-out;
+    z-index: -1;
+}
+
+.backToHubButton:hover,
+.backToHubButton:focus {
+    transform: scale(1.1);
+}
+
+.backToHubButton:hover::before,
+.backToHubButton:focus::before {
+    transform: translateY(0);
+}

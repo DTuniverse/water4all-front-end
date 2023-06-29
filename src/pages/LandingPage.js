@@ -22,7 +22,7 @@ export default function LandingPage() {
         <Link to="/mappage" className="buttonLink">
           <button className="blueButton">SHOW MAP</button>
         </Link>
-        </div>
+      </div>
         <div>
             <img  className="heroImage" src={process.env.PUBLIC_URL + "/resources/Group 20 (1).svg"} 
             alt="Cartoon people working around a globe"/>
