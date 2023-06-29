@@ -27,8 +27,10 @@ export default function MapPage() {
   const [newLat, setNewLat] = useState(null);
   const [newLng, setNewLng] = useState(null);
   const { lat, lng,  } = useContext(AuthContext);
+  const [currentZoom, setCurrentZoom] = useState(10);
   const center = { lat: lat, lng: lng };
   const defaultCenter = { lat: 52.519432315072166, lng: 13.401147636877893 };
+  const libraries = ["places", "streetView"];
 
 // get all added locations 
 const getNewLocation = async () => {
@@ -91,6 +93,7 @@ getNewLocation()
     setNewLat(newLat);
     setNewLng(newLng);
     setClickSomewhere(true);
+    setCurrentZoom(15);
   };
   console.log(`get or not? lat: ${newLat} lng: ${newLng} `);
 
@@ -111,8 +114,12 @@ getNewLocation()
   const markerDragEnd = (event, index) => {
       console.log(event.latLng.lat())
       console.log(event.latLng.lng())
-  }
-
+  };
+  
+  const handleZoom = () => {
+    setCurrentZoom(15);
+  };
+ console.log(`zoom: ${currentZoom}`)
   // console.log(Boolean(center.lat))
 
 
@@ -122,13 +129,14 @@ getNewLocation()
       <h2>WATER FINDER</h2>
       <div className="mapcontainer">
         <LoadScript
-          libraries={["places", "streetView"]}
+          libraries={libraries}
           googleMapsApiKey={process.env.REACT_APP_MAP_API_KEY}
         >
           <GoogleMap
             mapContainerStyle={containerStyle}
             center={newCenter ? newPlace : (center.lat ? center : defaultCenter )}
-            zoom={10}
+            zoom={currentZoom}
+            onCenterChanged={handleZoom}
             onClick={mapClicked}
             options={{
               mapTypeControl: false,
