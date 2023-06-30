@@ -1,17 +1,32 @@
 import "./Footer.css";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import TelegramIcon from "@mui/icons-material/Telegram";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import TwitterIcon from "@mui/icons-material/Twitter";
+import { useEffect } from "react";
 
 export default function Footer() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
   return (
-    <div>
+    <div className="footer-component">
       <div className="flex-container-links">
-        <Link to="/mappage">Water Finder</Link>
-        <Link to="/blogpage">Water Blog</Link>
-        <Link to="/shoppage">Water Shop</Link>
+        <NavLink to="/mappage" className="navlink" activeClassName="active">
+          Water Finder
+        </NavLink>
+        <NavLink to="/blogpage" className="navlink" activeClassName="active">
+          Water Blog
+        </NavLink>
+        <NavLink to="/shoppage" className="navlink" activeClassName="active">
+          Water Shop
+        </NavLink>
+        <NavLink to="/" className="navlink" activeClassName="active">
+          Home
+        </NavLink>
       </div>
       <h2
         style={{
@@ -32,9 +47,11 @@ export default function Footer() {
         <a>
           <TelegramIcon fontSize="large" />
         </a>
-        <a>
-          <FacebookIcon fontSize="large" />
-        </a>
+        <div style={{ paddingLeft: "20px", paddingRight: "20px" }}>
+          <a>
+            <FacebookIcon fontSize="large" />
+          </a>
+        </div>
         <a>
           <TwitterIcon fontSize="large" />
         </a>
