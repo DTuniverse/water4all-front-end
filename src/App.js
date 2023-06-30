@@ -11,7 +11,10 @@ import { AuthContext } from "./context/authContext";
 import "./App.css";
 import MapPage from "./pages/MapPage";
 import ShopPage from "./pages/ShopPage";
-import BlogArticlePage from "./pages/BlogArticlePage";
+import BlogArticleFuture from "./pages/BlogArticleFuture";
+import BlogArticleProtection  from "./pages/BlogArticleProtection";
+import BlogArticleEducation from "./pages/BlogArticleEducation";
+import BlogArticleQuality from "./pages/BlogArticleQuality";
 
 function App() {
   const { token } = useContext(AuthContext);
@@ -30,7 +33,10 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/blogpage" element={<BlogPage />} />
         <Route path="/shoppage" element={<ShopPage />} />
-        <Route path="/article" element={<BlogArticlePage />} />
+        <Route path="/articlefuture" element={<BlogArticleFuture />} />
+        <Route path="/articleprotection" element={<BlogArticleProtection />} />
+        <Route path="/articleeducation" element={<BlogArticleEducation />} />
+        <Route path="/articlequality" element={<BlogArticleQuality />} />
         {/* <Route path="/" element={token ? <Home /> : <Navigate to="/login" />} />
         <Route
           path="/login"
