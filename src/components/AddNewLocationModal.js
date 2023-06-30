@@ -4,8 +4,9 @@ import Modal from "@mui/material/Modal";
 import Button from "@mui/material/Button";
 import Login from "./Login";
 import Signup from "./Signup";
-
-
+import LoginRoundedIcon from "@mui/icons-material/LoginRounded";
+import CloseIcon from "@mui/icons-material/Close";
+import PersonAddAlt1RoundedIcon from "@mui/icons-material/PersonAddAlt1Rounded";
 const style = {
   position: "absolute",
   top: "50%",
@@ -31,16 +32,27 @@ function ChildModalLogin() {
 
   return (
     <React.Fragment>
-      <Button onClick={handleOpen}>Login</Button>
+      <Button onClick={handleOpen}>
+        <LoginRoundedIcon
+          style={{
+            position: "relative",
+            right: "5px",
+          }}
+        />
+        Login
+      </Button>
       <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="child-modal-title"
         aria-describedby="child-modal-description"
       >
-        <Box sx={{ ...style, width: 200 }}>
+        <Box sx={{ ...style, width: "95vw" }}>
           <Login />
-          <Button onClick={handleClose}>Close</Button>
+          <Button onClick={handleClose} color="error">
+            <CloseIcon />
+            Close
+          </Button>
         </Box>
       </Modal>
     </React.Fragment>
@@ -57,16 +69,28 @@ function ChildModalSignUp() {
 
   return (
     <React.Fragment>
-      <Button onClick={handleOpen}>Signup</Button>
+      <Button onClick={handleOpen}>
+        {" "}
+        <PersonAddAlt1RoundedIcon
+          style={{
+            position: "relative",
+            right: "5px",
+          }}
+        />{" "}
+        Signup{" "}
+      </Button>
       <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="child-modal-title"
         aria-describedby="child-modal-description"
       >
-        <Box sx={{ ...style, width: 200 }}>
+        <Box sx={{ ...style, width: "95vw" }}>
           <Signup />
-          <Button onClick={handleClose}>Close</Button>
+          <Button onClick={handleClose} color="error">
+            <CloseIcon />
+            Close
+          </Button>
         </Box>
       </Modal>
     </React.Fragment>
@@ -84,21 +108,47 @@ export default function NestedModal() {
 
   return (
     <div>
-      <Button onClick={handleOpen}>To add new location please login</Button>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          paddingTop: "5px",
+        }}
+      >
+        <Button
+          onClick={handleOpen}
+          style={{
+            width: "auto",
+            height: "40px",
+          }}
+          variant="outlined"
+        >
+          <LoginRoundedIcon />
+          Login to add new water point
+        </Button>
+      </div>
+
       <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="parent-modal-title"
         aria-describedby="parent-modal-description"
       >
-        <Box sx={{ ...style, width: 400 }}>
-          <h2 id="parent-modal-title">Please login</h2>
+        <Box
+          sx={{
+            ...style,
+            width: "95vw",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          {/* <h2 id="parent-modal-title">Please login</h2> */}
           <ChildModalLogin />
-          <p id="parent-modal-description">
-            If you don't have an account please register by clicking Signup
-          </p>
           <ChildModalSignUp />
-          <Button onClick={handleClose}>Close</Button>
+          <Button onClick={handleClose} color="error">
+            <CloseIcon />
+            Close
+          </Button>
         </Box>
       </Modal>
     </div>
