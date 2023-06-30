@@ -1,6 +1,7 @@
 import "../pages/BlogPage.css";
 import React from "react";
-import { Link } from 'react-router-dom';
+import { useEffect } from "react";
+import { Link, useLocation } from 'react-router-dom';
 import Container from '@mui/material/Container';
 import BlogPageQualityCard from '../components/BlogPageQualityCard';
 import BlogPageProtectionCard from '../components/BlogPageProtectionCard';
@@ -8,6 +9,12 @@ import BlogPageEducationCard from "../components/BlogPageEducationCard";
 import BlogPageFutureCard  from "../components/BlogPageFutureCard";
 
 export default function BlogPage() {
+    const { pathname } = useLocation();
+
+    useEffect(() => {
+        window.scrollTo(0,0);
+    }, [pathname]);
+
     return(
         <div>
             <div className="blogHeadlineContainer">
