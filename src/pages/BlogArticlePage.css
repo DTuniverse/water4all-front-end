@@ -52,6 +52,10 @@
     font-weight: bold;
   }
 
+  .italicText {
+    font-style: italic;
+  }
+
 .backToHubButtonContainer {
     display: flex;
     justify-content: center;

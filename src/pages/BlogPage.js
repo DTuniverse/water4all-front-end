@@ -29,22 +29,22 @@ export default function BlogPage() {
             </div>
                 <Container maxWidth="md" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     <div className="cardWrapper">
-                        <Link to="/article" className="linkWithoutUnderline">
+                        <Link to="/articlequality" className="linkWithoutUnderline">
                             <BlogPageQualityCard />
                         </Link>
                     </div>
                     <div className="cardWrapper">
-                        <Link to="/article" className="linkWithoutUnderline">
+                        <Link to="/articleeducation" className="linkWithoutUnderline">
                             <BlogPageEducationCard />
                         </Link>
                     </div>
                     <div className="cardWrapper">
-                        <Link to="/article" className="linkWithoutUnderline">
+                        <Link to="/articleprotection" className="linkWithoutUnderline">
                             <BlogPageProtectionCard />
                         </Link>
                     </div>
                     <div className="cardWrapper">
-                        <Link to="/article" className="linkWithoutUnderline">
+                        <Link to="/articlefuture" className="linkWithoutUnderline">
                             <BlogPageFutureCard />
                         </Link>
                     </div>
