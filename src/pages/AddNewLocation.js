@@ -14,7 +14,8 @@ import { Button, FormControl, Box, Input, TextField } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import "./Map.css";
 import AddLocationAltRoundedIcon from "@mui/icons-material/AddLocationAltRounded";
-
+import TouchAppRoundedIcon from "@mui/icons-material/TouchAppRounded";
+import TouchAppOutlinedIcon from "@mui/icons-material/TouchAppOutlined";
 export default function AddNewLocation() {
   // const google = window.google;
   const [activeInfoWindow, setActiveInfoWindow] = useState(false);
@@ -96,8 +97,10 @@ export default function AddNewLocation() {
   }, [isAdded]);
 
   const containerStyle = {
-    width: "90vw",
+    width: "98vw",
     height: "70vh",
+    borderRadius: "10px",
+    border: "3px solid #2669ba ",
   };
 
   // get acurate address
@@ -196,7 +199,34 @@ export default function AddNewLocation() {
 
   return (
     <>
-      <h2>ADD NEW LOCATION</h2>
+      <div>
+        {/* <h1
+          style={{
+            textAlign: "center",
+            color: "#2669ba",
+            paddingTop: "50px",
+          }}
+        >
+          ADD NEW POINT
+        </h1> */}
+        <p
+          style={{
+            textAlign: "center",
+            paddingTop: "15px",
+          }}
+        >
+          To add a new water point please tap <TouchAppOutlinedIcon /> on the
+          map or use our search bar to look for the required location .
+        </p>
+        <p
+          style={{
+            textAlign: "center",
+            paddingBottom: "15px",
+          }}
+        >
+          Spread <s>love</s> water throughout your community!
+        </p>
+      </div>
       <div className="mapcontainer">
         <LoadScript
           libraries={libraries}
@@ -313,7 +343,7 @@ export default function AddNewLocation() {
                     placeholder="Name / Type"
                     style={{
                       width: `200px`,
-                      height: `40px`,
+                      height: `60px`,
                       padding: `0 12px`,
                       margin: "0",
                       borderRadius: `3px`,
@@ -343,7 +373,7 @@ export default function AddNewLocation() {
                     disabled="true"
                     inputProps={{
                       style: {
-                        height: "40px",
+                        height: "45px",
                         padding: "0 12px",
                         background: "transparent",
                       },
@@ -359,7 +389,7 @@ export default function AddNewLocation() {
                     placeholder="Description"
                     style={{
                       width: `200px`,
-                      height: `40px`,
+                      height: `60px`,
                       padding: `0 12px`,
                       margin: "0",
                       borderRadius: `3px`,
@@ -383,8 +413,8 @@ export default function AddNewLocation() {
                   <div className="button-container">
                     <Button
                       style={{
-                        width: "30px",
-                        height: "40px",
+                        width: "60px",
+                        height: "60px",
                         lineHeight: "40px",
                       }}
                       variant="contained"
@@ -396,7 +426,7 @@ export default function AddNewLocation() {
                     <Button
                       style={{
                         width: "136px",
-                        height: "40px",
+                        height: "60px",
                         lineHeight: "40px",
                       }}
                       variant="contained"
@@ -435,7 +465,7 @@ export default function AddNewLocation() {
                     placeholder="Name / Type"
                     style={{
                       width: `200px`,
-                      height: `40px`,
+                      height: `60px`,
                       padding: `0 12px`,
                       margin: "0",
                       borderRadius: `3px`,
@@ -456,7 +486,7 @@ export default function AddNewLocation() {
                     disabled="true"
                     inputProps={{
                       style: {
-                        height: "40px",
+                        height: "45px",
                         padding: "0 12px",
                         background: "transparent",
                       },
@@ -472,7 +502,7 @@ export default function AddNewLocation() {
                     placeholder="Description"
                     style={{
                       width: `200px`,
-                      height: `40px`,
+                      height: `60px`,
                       padding: `0 12px`,
                       margin: "0",
                       borderRadius: `3px`,
@@ -489,8 +519,8 @@ export default function AddNewLocation() {
                   <div className="button-container">
                     <Button
                       style={{
-                        width: "30px",
-                        height: "40px",
+                        width: "60px",
+                        height: "60px",
                         lineHeight: "40px",
                       }}
                       variant="contained"
@@ -502,7 +532,7 @@ export default function AddNewLocation() {
                     <Button
                       style={{
                         width: "136px",
-                        height: "40px",
+                        height: "60px",
                         lineHeight: "40px",
                       }}
                       variant="contained"
