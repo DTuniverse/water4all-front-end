@@ -2,8 +2,11 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import LoadingOverlay from "react-loading-overlay";
+import { AuthContext } from "../context/authContext";
+import { useJwt } from "react-jwt";
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -20,7 +23,7 @@ export default function BuyModal() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
+  const { token } = useContext(AuthContext);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -28,26 +31,43 @@ export default function BuyModal() {
   const [comment, setComment] = useState("");
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isOrdered, setIsOrdered] = useState(true);
+  const { decodedToken } = useJwt(token);
+  console.log(token);
   const handleSubmit = async (e) => {
     e.preventDefault();
+    let newOrder = {
+      firstname: firstName,
+      lastname: lastName,
+      email: email,
+      address: address,
+      comments: comment,
+      user_id: decodedToken?._id,
+    };
     setIsLoading(true);
     setError(null);
-    const response = await fetch(
-      "https://water4all-backend.onrender.com/user/order",
-      {
+    setIsOrdered(false);
+    try{
+    const response = await fetch("https://water4all-backend.onrender.com/order", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ firstName, lastName, email, address, comment }),
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newOrder),
       }
-    );
-    const data = await response.json();
-    if (!response.ok) {
-      setIsLoading(false);
-      setError(data.error);
-    }
-    if (response.ok) {
+      );
+      console.log(response);
       setIsLoading(false);
       setOpen(false);
+      setAddress(null);
+      setComment(null);
+      setEmail(null);
+      setFirstName(null);
+      setLastName(null);
+    }catch(err){
+      setIsLoading(false);
+      setError(err);
     }
   };
 
@@ -67,7 +87,7 @@ export default function BuyModal() {
               spinner
               text="Sending your order..."
             >
-              <form className="signup" onSubmit={handleSubmit}>
+            <form className="signup" onSubmit={handleSubmit}>
                 <h3>
                   Please fill all fields of the form, press submit and we will
                   contact you with details about paying and delivery
@@ -85,7 +105,7 @@ export default function BuyModal() {
                   value={lastName}
                 />
 
-                <label>Email: </label>
+               <label>Email: </label>
                 <input
                   type="email"
                   onChange={(e) => setEmail(e.target.value)}
