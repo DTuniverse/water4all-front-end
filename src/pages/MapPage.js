@@ -134,7 +134,7 @@ getNewLocation()
         >
           <GoogleMap
             mapContainerStyle={containerStyle}
-            center={newCenter ? newPlace : (center.lat ? center : defaultCenter )}
+            center={clickSomewhere ? {lat: newLat, lng: newLng} : newCenter ? newPlace : (center.lat ? center : defaultCenter )}
             zoom={currentZoom}
             onCenterChanged={handleZoom}
             onClick={mapClicked}
@@ -175,7 +175,7 @@ getNewLocation()
               position={{ lat: lo.lat, lng: lo.lng }} 
               onClick={e=>markerClicked(lo, index)}
               onDragEnd={e=>markerDragEnd(e, index)}
-              icon={process.env.PUBLIC_URL + '/resources/ph_drop-filldrop.svg'}
+              icon={process.env.PUBLIC_URL + '/resources/mdi_drop.svg'}
               >
                  { (activeInfoWindow === index) && !clickSomewhere &&
                 <InfoWindow

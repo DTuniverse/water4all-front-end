@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import Navbar from "./components/Navbar";
@@ -18,6 +18,7 @@ import BlogArticleQuality from "./pages/BlogArticleQuality";
 
 function App() {
   const { token } = useContext(AuthContext);
+  const [flag, setFlag] = useState(false);
 
   return (
     <div className="App">
