@@ -10,13 +10,13 @@ import { getGeocode, getLatLng } from "use-places-autocomplete";
 import { AuthContext } from "../context/authContext";
 import { useJwt } from "react-jwt";
 import { Button, FormControl, Box, Input, TextField } from "@mui/material";
-
 import CloseIcon from "@mui/icons-material/Close";
 import "./Map.css";
 import AddLocationAltRoundedIcon from "@mui/icons-material/AddLocationAltRounded";
 import TouchAppRoundedIcon from "@mui/icons-material/TouchAppRounded";
 import Diversity1Icon from "@mui/icons-material/Diversity1";
 import TouchAppOutlinedIcon from "@mui/icons-material/TouchAppOutlined";
+import UploadImage from "../components/UploadImage";
 import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
 export default function AddNewLocation() {
   // const google = window.google;
@@ -43,6 +43,7 @@ export default function AddNewLocation() {
   const center = { lat: lat, lng: lng };
   const defaultCenter = { lat: 52.519432315072166, lng: 13.401147636877893 };
   const libraries = ["places", "streetView"];
+  const [imgUrl, setImgUrl] = useState(null);
 
   // google search bar
   const searchBoxRef = useRef(null);
@@ -97,6 +98,7 @@ export default function AddNewLocation() {
   useEffect(() => {
     getNewLocation();
   }, [isAdded]);
+ 
 
   const containerStyle = {
     width: "100vw",
@@ -128,6 +130,7 @@ export default function AddNewLocation() {
     const address = await getAddress(event.latLng.lat(), event.latLng.lng());
     setAddress(address);
     setAddLocation(true);
+    setAddSearch(false);
     setIsAdded(false);
     setNewLat(lat);
     setNewLng(lng);
@@ -145,6 +148,21 @@ export default function AddNewLocation() {
   console.log(`token: ${token}`);
   console.log(`username : ${decodedToken?._id}`);
 
+  // picture URL
+  const handleUrl = async(e) => {
+    e.preventDefault();
+    try{
+      const res = await fetch("https://water4all-backend.onrender.com/api/image");
+      const data = await res.json();
+      const imageUrl = data.image.slice(-1)[0].url
+      setImgUrl(imageUrl);
+    }catch(err){
+    console.log(err)
+  };
+  };
+
+  console.log(`imgUrl ${imgUrl}`);
+
   // add new location handler
   const handleAdding = async (e) => {
     e.preventDefault();
@@ -156,7 +174,9 @@ export default function AddNewLocation() {
       description: addDescription,
       address: address,
       user_id: decodedToken?._id,
+      url: imgUrl,
     };
+    
     console.log("CONSOLE LOG NEW POST", newPost);
     try {
       const res = await fetch("https://water4all-backend.onrender.com/posts", {
@@ -173,6 +193,7 @@ export default function AddNewLocation() {
       setIsAdded(true);
       setAddTittle(null);
       setAddDescription(null);
+      setImgUrl(null);
     } catch (err) {
       console.log(err);
     }
@@ -199,6 +220,7 @@ export default function AddNewLocation() {
   // console.log("NEWPLACE ", newPlace )
   // console.log("CENTER ", center )
 
+
   return (
     <>
       <div className="mapcontainer">
@@ -208,7 +230,7 @@ export default function AddNewLocation() {
         >
           <GoogleMap
             mapContainerStyle={containerStyle}
-            center={newCenter ? newPlace : center.lat ? center : defaultCenter}
+            center={addLocation? {lat: newLat, lng: newLng} : newCenter ? newPlace : center.lat ? center : defaultCenter}
             zoom={currentZoom}
             onCenterChanged={handleZoom}
             onClick={mapClicked}
@@ -255,7 +277,7 @@ export default function AddNewLocation() {
                 onClick={(e) => markerClicked(lo, index)}
                 onDragEnd={(e) => markerDragEnd(e, index)}
                 icon={
-                  process.env.PUBLIC_URL + "/resources/ph_drop-filldrop.svg"
+                  process.env.PUBLIC_URL + "/resources/mdi_drop.svg"
                 }
               >
                 {activeInfoWindow === index && (
@@ -265,9 +287,11 @@ export default function AddNewLocation() {
                   >
                     <div>
                       <h2>Info</h2>
+                      {lo.url? <img src={lo.url} alt={lo.title} style={{width:"200px"}}/> : null}
                       <p>Tittle: {lo.title}</p>
                       <p>Creator: {lo.creator}</p>
                       <p>Description: {lo.description}</p>
+                      <p>Address: {lo.address}</p>
                       <a
                         className="google-link"
                         href={`https://www.google.com/maps?z=12&t=m&q=loc:${lo.lat}+${lo.lng}`}
@@ -309,6 +333,10 @@ export default function AddNewLocation() {
                     opacity: "90%",
                   }}
                 >
+                  <UploadImage/>
+                  <button onClick={handleUrl}>
+                    Add Photo
+                  </button>
                   <input
                     onChange={(e) => setAddTittle(e.target.value)}
                     value={addTittle}
@@ -425,6 +453,10 @@ export default function AddNewLocation() {
                 noValidate
                 autoComplete="off"
               >
+                 <UploadImage/>
+                  <button onClick={handleUrl}>
+                    Add Photo
+                  </button>
                 <FormControl
                   sx={{
                     backgroundColor: "white",
