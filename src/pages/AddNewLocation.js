@@ -14,8 +14,10 @@ import CloseIcon from "@mui/icons-material/Close";
 import "./Map.css";
 import AddLocationAltRoundedIcon from "@mui/icons-material/AddLocationAltRounded";
 import TouchAppRoundedIcon from "@mui/icons-material/TouchAppRounded";
+import Diversity1Icon from "@mui/icons-material/Diversity1";
 import TouchAppOutlinedIcon from "@mui/icons-material/TouchAppOutlined";
 import UploadImage from "../components/UploadImage";
+import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
 export default function AddNewLocation() {
   // const google = window.google;
   const [activeInfoWindow, setActiveInfoWindow] = useState(false);
@@ -99,10 +101,10 @@ export default function AddNewLocation() {
  
 
   const containerStyle = {
-    width: "98vw",
+    width: "100vw",
     height: "70vh",
-    borderRadius: "10px",
-    border: "3px solid #2669ba ",
+    // borderRadius: "10px",
+    // border: "3px solid #2669ba ",
   };
 
   // get acurate address
@@ -221,34 +223,6 @@ export default function AddNewLocation() {
 
   return (
     <>
-      <div>
-        {/* <h1
-          style={{
-            textAlign: "center",
-            color: "#2669ba",
-            paddingTop: "50px",
-          }}
-        >
-          ADD NEW POINT
-        </h1> */}
-        <p
-          style={{
-            textAlign: "center",
-            paddingTop: "15px",
-          }}
-        >
-          To add a new water point please tap <TouchAppOutlinedIcon /> on the
-          map or use our search bar to look for the required location .
-        </p>
-        <p
-          style={{
-            textAlign: "center",
-            paddingBottom: "15px",
-          }}
-        >
-          Spread <s>love</s> water throughout your community!
-        </p>
-      </div>
       <div className="mapcontainer">
         <LoadScript
           libraries={libraries}
@@ -289,7 +263,6 @@ export default function AddNewLocation() {
                   position: "absolute",
                   left: "10px",
                   opacity: "90%",
-                  // marginLeft: "-120px",
                 }}
               />
             </StandaloneSearchBox>
@@ -603,6 +576,27 @@ export default function AddNewLocation() {
             )}
           </GoogleMap>
         </LoadScript>
+      </div>
+
+      <div>
+        <p
+          style={{
+            textAlign: "center",
+            paddingTop: "15px",
+            color: "#2669ba",
+            fontWeight: "bold",
+          }}
+        >
+          To add a new water point please tap{" "}
+          <TouchAppOutlinedIcon
+            style={{
+              position: "relative",
+              top: "2px",
+            }}
+          />
+          on the map or use search bar to look for the required location .
+        </p>
+        <br />
       </div>
     </>
   );

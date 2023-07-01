@@ -15,17 +15,17 @@ export default function Footer() {
   return (
     <div className="footer-component">
       <div className="flex-container-links">
+        <NavLink to="/" className="navlink" activeClassName="active">
+          Home
+        </NavLink>
         <NavLink to="/mappage" className="navlink" activeClassName="active">
-          Water Finder
+          Water Map
         </NavLink>
         <NavLink to="/blogpage" className="navlink" activeClassName="active">
-          Water Blog
+          Water Hub
         </NavLink>
         <NavLink to="/shoppage" className="navlink" activeClassName="active">
           Water Shop
-        </NavLink>
-        <NavLink to="/" className="navlink" activeClassName="active">
-          Home
         </NavLink>
       </div>
       <h2

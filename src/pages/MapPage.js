@@ -1,5 +1,11 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
-import { GoogleMap, InfoWindow, LoadScript, Marker, StandaloneSearchBox } from "@react-google-maps/api";
+import {
+  GoogleMap,
+  InfoWindow,
+  LoadScript,
+  Marker,
+  StandaloneSearchBox,
+} from "@react-google-maps/api";
 import { getLatLng } from "use-places-autocomplete";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/authContext";
@@ -11,6 +17,7 @@ import AddNewLocationModal from "../components/AddNewLocationModal";
 import IconButton from "@mui/material/IconButton";
 import AddLocationAltRoundedIcon from "@mui/icons-material/AddLocationAltRounded";
 import { Transform } from "@mui/icons-material";
+import Diversity1Icon from "@mui/icons-material/Diversity1";
 
 //
 
@@ -26,26 +33,26 @@ export default function MapPage() {
   const [clickSomewhere, setClickSomewhere] = useState(false);
   const [newLat, setNewLat] = useState(null);
   const [newLng, setNewLng] = useState(null);
-  const { lat, lng,  } = useContext(AuthContext);
+  const { lat, lng } = useContext(AuthContext);
   const [currentZoom, setCurrentZoom] = useState(10);
   const center = { lat: lat, lng: lng };
   const defaultCenter = { lat: 52.519432315072166, lng: 13.401147636877893 };
   const libraries = ["places", "streetView"];
 
-// get all added locations 
-const getNewLocation = async () => {
-  try {
-    const res = await fetch("https://water4all-backend.onrender.com/posts");
-    const data = await res.json();
-    setLocale(data.data);
-    console.log(locale);
-  } catch (err) {
-    console.log(err);
-  }
-};
-useEffect(() => {
-getNewLocation()
-}, []);
+  // get all added locations
+  const getNewLocation = async () => {
+    try {
+      const res = await fetch("https://water4all-backend.onrender.com/posts");
+      const data = await res.json();
+      setLocale(data.data);
+      console.log(locale);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEffect(() => {
+    getNewLocation();
+  }, []);
 
   // google search bar
   const searchBoxRef = useRef(null);
@@ -68,8 +75,6 @@ getNewLocation()
     }
   };
 
- 
-
   // get acurate address
   const getAddress = (lat, lng) => {
     const geocoder = new window.google.maps.Geocoder();
@@ -84,7 +89,7 @@ getNewLocation()
     });
   };
   // get click location
-    const mapClicked = async (event) => {
+  const mapClicked = async (event) => {
     console.log(event.latLng.lat(), event.latLng.lng());
     const newLat = event.latLng.lat();
     const newLng = event.latLng.lng();
@@ -97,10 +102,11 @@ getNewLocation()
   };
   console.log(`get or not? lat: ${newLat} lng: ${newLng} `);
 
-
   const containerStyle = {
-    width: "90%",
-    height: "450px",
+    width: "100vw",
+    height: "70vh",
+    // borderRadius: "10px",
+    // border: "3px solid #2669ba ",
   };
 
   const markerClicked = (lo, index) => {
@@ -110,23 +116,20 @@ getNewLocation()
     setClickSomewhere(false);
   };
 
-
   const markerDragEnd = (event, index) => {
-      console.log(event.latLng.lat())
-      console.log(event.latLng.lng())
+    console.log(event.latLng.lat());
+    console.log(event.latLng.lng());
   };
-  
+
   const handleZoom = () => {
     setCurrentZoom(15);
   };
- console.log(`zoom: ${currentZoom}`)
+  console.log(`zoom: ${currentZoom}`);
   // console.log(Boolean(center.lat))
-
-
 
   return (
     <div>
-      <h2>WATER FINDER</h2>
+      {/* <h2>WATER FINDER</h2> */}
       <div className="mapcontainer">
         <LoadScript
           libraries={libraries}
@@ -151,12 +154,13 @@ getNewLocation()
                 onChange={(e) => setValue(e.target.value)}
                 value={value}
                 type="text"
-                placeholder="Search Here"
+                placeholder="Search"
                 style={{
                   boxSizing: `border-box`,
                   border: `1px solid transparent`,
-                  width: `240px`,
-                  height: `32px`,
+                  width: `200px`,
+                  maxWidth: "400px",
+                  height: `40px`,
                   padding: `0 12px`,
                   borderRadius: `3px`,
                   boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
@@ -164,12 +168,15 @@ getNewLocation()
                   outline: `none`,
                   textOverflow: `ellipses`,
                   position: "absolute",
-                  left: "50%",
-                  marginLeft: "-120px",
+                  left: "10px",
+                  opacity: "90%",
                 }}
               />
             </StandaloneSearchBox>
-            <Marker icon={process.env.PUBLIC_URL + '/resources/person.png'} position={center}/>
+            <Marker
+              icon={process.env.PUBLIC_URL + "/resources/person.png"}
+              position={center}
+            />
             {locale?.map((lo, index) => (
               <Marker key={lo._id} 
               position={{ lat: lo.lat, lng: lo.lng }} 
@@ -177,22 +184,32 @@ getNewLocation()
               onDragEnd={e=>markerDragEnd(e, index)}
               icon={process.env.PUBLIC_URL + '/resources/mdi_drop.svg'}
               >
-                 { (activeInfoWindow === index) && !clickSomewhere &&
-                <InfoWindow
-                onLoad={onLoad}
-                position={{ lat: lo.lat, lng: lo.lng }}
-                >
-                  <div>
-                    <h2>Info</h2>
-                    <p>Tittle: {lo.title}</p>
-                    <p>Creator: {lo.creator}</p>
-                    <p>Address: {lo?.address}</p>
-                    <p>Description: {lo.description}</p>
-                    <a className="google-link" href={`https://www.google.com/maps?z=12&t=m&q=loc:${lo.lat}+${lo.lng}`}> Search on GoogleMap</a>
-                    {lo.verified != true ? <Button disabled="true">Not Verified</Button> : <Button>Verified</Button>}
-                  </div>
-                </InfoWindow>
-            }
+                {activeInfoWindow === index && !clickSomewhere && (
+                  <InfoWindow
+                    onLoad={onLoad}
+                    position={{ lat: lo.lat, lng: lo.lng }}
+                  >
+                    <div>
+                      <h2>Info</h2>
+                      <p>Tittle: {lo.title}</p>
+                      <p>Creator: {lo.creator}</p>
+                      <p>Address: {lo?.address}</p>
+                      <p>Description: {lo.description}</p>
+                      <a
+                        className="google-link"
+                        href={`https://www.google.com/maps?z=12&t=m&q=loc:${lo.lat}+${lo.lng}`}
+                      >
+                        {" "}
+                        Search on GoogleMap
+                      </a>
+                      {lo.verified != true ? (
+                        <Button disabled="true">Not Verified</Button>
+                      ) : (
+                        <Button>Verified</Button>
+                      )}
+                    </div>
+                  </InfoWindow>
+                )}
               </Marker>
             ))}
             {newCenter && !clickSomewhere && <Marker position={newPlace} />}
@@ -204,23 +221,64 @@ getNewLocation()
       </div>
       {token !== null && (
         <>
-          <Link
-            to="/addnewlocation"
+          <p
             style={{
-              textDecoration: "none",
-              color: "inherit",
-              padding: "6px 16px",
+              textAlign: "center",
+              paddingBottom: "15px",
+              color: "#2669ba",
+              fontWeight: "bold",
             }}
           >
-            Click here to add new location
-            <IconButton aria-label="add">
-              <AddLocationAltRoundedIcon />
-            </IconButton>
-          </Link>
+            Spread water throughout your community{" "}
+            <Diversity1Icon
+              style={{
+                position: "relative",
+                top: "5px",
+              }}
+            />
+          </p>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              paddingTop: "5px",
+            }}
+          >
+            <div style={{ padding: "10px" }}>
+              <Link to="/addnewlocation">
+                <Button
+                  style={{
+                    width: "auto",
+                    height: "40px",
+                  }}
+                  variant="outlined"
+                >
+                  <AddLocationAltRoundedIcon />
+                  add new water point
+                </Button>
+              </Link>
+            </div>
+          </div>
         </>
       )}
       {token === null && (
         <div>
+          <p
+            style={{
+              textAlign: "center",
+              paddingBottom: "15px",
+              color: "#2669ba",
+              fontWeight: "bold",
+            }}
+          >
+            Spread water throughout your community{" "}
+            <Diversity1Icon
+              style={{
+                position: "relative",
+                top: "5px",
+              }}
+            />
+          </p>
           <AddNewLocationModal />
         </div>
       )}

@@ -54,6 +54,8 @@ function ResponsiveAppBar() {
             sx={{
               display: { xs: "none", md: "flex" },
               mr: 1,
+              width: "24px",
+              height: "24px",
             }}
           />
           <Typography
@@ -152,6 +154,8 @@ function ResponsiveAppBar() {
             sx={{
               display: { xs: "flex", md: "none" },
               mr: 0,
+              width: "24px",
+              height: "24px",
             }}
           />
           <Typography
