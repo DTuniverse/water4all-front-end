@@ -13,8 +13,10 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { useContext } from "react";
 import { AuthContext } from "../context/authContext";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useJwt } from "react-jwt";
+import LetterAvatars from "./LetterAvatars";
+import "./Navbar.css";
 
 const pages = ["WaterBlog", "WaterShop"];
 
@@ -107,8 +109,26 @@ function ResponsiveAppBar() {
             >
               <MenuItem onClick={handleCloseNavMenu}>
                 <Typography textAlign="center">
-                  <Link
+                  <NavLink
+                    to="/"
+                    className="navlink"
+                    activeClassName="active"
+                    style={{
+                      textDecoration: "none",
+                      color: "inherit",
+                      padding: "6px 16px",
+                    }}
+                  >
+                    Home
+                  </NavLink>
+                </Typography>
+              </MenuItem>
+              <MenuItem onClick={handleCloseNavMenu}>
+                <Typography textAlign="center">
+                  <NavLink
                     to="/mappage"
+                    className="navlink"
+                    activeClassName="active"
                     style={{
                       textDecoration: "none",
                       color: "inherit",
@@ -116,13 +136,15 @@ function ResponsiveAppBar() {
                     }}
                   >
                     Water Finder
-                  </Link>
+                  </NavLink>
                 </Typography>
               </MenuItem>
               <MenuItem onClick={handleCloseNavMenu}>
                 <Typography textAlign="center">
-                  <Link
+                  <NavLink
                     to="/blogpage"
+                    className="navlink"
+                    activeClassName="active"
                     style={{
                       textDecoration: "none",
                       color: "inherit",
@@ -130,13 +152,15 @@ function ResponsiveAppBar() {
                     }}
                   >
                     Water Blog
-                  </Link>
+                  </NavLink>
                 </Typography>
               </MenuItem>
               <MenuItem onClick={handleCloseNavMenu}>
                 <Typography textAlign="center">
-                  <Link
+                  <NavLink
                     to="/shoppage"
+                    className="navlink"
+                    activeClassName="active"
                     style={{
                       textDecoration: "none",
                       color: "inherit",
@@ -144,7 +168,7 @@ function ResponsiveAppBar() {
                     }}
                   >
                     Water Shop
-                  </Link>
+                  </NavLink>
                 </Typography>
               </MenuItem>
             </Menu>
@@ -192,12 +216,19 @@ function ResponsiveAppBar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                {token === null && <Avatar alt="out" src="" />}
-                {token !== null && (
+                {token === null && (
                   <Avatar
-                    alt="in"
-                    src={process.env.PUBLIC_URL + "/resources/astr.jpeg"}
+                    alt="out"
+                    src=""
+                    sx={{ width: "30px", height: "30px" }}
                   />
+                )}
+                {token !== null && (
+                  // <Avatar
+                  //   alt="in"
+                  //   src={process.env.PUBLIC_URL + "/resources/astr.jpeg"}
+                  // />
+                  <LetterAvatars />
                 )}
               </IconButton>
             </Tooltip>
@@ -229,30 +260,39 @@ function ResponsiveAppBar() {
               )}
               {token === null && (
                 <div>
-                  <Typography textAlign="center">
-                    <Link
-                      to="login"
-                      style={{
-                        textDecoration: "none",
-                        color: "inherit",
-                        padding: "6px 16px",
-                      }}
-                    >
-                      Login
-                    </Link>
-                  </Typography>
-                  <Typography textAlign="center">
-                    <Link
-                      to="signup"
-                      style={{
-                        textDecoration: "none",
-                        color: "inherit",
-                        padding: "6px 16px",
-                      }}
-                    >
-                      Signup
-                    </Link>
-                  </Typography>
+                  <MenuItem>
+                    <Typography textAlign="center">
+                      <NavLink
+                        to="/login"
+                        className="navlink"
+                        activeClassName="active"
+                        style={{
+                          textDecoration: "none",
+                          color: "inherit",
+                          padding: "6px 16px",
+                        }}
+                      >
+                        Login
+                      </NavLink>
+                    </Typography>
+                  </MenuItem>
+
+                  <MenuItem>
+                    <Typography textAlign="center">
+                      <NavLink
+                        to="/signup"
+                        className="navlink"
+                        activeClassName="active"
+                        style={{
+                          textDecoration: "none",
+                          color: "inherit",
+                          padding: "6px 16px",
+                        }}
+                      >
+                        Signup
+                      </NavLink>
+                    </Typography>
+                  </MenuItem>
                 </div>
               )}
             </Menu>
