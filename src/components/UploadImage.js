@@ -20,7 +20,7 @@ function UploadImage({flag, setFlag}) {
             formData.append('picture', image, image.name);
             //(field, state image, file name)
             console.log(`formData ${formData}`)
-            let res = await fetch('http://localhost:8080/api/upload', {
+            let res = await fetch('https://water4all-backend.onrender.com/api/upload', {
               method: "POST",
               headers:{
                 Authorization: `Bearer ${token}`,
