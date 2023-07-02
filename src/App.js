@@ -12,9 +12,11 @@ import "./App.css";
 import MapPage from "./pages/MapPage";
 import ShopPage from "./pages/ShopPage";
 import BlogArticleFuture from "./pages/BlogArticleFuture";
-import BlogArticleProtection  from "./pages/BlogArticleProtection";
+import BlogArticleProtection from "./pages/BlogArticleProtection";
 import BlogArticleEducation from "./pages/BlogArticleEducation";
 import BlogArticleQuality from "./pages/BlogArticleQuality";
+
+import LetterAvatars from "./components/LetterAvatars";
 
 function App() {
   const { token } = useContext(AuthContext);
@@ -23,8 +25,6 @@ function App() {
   return (
     <div className="App">
       <Navbar />
-      {/* <MapPage /> */}
-      {/* <AddNewLocation /> */}
 
       <Routes>
         <Route path="/" element={<LandingPage />} />

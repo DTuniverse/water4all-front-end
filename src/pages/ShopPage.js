@@ -1,22 +1,28 @@
 import "./ShopPage.css";
 import BuyModal from "../components/BuyModal";
 import * as React from "react";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardMedia from "@mui/material/CardMedia";
-import Button from "@mui/material/Button";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
+import Slider from "react-slick";
 
 export default function ShopPage() {
   const [expanded, setExpanded] = React.useState(false);
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
+  };
+
+  var settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    // adaptiveHeight: true,
   };
   return (
     <div className="generalwrapper">
@@ -36,29 +42,65 @@ export default function ShopPage() {
             wherever you go.
           </p>
         </div>
+
+        <div className="imgs-container">
+          <Slider {...settings}>
+            <div>
+              <img
+                src={process.env.PUBLIC_URL + "/resources/11.jpg"}
+                style={{
+                  width: "99vw",
+                  height: "auto",
+                  // borderRadius: "50px",
+                }}
+              ></img>
+            </div>{" "}
+            <div>
+              <img
+                src={process.env.PUBLIC_URL + "/resources/22.webp"}
+                style={{ width: "99vw", height: "auto" }}
+              ></img>
+            </div>{" "}
+            <div>
+              <img
+                src={process.env.PUBLIC_URL + "/resources/33.webp"}
+                style={{ width: "99vw", height: "auto" }}
+              ></img>
+            </div>{" "}
+            <div>
+              <img
+                src={process.env.PUBLIC_URL + "/resources/44.webp"}
+                style={{ width: "99vw", height: "auto" }}
+              ></img>
+            </div>
+            <div>
+              <img
+                src={process.env.PUBLIC_URL + "/resources/55.webp"}
+                style={{ width: "99vw", height: "auto" }}
+              ></img>
+            </div>
+          </Slider>
+        </div>
         <div
           className="flex-container"
           style={{
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            alignItems: "stretch",
+            alignItems: "center",
             height: "auto",
             width: "auto",
             paddingTop: "50px",
           }}
         >
-          <div>
-            <Card sx={{ maxWidth: 360, marginBottom: 1 }}>
-              <CardMedia
-                sx={{ height: 350 }}
-                image={process.env.PUBLIC_URL + "/resources/waterbottle1.png"}
-              />
-              <CardActions>
-                <BuyModal />
-              </CardActions>
-            </Card>
+          <div className="buymodal-flex-container">
+            <BuyModal />
+
+            <div style={{ textAlign: "center", width: "64px" }}>
+              <p style={{ padding: "6px 8px" }}>10$</p>
+            </div>
           </div>
+
           <div>
             <h4 style={{ textAlign: "center", padding: "25px" }}>
               Why should you choose our bottle?
