@@ -135,7 +135,7 @@ function ResponsiveAppBar() {
                       padding: "6px 16px",
                     }}
                   >
-                    Water Finder
+                    Water Map
                   </NavLink>
                 </Typography>
               </MenuItem>
@@ -151,7 +151,7 @@ function ResponsiveAppBar() {
                       padding: "6px 16px",
                     }}
                   >
-                    Water Blog
+                    Water Hub
                   </NavLink>
                 </Typography>
               </MenuItem>
