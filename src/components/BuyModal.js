@@ -80,7 +80,7 @@ export default function BuyModal() {
         variant="contained"
         sx={{ backgroundColor: "#2669BA" }}
       >
-        Buy
+        ORDER
       </Button>
       <Modal
         open={open}
