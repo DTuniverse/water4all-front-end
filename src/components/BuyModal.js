@@ -47,15 +47,17 @@ export default function BuyModal() {
     setIsLoading(true);
     setError(null);
     setIsOrdered(false);
-    try{
-    const response = await fetch("https://water4all-backend.onrender.com/order", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newOrder),
-      }
+    try {
+      const response = await fetch(
+        "https://water4all-backend.onrender.com/order",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newOrder),
+        }
       );
       console.log(response);
       setIsLoading(false);
@@ -65,7 +67,7 @@ export default function BuyModal() {
       setEmail(null);
       setFirstName(null);
       setLastName(null);
-    }catch(err){
+    } catch (err) {
       setIsLoading(false);
       setError(err);
     }
@@ -87,7 +89,7 @@ export default function BuyModal() {
               spinner
               text="Sending your order..."
             >
-            <form className="signup" onSubmit={handleSubmit}>
+              <form className="signup" onSubmit={handleSubmit}>
                 <h3>
                   Please fill all fields of the form, press submit and we will
                   contact you with details about paying and delivery
@@ -105,7 +107,7 @@ export default function BuyModal() {
                   value={lastName}
                 />
 
-               <label>Email: </label>
+                <label>Email: </label>
                 <input
                   type="email"
                   onChange={(e) => setEmail(e.target.value)}

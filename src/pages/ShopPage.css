@@ -1,1 +1,14 @@
+.imgs-container {
+  margin-top: 50px;
+}
+.imgs-container div {
+  border-radius: 10px;
+}
 
+.buymodal-flex-container {
+  display: flex;
+  width: 90%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}

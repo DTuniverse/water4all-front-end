@@ -32,14 +32,14 @@ export default function Footer() {
         style={{
           textAlign: "center",
           color: "#2669ba",
-          fontSize: "35px",
+          fontSize: "32px",
           marginTop: "72px",
           marginBottom: "20px",
         }}
       >
         CONTACT US:
       </h2>
-      <div className="flex-container-links">
+      <div className="flex-container-p">
         <p>+1-415-555-0173</p>
         <p>water4all@npo.com</p>
       </div>
