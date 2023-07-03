@@ -19,6 +19,7 @@ import TouchAppOutlinedIcon from "@mui/icons-material/TouchAppOutlined";
 import UploadImage from "../components/UploadImage";
 import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
 import { Add } from "@mui/icons-material";
+
 export default function AddNewLocation() {
   // const google = window.google;
   const [activeInfoWindow, setActiveInfoWindow] = useState(false);
