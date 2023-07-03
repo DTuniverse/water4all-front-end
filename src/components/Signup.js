@@ -47,7 +47,7 @@ export default function Signup({ setUser }) {
     <div>
       <LoadingOverlay active={isLoading} spinner text="Signing in...">
         <form className="signup" onSubmit={handleSubmit}>
-          <h3>Sign up</h3>
+          <h3 style={{ paddingBottom: "10px" }}>Sign Up</h3>
           <label>username: </label>
           <input
             type="text"
@@ -69,7 +69,7 @@ export default function Signup({ setUser }) {
             value={password}
           />
 
-          <button>Sign up</button>
+          <button>Sign Up</button>
           {error && <div className="error">{error}</div>}
         </form>
       </LoadingOverlay>
