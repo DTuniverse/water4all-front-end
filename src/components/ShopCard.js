@@ -19,11 +19,12 @@ export default function ShopCard() {
   return (
     <div className="card-flex-container">
       <Card
+        elevation={3}
         sx={{
           width: "100vw",
           height: "auto",
           minHeight: "400px",
-          marginTop: "5px",
+          marginTop: "15px",
         }}
       >
         <div className="imgs-container">
@@ -52,12 +53,6 @@ export default function ShopCard() {
             </div>{" "}
             <div>
               <img
-                src={process.env.PUBLIC_URL + "/resources/44.webp"}
-                style={{ width: "100%", height: "auto" }}
-              ></img>
-            </div>
-            <div>
-              <img
                 src={process.env.PUBLIC_URL + "/resources/55.webp"}
                 style={{ width: "100%", height: "auto" }}
               ></img>
@@ -78,74 +73,12 @@ export default function ShopCard() {
         >
           <div className="buymodal-flex-container">
             <div style={{ textAlign: "center", width: "64px" }}>
-              <p style={{ padding: "6px 8px", fontWeight: "bold" }}>10$</p>
+              <p style={{ padding: "6px 8px", fontWeight: "bold" }}>$10.00</p>
             </div>
             <BuyModal />
           </div>
         </div>
-        {/* <CardActionArea>
-      <CardMedia
-        component="img"
-        height="140"
-        image="/static/images/cards/contemplative-reptile.jpg"
-        alt="green iguana"
-      />
-      <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
-          Lizard
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Lizards are a widespread group of squamate reptiles, with over 6,000
-          species, ranging across all continents except Antarctica
-        </Typography>
-      </CardContent>
-    </CardActionArea>
-    <CardActions>
-      <Button size="small" color="primary">
-        Share
-      </Button>
-    </CardActions> */}
       </Card>
     </div>
   );
-}
-
-{
-  /* <div className="imgs-container">
-  <Slider {...settings}>
-    <div className="image-parent">
-      <img
-        src={process.env.PUBLIC_URL + "/resources/11.jpg"}
-        style={{
-          width: "100vw",
-          height: "auto",
-        }}
-      ></img>
-    </div>{" "}
-    <div>
-      <img
-        src={process.env.PUBLIC_URL + "/resources/22.webp"}
-        style={{ width: "100vw", height: "auto" }}
-      ></img>
-    </div>{" "}
-    <div>
-      <img
-        src={process.env.PUBLIC_URL + "/resources/33.webp"}
-        style={{ width: "100vw", height: "auto" }}
-      ></img>
-    </div>{" "}
-    <div>
-      <img
-        src={process.env.PUBLIC_URL + "/resources/44.webp"}
-        style={{ width: "100vw", height: "auto" }}
-      ></img>
-    </div>
-    <div>
-      <img
-        src={process.env.PUBLIC_URL + "/resources/55.webp"}
-        style={{ width: "100vw", height: "auto" }}
-      ></img>
-    </div>
-  </Slider>
-</div>; */
 }
