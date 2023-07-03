@@ -32,7 +32,7 @@ export default function Footer() {
         style={{
           textAlign: "center",
           color: "#2669ba",
-          fontSize: "32px",
+          fontSize: "22px",
           marginTop: "72px",
           marginBottom: "20px",
         }}
