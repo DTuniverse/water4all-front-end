@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 
 export default function ImgMediaCard() {
 return (
-    <Card sx={{  maxWidth: "345px", width: "100%", borderRadius: 8 }} >
+    <Card elevation={3} sx={{  maxWidth: "345px", width: "100%", borderRadius: 8 }} >
         <CardContent>
             <h1 className='waterShopH1'>WATER SHOP</h1>
             <p className="missionP">

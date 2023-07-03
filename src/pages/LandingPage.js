@@ -27,19 +27,25 @@ export default function LandingPage() {
             <img  className="heroImage" src={process.env.PUBLIC_URL + "/resources/Group 20 (1).svg"} 
             alt="Cartoon people working around a globe"/>
         </div>
-        <div className="ourMission">
-            <h1 className="missionH1">OUR MISSION</h1>
+        <div className="missionParentContainer">
+            <div className="missionH1Container">
+              <h1 className="missionH1" style={{ textAlign: "left" }}>OUR MISSION</h1>
+            </div>
             <div className="missionPContainer">
-                <span className="missionP">Our mission is to ensure easy access to</span> 
-                <span className="missionP">clean drinking water for everyone.</span>
-                <span className="emptyLine" />
-                <span className="missionP">Through our interactive map, we provide</span>
-                <span className="missionP">locations of drinking fountains, restaurants,</span> 
-                <span className="missionP">cafés and other places where people can</span>
-                <span className="missionP">find free drinking water. </span>
-                <span className="emptyLine" />
-                <span className="missionP">YOU can contribute by adding more places</span>
-                <span className="missionP">and ratings to the existing ones.</span>
+              <p className="missionP">
+                Our mission is to ensure easy access to clean drinking water for everyone.
+                hrough our interactive map, we provide locations 
+                <br />
+                of drinking fountains, restaurants,
+                cafés 
+                <br />
+                and other places where people can find
+                <br />
+                free drinking water.
+                YOU can contribute 
+                <br />
+                by adding more places and ratings to the existing ones.
+              </p>
             </div>
         </div>
         <div>

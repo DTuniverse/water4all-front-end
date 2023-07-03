@@ -19,7 +19,7 @@
     display: flex;
     justify-content: center;
     font-weight: 405;
-    font-size: large;
+    font-size: medium;
 }
 
 .blueButtonContainer {
@@ -74,34 +74,23 @@
     transform: translateY(0);
 }
 
-.ourMission {
-    display: flex;
-    flex-direction: column;
+.missionParentContainer {
+    padding-top: 100px;
+    padding-left: 20px;
 }
 
 .missionH1 {
-    text-align: center;
-    padding-top: 50px;
     padding-bottom: 20px;
     color: #2669BA;
     font-weight: bold;
     font-size: xx-large;
+    
 }
 
-.missionPContainer {
-    padding-bottom: 15px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: left;
-    margin: 0 auto;
-  }
-  
-  .missionP {
+.missionP {
     font-weight: 405;
-    width: 100%;
-    font-size: large;
-  }
+    font-size: medium;
+}
 
 .missionImage {
     max-width: 100%;
@@ -109,14 +98,13 @@
     display: block;
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: 35px;
-    margin-top: 35px;
+    margin-bottom: 100px;
 }
 
 .howH1 {
     text-align: center;
     color: #2669BA;
-    padding-bottom: 20px;
+    padding-bottom: 10px;
 }
 
 .howImage {
@@ -126,7 +114,7 @@
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 35px;
-    margin-top: 35px;
+    margin-top: 10px;
     padding-bottom: 90px;
 }
 

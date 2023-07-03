@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 
 export default function BlogPageQualityCard() {
     return (
-        <Card sx={{ display: 'flex', borderRadius: 8 }}>
+        <Card elevation={3} sx={{ display: 'flex', borderRadius: 8 }}>
             <CardMedia
                 component="img"
                 alt="water drop"

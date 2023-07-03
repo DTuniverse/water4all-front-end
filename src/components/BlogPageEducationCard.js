@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 
 export default function BlogPageEducationCard() {
     return (
-        <Card sx={{ display: 'flex', borderRadius: 8 }}>
+        <Card elevation={3} sx={{ display: 'flex', borderRadius: 8 }}>
             <CardMedia
                 component="img"
                 alt="view at the water surface from underneath"
