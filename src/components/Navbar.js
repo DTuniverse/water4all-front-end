@@ -3,7 +3,8 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
+import { Link, Typography } from '@mui/material';
+// import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
@@ -13,7 +14,7 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { useContext } from "react";
 import { AuthContext } from "../context/authContext";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useJwt } from "react-jwt";
 import LetterAvatars from "./LetterAvatars";
 import "./Navbar.css";
@@ -63,8 +64,10 @@ function ResponsiveAppBar() {
           <Typography
             variant="h6"
             noWrap
-            component="a"
-            href=""
+            // component="a"
+            // href=""
+            component={Link}
+            to="/"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -185,8 +188,10 @@ function ResponsiveAppBar() {
           <Typography
             variant="h5"
             noWrap
-            component="a"
-            href=""
+            component={Link}
+            href="/"
+            // component={Link}
+            // to="/"
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
