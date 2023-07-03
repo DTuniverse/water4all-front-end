@@ -191,6 +191,7 @@ export default function MapPage() {
                   >
                     <div>
                       <h2>Info</h2>
+                      {lo.url? <div style={{ display:"flex", justifyContent:"center"}}><img src={lo.url} alt={lo.title} style={{width:"200px"}}/></div> : null}
                       <p>Tittle: {lo.title}</p>
                       <p>Creator: {lo.creator}</p>
                       <p>Address: {lo?.address}</p>
