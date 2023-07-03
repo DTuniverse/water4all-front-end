@@ -6,13 +6,15 @@ import { useState, useContext } from "react";
 import LoadingOverlay from "react-loading-overlay";
 import { AuthContext } from "../context/authContext";
 import { useJwt } from "react-jwt";
-
+import CloseIcon from "@mui/icons-material/Close";
+import { Alert, Snackbar } from "@mui/material";
 const style = {
   position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
+  width: "90vw",
+  height: "auto",
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
@@ -20,6 +22,8 @@ const style = {
 };
 
 export default function BuyModal() {
+  const [openAlert, setOpenAlert] = useState(false);
+
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -61,6 +65,7 @@ export default function BuyModal() {
       );
       console.log(response);
       setIsLoading(false);
+      setOpenAlert(true);
       setOpen(false);
       setAddress(null);
       setComment(null);
@@ -96,10 +101,15 @@ export default function BuyModal() {
               text="Sending your order..."
             >
               <form className="signup" onSubmit={handleSubmit}>
-                <h3>
-                  Please fill all fields of the form, press submit and we will
-                  contact you with details about paying and delivery
-                </h3>
+                <p style={{ fontWeight: "bold" }}>
+                  Please fill all fields and press Submit Order.
+                </p>
+                <p style={{ fontWeight: "bold" }}>
+                  We will contact you with paying and delivery details.
+                </p>
+
+                <br />
+
                 <label>First Name: </label>
                 <input
                   type="text"
@@ -127,21 +137,57 @@ export default function BuyModal() {
                   value={address}
                 />
 
-                <label>Your comments on order: </label>
-                <input
+                <label>Additional comments: </label>
+                {/* <input
                   type="text"
                   onChange={(e) => setComment(e.target.value)}
                   value={comment}
+                /> */}
+                <textarea
+                  onChange={(e) => setComment(e.target.value)}
+                  value={comment}
+                  style={{
+                    width: "100%",
+                    border: "1px solid #ccc",
+                    borderRadius: "4px",
+                  }}
+                  rows={3}
+                  placeholder="Quantity, delivery details, etc.."
                 />
 
-                <button>Submit order</button>
-                <Button onClick={handleClose}>Back</Button>
+                <Button
+                  onClick={handleClose}
+                  color="error"
+                  sx={{ marginTop: "10px" }}
+                >
+                  <CloseIcon />
+                  Close
+                </Button>
+                <button
+                  style={{
+                    backgroundColor: "#2669ba",
+                    height: "37px",
+                    float: "right",
+                    marginTop: "10px",
+                  }}
+                >
+                  SUBMIT ORDER
+                </button>
                 {error && <div className="error">{error}</div>}
               </form>
             </LoadingOverlay>
           </div>
         </Box>
       </Modal>
+      <Snackbar
+        open={openAlert}
+        autoHideDuration={3000}
+        onClose={() => setOpenAlert(false)}
+      >
+        <Alert onClose={() => setOpenAlert(false)} severity="success">
+          Data posted successfully!
+        </Alert>
+      </Snackbar>
     </div>
   );
 }
