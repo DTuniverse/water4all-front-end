@@ -9,14 +9,13 @@ import {
 import { getGeocode, getLatLng } from "use-places-autocomplete";
 import { AuthContext } from "../context/authContext";
 import { useJwt } from "react-jwt";
-import { Button, FormControl, Box, Input, TextField, Switch, FormControlLabel } from "@mui/material";
+import { Button, FormControl, Box, Input, TextField, Switch, FormControlLabel, Modal } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import "./Map.css";
 import AddLocationAltRoundedIcon from "@mui/icons-material/AddLocationAltRounded";
 import TouchAppRoundedIcon from "@mui/icons-material/TouchAppRounded";
 import Diversity1Icon from "@mui/icons-material/Diversity1";
 import TouchAppOutlinedIcon from "@mui/icons-material/TouchAppOutlined";
-import UploadImage from "../components/UploadImage";
 import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
 import { Add } from "@mui/icons-material";
 
@@ -47,6 +46,67 @@ export default function AddNewLocation() {
   const libraries = ["places", "streetView"];
   const [imgUrl, setImgUrl] = useState(null);
   const [wantPhoto, setWantPhoto] = useState(false);
+  const [uploaded, setUploaded] = useState(false);
+  const [image, setImage] = useState(null);
+  const [error, setError] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  // upload photo for new post
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    pt: 2,
+    px: 4,
+    pb: 3,
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+    setWantPhoto(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  //upload photo
+  const onSubmit = async(e)=>{
+      e.preventDefault();
+      try{
+          const formData = new FormData();
+          formData.append('picture', image, image.name);
+          //(field, state image, file name)
+          console.log(`formData ${formData}`)
+          let res = await fetch('https://water4all-backend.onrender.com/api/upload', {
+            method: "POST",
+            headers:{
+              Authorization: `Bearer ${token}`,
+            },
+            body: formData
+          });
+          setUploaded(true);
+          setError(false);
+          handleUrl();
+      }catch(err){
+        setError(err)
+      }
+  };
+
+  const fileData = ()=>{
+    if(image){
+      return(
+        <h5>
+          <em>{image.name}</em>
+        </h5>
+      )
+      return null
+    }
+  };
 
   // google search bar
   const searchBoxRef = useRef(null);
@@ -70,6 +130,7 @@ export default function AddNewLocation() {
       setNewLng(result.lng);
       setAddLocation(false);
       setWantPhoto(false);
+      setUploaded(false);
       console.log(`new lat: ${newLat}`);
       const geocoder = new window.google.maps.Geocoder();
       geocoder.geocode(
@@ -144,6 +205,8 @@ export default function AddNewLocation() {
     setAddDescription(null);
     setAddTittle(null);
     setWantPhoto(false);
+    setUploaded(false);
+    setImage(false);
   };
   console.log(
     `get or not? lat: ${newLat} lng: ${newLng} addLocation: ${addLocation} `,
@@ -154,13 +217,13 @@ export default function AddNewLocation() {
   console.log(`username : ${decodedToken?._id}`);
 
   // picture URL
-  const handleUrl = async(e) => {
-    e.preventDefault();
+  const handleUrl = async() => {
     try{
       const res = await fetch("https://water4all-backend.onrender.com/api/image");
       const data = await res.json();
       const imageUrl = data.image.slice(-1)[0].url
       setImgUrl(imageUrl);
+      setOpen(false);
     }catch(err){
     console.log(err)
   };
@@ -170,7 +233,7 @@ export default function AddNewLocation() {
 
   // add new location handler
   const handleAdding = async (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     let newPost = {
       title: addTittle,
       lat: newLat,
@@ -192,7 +255,7 @@ export default function AddNewLocation() {
         },
         body: JSON.stringify(newPost),
       });
-      console.log(`res: ${res.ok}`);
+      console.log(`res: ${res.type}`);
       setAddLocation(false);
       setAddSearch(false);
       setIsAdded(true);
@@ -200,6 +263,7 @@ export default function AddNewLocation() {
       setAddDescription(null);
       setImgUrl(null);
       setWantPhoto(false);
+      setImage(false);
     } catch (err) {
       console.log(err);
     }
@@ -217,9 +281,7 @@ export default function AddNewLocation() {
     console.log(event.latLng.lng());
   };
 
-  const handleZoom = () => {
-    setCurrentZoom(15);
-  };
+
   console.log(`zoom: ${currentZoom}`);
   // console.log(`description: ${addDescription}`)
   // console.log("NEWCENTER ", newCenter )
@@ -402,11 +464,52 @@ export default function AddNewLocation() {
                       textOverflow: `ellipses`,
                     }}
                   />
-                    {wantPhoto? null : <Button onClick={()=>setWantPhoto(true)}>Add Photo</Button>}
+                    <Button onClick={handleOpen}>Add Photo</Button>
                  {wantPhoto?
                  <div>
-                  <UploadImage/>
-                  <FormControlLabel required control={<Switch onChange={handleUrl} />} label="Photo Added" />
+                     <Modal
+                        open={open}
+                        onClose={uploaded && handleClose}
+                        aria-labelledby="child-modal-title"
+                        aria-describedby="child-modal-description"
+                      >
+                      <Box sx={{ ...style, width: "80vw" }}>
+                        <div>
+                        <p>Upload Image</p>
+                        <form onSubmit={onSubmit}>
+                              <div className="form-group">
+                                <div className="custom-file">
+                                  <input
+                                    type="file"
+                                    onChange={(e) => setImage(e.target.files[0])}
+                                    className="custom-file-input"
+                                    id="image"
+                                  />
+
+                              <label style={{fontSize:"smaller", marginBottom:"30px", marginLeft:"10px"}} htmlFor="image">
+                                {image ? fileData() : "Choose File"}
+                              </label>
+                            </div>
+                          </div>
+
+                              <Button sx={{marginLeft:"10px", marginRight:"10px"}} variant="contained" onClick={onSubmit}>
+                                Upload
+                              </Button>
+                              <Button variant="contained" color="error" onClick={handleClose}>
+                                Cancel
+                              </Button>
+                            
+
+                              {uploaded? <p style={{marginTop:"30px", fontSize:"smaller"}}>Upload Successfully!!! {<br/>} Please Add Photo To Location</p> : error ? (
+                                <div className="text-danger">
+                                  An error occurred uploading the file
+                                </div>
+                              ) : null}
+                            </form>
+                        </div>
+                        {/* <FormControlLabel required disabled={!uploaded} control={<Switch onChange={handleUrl} />} label="Photo Added" /> */}
+                        </Box>
+                    </Modal>
                   </div> : null}
 
                   {/* <TextField
@@ -524,12 +627,54 @@ export default function AddNewLocation() {
                     }}
                   />
                   
-                {wantPhoto? null : <Button onClick={()=>setWantPhoto(true)}>Add Photo</Button>}
+                  <Button onClick={handleOpen}>Add Photo</Button>
                  {wantPhoto?
                  <div>
-                  <UploadImage/>
-                  <FormControlLabel required control={<Switch onChange={handleUrl} />} label="Photo Added" />
+                     <Modal
+                        open={open}
+                        onClose={uploaded && handleClose}
+                        aria-labelledby="child-modal-title"
+                        aria-describedby="child-modal-description"
+                      >
+                      <Box sx={{ ...style, width: "80vw" }}>
+                        <div>
+                        <p>Upload Image</p>
+                        <form onSubmit={onSubmit}>
+                              <div className="form-group">
+                                <div className="custom-file">
+                                  <input
+                                    type="file"
+                                    onChange={(e) => setImage(e.target.files[0])}
+                                    className="custom-file-input"
+                                    id="image"
+                                  />
+
+                              <label style={{fontSize:"smaller", marginBottom:"30px", marginLeft:"10px"}} htmlFor="image">
+                                {image ? fileData() : "Choose File"}
+                              </label>
+                            </div>
+                          </div>
+
+                              <Button sx={{marginLeft:"10px", marginRight:"10px"}} variant="contained"   onClick={onSubmit}>
+                                Upload
+                              </Button>
+                              <Button variant="contained" color="error" onClick={handleClose}>
+                                Cancel
+                              </Button>
+                            
+
+                              {uploaded? <p style={{marginTop:"30px", fontSize:"smaller"}}>Upload Successfully!!! {<br/>} Please Add Photo To Location</p> : error ? (
+                                <div className="text-danger">
+                                  An error occurred uploading the file
+                                </div>
+                              ) : null}
+                            </form>
+                        </div>
+                        {/* <FormControlLabel required disabled={!uploaded} control={<Switch onChange={handleUrl} />} label="Photo Added" /> */}
+                        </Box>
+                    </Modal>
                   </div> : null}
+
 
                   {/* <TextField
                     label="Description: "
@@ -616,3 +761,8 @@ export default function AddNewLocation() {
     </>
   );
 }
+
+
+
+
+  
