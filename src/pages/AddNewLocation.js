@@ -19,6 +19,7 @@ import Diversity1Icon from "@mui/icons-material/Diversity1";
 import TouchAppOutlinedIcon from "@mui/icons-material/TouchAppOutlined";
 import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
 import { Add } from "@mui/icons-material";
+import InfoIcon from '@mui/icons-material/Info';
 
 export default function AddNewLocation() {
   // const google = window.google;
@@ -135,6 +136,8 @@ export default function AddNewLocation() {
       setWantPhoto(false);
       setUploaded(false);
       setPhotoAdded(false);
+      setCurrentZoom(15);
+      setActiveInfoWindow(false);
       console.log(`new lat: ${newLat}`);
       const geocoder = new window.google.maps.Geocoder();
       geocoder.geocode(
@@ -212,6 +215,7 @@ export default function AddNewLocation() {
     setUploaded(false);
     setImage(false);
     setPhotoAdded(false);
+    setActiveInfoWindow(false);
   };
   console.log(
     `get or not? lat: ${newLat} lng: ${newLng} addLocation: ${addLocation} `,
@@ -359,8 +363,14 @@ export default function AddNewLocation() {
                     position={{ lat: lo.lat, lng: lo.lng }}
                   >
                     <div>
-                      <h2>Info</h2>
-                      {lo.url? <div style={{ display:"flex", justifyContent:"center"}}><img src={lo.url} alt={lo.title} style={{width:"200px"}}/></div> : null}
+                      <h2>Information</h2>
+                      {lo.url? <div style={{ display:"flex", justifyContent:"center"}}><img src={lo.url} alt={lo.title} style={{width:"200px", borderRadius:"10px"}}/></div> : null}
+                      {lo.verified != true ? (
+                        <Button disabled>Not Verified</Button>
+                      ) : (
+                        <Button>Verified</Button>
+                      )}
+                      <div style={{width:"200px", height:"200px", display:"flex", flexDirection:"column", justifyContent:"space-between"}}>
                       <p>Tittle: {lo.title}</p>
                       <p>Creator: {lo.creator}</p>
                       <p>Description: {lo.description}</p>
@@ -372,11 +382,7 @@ export default function AddNewLocation() {
                         {" "}
                         Search on GoogleMap
                       </a>
-                      {lo.verified != true ? (
-                        <Button disabled>Not Verified</Button>
-                      ) : (
-                        <Button>Verified</Button>
-                      )}
+                      </div>
                     </div>
                   </InfoWindow>
                 )}
@@ -481,7 +487,7 @@ export default function AddNewLocation() {
                       >
                       <Box sx={{ ...style, width: "80vw" }}>
                         <div>
-                        <p>Upload Image</p>
+                        <h2 style={{display:"flex", justifyContent:"center"}}>Upload Image</h2>
                         <form onSubmit={onSubmit}>
                               <div className="form-group">
                                 <div className="custom-file">
@@ -498,15 +504,15 @@ export default function AddNewLocation() {
                             </div>
                           </div>
 
-                              <Button sx={{marginLeft:"10px", marginRight:"10px"}} variant="contained" onClick={onSubmit}>
-                                Upload
-                              </Button>
-                              <Button variant="contained" color="error" onClick={handleClose}>
+                              <Button sx={{marginLeft:"10px", marginRight:"10px"}} variant="contained" color="error" onClick={handleClose}>
                                 Cancel
+                              </Button>
+                              <Button variant="contained"   onClick={onSubmit}>
+                                Upload
                               </Button>
                             
 
-                              {uploaded? <p style={{marginTop:"30px", fontSize:"smaller"}}>Upload Successfully!!! {<br/>} Please Add Photo To Location</p> : error ? (
+                              {uploaded? <p style={{marginTop:"30px", fontSize:"smaller"}}>Upload Successfully!!!</p> : error ? (
                                 <div className="text-danger">
                                   An error occurred uploading the file
                                 </div>
@@ -645,7 +651,7 @@ export default function AddNewLocation() {
                       >
                       <Box sx={{ ...style, width: "80vw" }}>
                         <div>
-                        <p>Upload Image</p>
+                        <h2 style={{display:"flex", justifyContent:"center"}}>Upload Image</h2>
                         <form onSubmit={onSubmit}>
                               <div className="form-group">
                                 <div className="custom-file">
@@ -662,15 +668,14 @@ export default function AddNewLocation() {
                             </div>
                           </div>
 
-                              <Button sx={{marginLeft:"10px", marginRight:"10px"}} variant="contained"   onClick={onSubmit}>
-                                Upload
-                              </Button>
-                              <Button variant="contained" color="error" onClick={handleClose}>
+                              <Button sx={{marginLeft:"10px", marginRight:"10px"}} variant="contained" color="error" onClick={handleClose}>
                                 Cancel
                               </Button>
+                              <Button variant="contained"   onClick={onSubmit}>
+                                Upload
+                              </Button>
                             
-
-                              {uploaded? <p style={{marginTop:"30px", fontSize:"smaller"}}>Upload Successfully!!! {<br/>} Please Add Photo To Location</p> : error ? (
+                              {uploaded? <p style={{marginTop:"30px", fontSize:"smaller"}}>Upload Successfully!!!</p> : error ? (
                                 <div className="text-danger">
                                   An error occurred uploading the file
                                 </div>
