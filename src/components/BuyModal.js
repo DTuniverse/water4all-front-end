@@ -75,7 +75,13 @@ export default function BuyModal() {
 
   return (
     <div>
-      <Button onClick={handleOpen}>Buy</Button>
+      <Button
+        onClick={handleOpen}
+        variant="contained"
+        sx={{ backgroundColor: "#2669BA" }}
+      >
+        ORDER
+      </Button>
       <Modal
         open={open}
         onClose={handleClose}

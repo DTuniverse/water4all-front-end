@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 
 export default function LandingPageBlogCard() {
     return(
-    <Card sx={{  maxWidth: "345px", width: "100%", borderRadius: 8 }}>
+    <Card elevation={3} sx={{  maxWidth: "345px", width: "100%", borderRadius: 8 }}>
         <CardContent>
             <h1 className='waterBlogH1'>WATER HUB</h1>
             <p className="missionP">
