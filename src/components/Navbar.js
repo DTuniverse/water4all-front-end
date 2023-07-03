@@ -3,7 +3,7 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
-import { Link, Typography } from '@mui/material';
+import { Link, Typography } from "@mui/material";
 // import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -277,7 +277,7 @@ function ResponsiveAppBar() {
                           padding: "6px 16px",
                         }}
                       >
-                        Login
+                        Log In
                       </NavLink>
                     </Typography>
                   </MenuItem>
@@ -294,7 +294,7 @@ function ResponsiveAppBar() {
                           padding: "6px 16px",
                         }}
                       >
-                        Signup
+                        Sign Up
                       </NavLink>
                     </Typography>
                   </MenuItem>
