@@ -1,4 +1,5 @@
 import { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/authContext";
 import LoadingOverlay from "react-loading-overlay";
 
@@ -8,6 +9,7 @@ export default function Login() {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,6 +38,7 @@ export default function Login() {
         localStorage.setItem("token", data.token);
         setIsLoading(false);
         login(data.token);
+        navigate("/addnewlocation");
       }, 5000);
     }
   };
