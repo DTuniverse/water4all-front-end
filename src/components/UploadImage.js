@@ -1,17 +1,36 @@
 import React, { useContext, useState } from 'react';
 import { AuthContext } from '../context/authContext';
+import { Modal, Button, Box } from "@mui/material";
 
 
 
-
-function UploadImage({flag, setFlag}) {
+function UploadImage() {
     const [uploaded, setUploaded] = useState(false);
-    const [show, setShow] = useState(false);
     const [image, setImage] = useState(null);
     const [error, setError] = useState(false);
     const { token } = useContext(AuthContext);
-    const handleShow = ()=> setShow(true);
-    const handleClose = ()=> setShow(false);
+    const [open, setOpen] = useState(false);
+
+    const style = {
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      width: 400,
+      bgcolor: "background.paper",
+      border: "2px solid #000",
+      boxShadow: 24,
+      pt: 2,
+      px: 4,
+      pb: 3,
+    };
+
+    const handleOpen = () => {
+      setOpen(true);
+    };
+    const handleClose = () => {
+      setOpen(false);
+    };
 
     const onSubmit = async(e)=>{
         e.preventDefault();
@@ -29,9 +48,7 @@ function UploadImage({flag, setFlag}) {
             });
             setUploaded(true);
             setError(false);
-            handleClose();
-            setFlag(!flag);
-
+            setOpen(false);
         }catch(err){
           setError(err)
         }
@@ -51,21 +68,26 @@ function UploadImage({flag, setFlag}) {
 
   return (
     <>
-    {/* <button className="btn btn-primary m-2" onClick={handleShow}>
-      Upload
-    </button> */}
-    <div show={show} onHide={handleClose}>
-     <p>Upload Image</p>
-     <form onSubmit={onSubmit}>
-
-          <div className="form-group">
-            <div className="custom-file">
-              <input
-                type="file"
-                onChange={(e) => setImage(e.target.files[0])}
-                className="custom-file-input"
-                id="image"
-              />
+    <Button onClick={handleOpen}>Upload Photo</Button>
+    
+    <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="child-modal-title"
+        aria-describedby="child-modal-description"
+      >
+      <Box sx={{ ...style, width: "95vw" }}>
+        <div>
+        <p>Upload Image</p>
+        <form onSubmit={onSubmit}>
+              <div className="form-group">
+                <div className="custom-file">
+                  <input
+                    type="file"
+                    onChange={(e) => setImage(e.target.files[0])}
+                    className="custom-file-input"
+                    id="image"
+                  />
 
               <label className="custom-file-label" htmlFor="image">
                 {image ? fileData() : "Choose File"}
@@ -73,21 +95,20 @@ function UploadImage({flag, setFlag}) {
             </div>
           </div>
 
-          <button type="submit" className="btn btn-primary">
-            Upload
-          </button>
-         
+              <button type="submit" className="btn btn-primary" onClick={onSubmit}>
+                Upload
+              </button>
+            
 
-          {uploaded? "Upload Successfully Please Add Photo To Your Location " : error ? (
-            <div className="text-danger">
-              An error occurred uploading the file
-            </div>
-          ) : null}
-        </form>
-        {/* <button variant="secondary" onClick={handleClose}>
-          Close
-        </button>  */}
-    </div>
+              {uploaded? "Upload Successfully Please Add Photo To Your Location " : error ? (
+                <div className="text-danger">
+                  An error occurred uploading the file
+                </div>
+              ) : null}
+            </form>
+        </div>
+        </Box>
+    </Modal>
   </>
   )
 }
