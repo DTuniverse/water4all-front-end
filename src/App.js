@@ -29,7 +29,10 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/mappage" element={<MapPage />} />
-        <Route path="/addnewlocation" element={<AddNewLocation />} />
+        <Route
+          path="/addnewlocation"
+          element={token ? <AddNewLocation /> : <Navigate to="/" />}
+        />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/blogpage" element={<BlogPage />} />
