@@ -9,7 +9,7 @@ import {
 import { getGeocode, getLatLng } from "use-places-autocomplete";
 import { AuthContext } from "../context/authContext";
 import { useJwt } from "react-jwt";
-import { Button, FormControl, Box, Input, TextField } from "@mui/material";
+import { Button, FormControl, Box, Input, TextField, Switch, FormControlLabel } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import "./Map.css";
 import AddLocationAltRoundedIcon from "@mui/icons-material/AddLocationAltRounded";
@@ -18,6 +18,7 @@ import Diversity1Icon from "@mui/icons-material/Diversity1";
 import TouchAppOutlinedIcon from "@mui/icons-material/TouchAppOutlined";
 import UploadImage from "../components/UploadImage";
 import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
+import { Add } from "@mui/icons-material";
 export default function AddNewLocation() {
   // const google = window.google;
   const [activeInfoWindow, setActiveInfoWindow] = useState(false);
@@ -44,6 +45,7 @@ export default function AddNewLocation() {
   const defaultCenter = { lat: 52.519432315072166, lng: 13.401147636877893 };
   const libraries = ["places", "streetView"];
   const [imgUrl, setImgUrl] = useState(null);
+  const [wantPhoto, setWantPhoto] = useState(false);
 
   // google search bar
   const searchBoxRef = useRef(null);
@@ -66,6 +68,7 @@ export default function AddNewLocation() {
       setNewLat(result.lat);
       setNewLng(result.lng);
       setAddLocation(false);
+      setWantPhoto(false);
       console.log(`new lat: ${newLat}`);
       const geocoder = new window.google.maps.Geocoder();
       geocoder.geocode(
@@ -139,6 +142,7 @@ export default function AddNewLocation() {
     setCurrentZoom(15);
     setAddDescription(null);
     setAddTittle(null);
+    setWantPhoto(false);
   };
   console.log(
     `get or not? lat: ${newLat} lng: ${newLng} addLocation: ${addLocation} `,
@@ -194,6 +198,7 @@ export default function AddNewLocation() {
       setAddTittle(null);
       setAddDescription(null);
       setImgUrl(null);
+      setWantPhoto(false);
     } catch (err) {
       console.log(err);
     }
@@ -220,7 +225,7 @@ export default function AddNewLocation() {
   // console.log("NEWPLACE ", newPlace )
   // console.log("CENTER ", center )
 
-
+  console.log(`wantPhoto ${wantPhoto}`)
   return (
     <>
       <div className="mapcontainer">
@@ -232,7 +237,7 @@ export default function AddNewLocation() {
             mapContainerStyle={containerStyle}
             center={addLocation? {lat: newLat, lng: newLng} : newCenter ? newPlace : center.lat ? center : defaultCenter}
             zoom={currentZoom}
-            onCenterChanged={handleZoom}
+            // onCenterChanged={handleZoom}
             onClick={mapClicked}
             options={{
               mapTypeControl: false,
@@ -287,7 +292,7 @@ export default function AddNewLocation() {
                   >
                     <div>
                       <h2>Info</h2>
-                      {lo.url? <img src={lo.url} alt={lo.title} style={{width:"200px"}}/> : null}
+                      {lo.url? <div style={{ display:"flex", justifyContent:"center"}}><img src={lo.url} alt={lo.title} style={{width:"200px"}}/></div> : null}
                       <p>Tittle: {lo.title}</p>
                       <p>Creator: {lo.creator}</p>
                       <p>Description: {lo.description}</p>
@@ -333,10 +338,7 @@ export default function AddNewLocation() {
                     opacity: "90%",
                   }}
                 >
-                  <UploadImage/>
-                  <button onClick={handleUrl}>
-                    Add Photo
-                  </button>
+               
                   <input
                     onChange={(e) => setAddTittle(e.target.value)}
                     value={addTittle}
@@ -399,6 +401,13 @@ export default function AddNewLocation() {
                       textOverflow: `ellipses`,
                     }}
                   />
+                    {wantPhoto? null : <Button onClick={()=>setWantPhoto(true)}>Add Photo</Button>}
+                 {wantPhoto?
+                 <div>
+                  <UploadImage/>
+                  <FormControlLabel required control={<Switch onChange={handleUrl} />} label="Photo Added" />
+                  </div> : null}
+
                   {/* <TextField
                     label="Description: "
                     value={addDescription}
@@ -446,23 +455,20 @@ export default function AddNewLocation() {
             )}
             {addSearch && !clickSomewhere && (
               <Box
-                position="absolute"
-                bottom="23px"
-                left="10px"
-                width="200px"
-                noValidate
-                autoComplete="off"
+              position="absolute"
+              bottom="23px"
+              left="10px"
+              width="200px"
+              noValidate
+              autoComplete="off"
               >
-                 <UploadImage/>
-                  <button onClick={handleUrl}>
-                    Add Photo
-                  </button>
                 <FormControl
                   sx={{
                     backgroundColor: "white",
                     opacity: "90%",
                   }}
                 >
+
                   <input
                     onChange={(e) => setAddTittle(e.target.value)}
                     value={addTittle}
@@ -516,6 +522,14 @@ export default function AddNewLocation() {
                       textOverflow: `ellipses`,
                     }}
                   />
+                  
+                {wantPhoto? null : <Button onClick={()=>setWantPhoto(true)}>Add Photo</Button>}
+                 {wantPhoto?
+                 <div>
+                  <UploadImage/>
+                  <FormControlLabel required control={<Switch onChange={handleUrl} />} label="Photo Added" />
+                  </div> : null}
+
                   {/* <TextField
                     label="Description: "
                     value={addDescription}

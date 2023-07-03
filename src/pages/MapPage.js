@@ -139,7 +139,7 @@ export default function MapPage() {
             mapContainerStyle={containerStyle}
             center={clickSomewhere ? {lat: newLat, lng: newLng} : newCenter ? newPlace : (center.lat ? center : defaultCenter )}
             zoom={currentZoom}
-            onCenterChanged={handleZoom}
+            // onCenterChanged={handleZoom}
             onClick={mapClicked}
             options={{
               mapTypeControl: false,
@@ -212,10 +212,10 @@ export default function MapPage() {
                 )}
               </Marker>
             ))}
-            {newCenter && !clickSomewhere && <Marker position={newPlace} />}
+            {/* {newCenter && !clickSomewhere && <Marker position={newPlace} />}
             {clickSomewhere && (
               <Marker position={{ lat: newLat, lng: newLng }} />
-            )}
+            )} */}
           </GoogleMap>
         </LoadScript>
       </div>
