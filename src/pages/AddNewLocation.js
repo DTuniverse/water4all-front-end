@@ -9,9 +9,10 @@ import {
 import { getGeocode, getLatLng } from "use-places-autocomplete";
 import { AuthContext } from "../context/authContext";
 import { useJwt } from "react-jwt";
-import { Button, FormControl, Box, Input, TextField, Switch, FormControlLabel, Modal } from "@mui/material";
+import { Button, FormControl, Box, Input, TextField, Switch, FormControlLabel, Modal, Checkbox } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import "./Map.css";
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import AddLocationAltRoundedIcon from "@mui/icons-material/AddLocationAltRounded";
 import TouchAppRoundedIcon from "@mui/icons-material/TouchAppRounded";
 import Diversity1Icon from "@mui/icons-material/Diversity1";
@@ -50,6 +51,7 @@ export default function AddNewLocation() {
   const [image, setImage] = useState(null);
   const [error, setError] = useState(false);
   const [open, setOpen] = useState(false);
+  const [photoAdded, setPhotoAdded] = useState(false);
 
   // upload photo for new post
   const style = {
@@ -92,6 +94,7 @@ export default function AddNewLocation() {
           setUploaded(true);
           setError(false);
           handleUrl();
+          setPhotoAdded(true);
       }catch(err){
         setError(err)
       }
@@ -131,6 +134,7 @@ export default function AddNewLocation() {
       setAddLocation(false);
       setWantPhoto(false);
       setUploaded(false);
+      setPhotoAdded(false);
       console.log(`new lat: ${newLat}`);
       const geocoder = new window.google.maps.Geocoder();
       geocoder.geocode(
@@ -207,6 +211,7 @@ export default function AddNewLocation() {
     setWantPhoto(false);
     setUploaded(false);
     setImage(false);
+    setPhotoAdded(false);
   };
   console.log(
     `get or not? lat: ${newLat} lng: ${newLng} addLocation: ${addLocation} `,
@@ -288,7 +293,7 @@ export default function AddNewLocation() {
   // console.log("NEWPLACE ", newPlace )
   // console.log("CENTER ", center )
 
-  console.log(`wantPhoto ${wantPhoto}`)
+
   return (
     <>
       <div className="mapcontainer">
@@ -439,12 +444,13 @@ export default function AddNewLocation() {
                     disabled="true"
                     inputProps={{
                       style: {
-                        height: "45px",
-                        padding: "0 12px",
+                        height: "32px",
+                        padding: "0 10px",
                         background: "transparent",
+                        fontSize:"14px"
                       },
                     }}
-                    maxRows={3}
+                    maxRows={2}
                     variant="filled"
                     multiline
                   />
@@ -464,7 +470,7 @@ export default function AddNewLocation() {
                       textOverflow: `ellipses`,
                     }}
                   />
-                    <Button onClick={handleOpen}>Add Photo</Button>
+                    {photoAdded? <FormControlLabel style={{display:"flex", justifyContent:"center"}} control={<Checkbox defaultChecked />} disabled label="Photo Added" /> : <Button style={{height:"60px"}} startIcon={<AddPhotoAlternateIcon />} onClick={handleOpen}>Add Photo</Button>}
                  {wantPhoto?
                  <div>
                      <Modal
@@ -601,12 +607,13 @@ export default function AddNewLocation() {
                     disabled="true"
                     inputProps={{
                       style: {
-                        height: "45px",
+                        height: "32px",
                         padding: "0 12px",
                         background: "transparent",
+                        fontSize:"14px"
                       },
                     }}
-                    maxRows={3}
+                    maxRows={2}
                     variant="filled"
                     multiline
                   />
@@ -627,7 +634,7 @@ export default function AddNewLocation() {
                     }}
                   />
                   
-                  <Button onClick={handleOpen}>Add Photo</Button>
+                  {photoAdded? <FormControlLabel style={{display:"flex", justifyContent:"center"}} control={<Checkbox defaultChecked />} disabled label="Photo Added" /> : <Button style={{height:"60px"}} startIcon={<AddPhotoAlternateIcon />} onClick={handleOpen}>Add Photo</Button>}
                  {wantPhoto?
                  <div>
                      <Modal
