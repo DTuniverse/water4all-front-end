@@ -8,6 +8,8 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Slider from "react-slick";
+import ShopCard from "../components/ShopCard";
+import { Shop } from "@mui/icons-material";
 
 export default function ShopPage() {
   const [expanded, setExpanded] = React.useState(false);
@@ -16,18 +18,20 @@ export default function ShopPage() {
     setExpanded(isExpanded ? panel : false);
   };
 
-  var settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    // adaptiveHeight: true,
-  };
+  // var settings = {
+  //   dots: true,
+  //   infinite: true,
+  //   speed: 500,
+  //   slidesToShow: 1,
+  //   slidesToScroll: 1,
+  //   // adaptiveHeight: true,
+  // };
   return (
     <div className="generalwrapper">
       <Container>
         <div>
+          <ShopCard />
+          {/* <div>
           <h1
             style={{
               textAlign: "center",
@@ -41,47 +45,46 @@ export default function ShopPage() {
             Owning a refillable bottle means you always have a drink with you,
             wherever you go.
           </p>
-        </div>
+        </div> */}
 
-        <div className="imgs-container">
+          {/* <div className="imgs-container">
           <Slider {...settings}>
-            <div>
+            <div className="image-parent">
               <img
                 src={process.env.PUBLIC_URL + "/resources/11.jpg"}
                 style={{
-                  width: "99vw",
+                  width: "100vw",
                   height: "auto",
-                  // borderRadius: "50px",
                 }}
               ></img>
             </div>{" "}
             <div>
               <img
                 src={process.env.PUBLIC_URL + "/resources/22.webp"}
-                style={{ width: "99vw", height: "auto" }}
+                style={{ width: "100vw", height: "auto" }}
               ></img>
             </div>{" "}
             <div>
               <img
                 src={process.env.PUBLIC_URL + "/resources/33.webp"}
-                style={{ width: "99vw", height: "auto" }}
+                style={{ width: "100vw", height: "auto" }}
               ></img>
             </div>{" "}
             <div>
               <img
                 src={process.env.PUBLIC_URL + "/resources/44.webp"}
-                style={{ width: "99vw", height: "auto" }}
+                style={{ width: "100vw", height: "auto" }}
               ></img>
             </div>
             <div>
               <img
                 src={process.env.PUBLIC_URL + "/resources/55.webp"}
-                style={{ width: "99vw", height: "auto" }}
+                style={{ width: "100vw", height: "auto" }}
               ></img>
             </div>
           </Slider>
-        </div>
-        <div
+        </div> */}
+          {/* <div
           className="flex-container"
           style={{
             display: "flex",
@@ -94,15 +97,20 @@ export default function ShopPage() {
           }}
         >
           <div className="buymodal-flex-container">
-            <BuyModal />
-
             <div style={{ textAlign: "center", width: "64px" }}>
-              <p style={{ padding: "6px 8px" }}>10$</p>
+              <p style={{ padding: "6px 8px", fontWeight: "bold" }}>10$</p>
             </div>
-          </div>
+            <BuyModal />
+          </div> */}
 
           <div>
-            <h4 style={{ textAlign: "center", padding: "25px" }}>
+            <h4
+              style={{
+                textAlign: "center",
+                paddingTop: "50px",
+                paddingBottom: "25px",
+              }}
+            >
               Why should you choose our bottle?
             </h4>
           </div>
@@ -118,7 +126,7 @@ export default function ShopPage() {
               >
                 <Typography sx={{ width: "33%", flexShrink: 0 }}>1</Typography>
                 <Typography sx={{ color: "text.secondary" }}>
-                  Support water access for everyone
+                  Support water access
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
@@ -199,5 +207,6 @@ export default function ShopPage() {
         </div>
       </Container>
     </div>
+    // </div>
   );
 }
