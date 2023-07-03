@@ -185,7 +185,7 @@ export default function BuyModal() {
         onClose={() => setOpenAlert(false)}
       >
         <Alert onClose={() => setOpenAlert(false)} severity="success">
-          Data posted successfully!
+          Order sent successfully!
         </Alert>
       </Snackbar>
     </div>
