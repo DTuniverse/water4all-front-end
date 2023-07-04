@@ -9,7 +9,7 @@ import {
 import { getGeocode, getLatLng } from "use-places-autocomplete";
 import { AuthContext } from "../context/authContext";
 import { useJwt } from "react-jwt";
-import { Button, FormControl, Box, Input, TextField, Switch, FormControlLabel, Modal, Checkbox, IconButton } from "@mui/material";
+import { Button, FormControl, Box, Input, TextField, Switch, FormControlLabel, Modal, Checkbox, IconButton, Snackbar, Alert } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import "./Map.css";
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
@@ -55,6 +55,12 @@ export default function AddNewLocation() {
   const [open, setOpen] = useState(false);
   const [photoAdded, setPhotoAdded] = useState(false);
   const [goBack, setGoBack] = useState(false);
+  const [ pleaseSelect, setPleaseSelect ] = useState(false);
+  const [ pleaseRefresh, setPleaseRefresh ] = useState(false);
+  const [ AddedLocation, setAddedLocation] = useState([]);
+  const [ goAdded, setGoAdded] = useState(false);
+  const [AddedLat, setAddedLat] = useState(null);
+  const [addedLng, setAddedLng] = useState(null);
 
   // upload photo for new post
   const style = {
@@ -141,6 +147,7 @@ export default function AddNewLocation() {
       setCurrentZoom(15);
       setActiveInfoWindow(false);
       setGoBack(false);
+      setGoAdded(false);
       console.log(`new lat: ${newLat}`);
       const geocoder = new window.google.maps.Geocoder();
       geocoder.geocode(
@@ -153,9 +160,30 @@ export default function AddNewLocation() {
       );
       console.log(`searchAddress: ${searchAddress}`);
     } catch (error) {
-      console.error("Error retrieving places", error);
+      console.error("Error retrieving places", error.message);
+      if(error.message === "Cannot read properties of undefined (reading 'geometry')"){
+        setPleaseSelect(true);
+      };
+      if(error.message === "searchBoxRef.current.getPlaces is not a function"){
+        setPleaseRefresh(true);
+      }
     }
   };
+
+  // put center to new added location
+  // useEffect(()=>{
+  //   const goAddedLocation = async() => {
+  //     try{
+  //       const res = await fetch("https://water4all-backend.onrender.com/posts");
+  //       const data = await res.json();
+  //       setAddedLocation(data);
+  //       console.log(` goAddedLocation ${AddedLocation}`);
+  //     }catch(err){
+  //       console.log(err);
+  //     }
+  //   }; 
+  //   goAddedLocation();
+  // },[goAdded])
 
   // get exist water point
   const getNewLocation = async () => {
@@ -165,6 +193,9 @@ export default function AddNewLocation() {
       const data = await res.json();
       setLocale(data.data);
       console.log(locale);
+      setAddedLat(data.data.slice(-1)[0].lat);
+      setAddedLng(data.data.slice(-1)[0].lng);
+      setGoAdded(true);
     } catch (err) {
       console.log(err);
     }
@@ -220,6 +251,7 @@ export default function AddNewLocation() {
     setPhotoAdded(false);
     setActiveInfoWindow(false);
     setGoBack(false);
+    setGoAdded(false);
   };
   console.log(
     `get or not? lat: ${newLat} lng: ${newLng} addLocation: ${addLocation} `,
@@ -277,6 +309,7 @@ export default function AddNewLocation() {
       setImgUrl(null);
       setWantPhoto(false);
       setImage(false);
+      setGoAdded(true);
     } catch (err) {
       console.log(err);
     }
@@ -296,8 +329,9 @@ export default function AddNewLocation() {
   
   const handleGoBack = () => {
     setGoBack(true);
+    setCurrentZoom(15);
   };
-
+console.log(`goBack ${goBack}`)
 
   console.log(`zoom: ${currentZoom}`);
   // console.log(`description: ${addDescription}`)
@@ -315,7 +349,7 @@ export default function AddNewLocation() {
         >
           <GoogleMap
             mapContainerStyle={containerStyle}
-            center={goBack ? {lat:lat, lng:lng} : addLocation? {lat: newLat, lng: newLng} : newCenter ? newPlace : center.lat ? center : defaultCenter}
+            center={ goAdded ? { lat: newLat, lng: newLng } : goBack ? {lat:lat, lng:lng} : addLocation? {lat: newLat, lng: newLng} : newCenter ? newPlace : center.lat ? center : defaultCenter}
             zoom={currentZoom}
             // onCenterChanged={handleZoom}
             onClick={mapClicked}
@@ -351,6 +385,25 @@ export default function AddNewLocation() {
                 }}
               />
             </StandaloneSearchBox>
+            {pleaseSelect? <Snackbar
+                open={pleaseSelect}
+                autoHideDuration={3000}
+                onClose={() => setPleaseSelect(false)}
+              >
+                <Alert onClose={() => setPleaseSelect(false)} severity="error">
+                  Please Select Location from List!
+                </Alert>
+              </Snackbar> : 
+              pleaseRefresh ? <Snackbar
+              open={pleaseRefresh}
+              autoHideDuration={3000}
+              onClose={() => setPleaseRefresh(false)}
+            >
+              <Alert onClose={() => setPleaseRefresh(false)} severity="error">
+               Something Went Wrong, Please Refresh Page!
+              </Alert>
+            </Snackbar> :
+              null}
             <IconButton onClick={handleGoBack} style={{position:"absolut", marginLeft:"210px", marginTop:"10px" }}>
               <MyLocationIcon/>
             </IconButton>
