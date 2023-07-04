@@ -11,13 +11,14 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../context/authContext";
 import { Button, IconButton } from "@mui/material";
 import "./Map.css";
+import Card from "@mui/material/Card";
 
 //
 import AddNewLocationModal from "../components/AddNewLocationModal";
 import AddLocationAltRoundedIcon from "@mui/icons-material/AddLocationAltRounded";
 import { Transform } from "@mui/icons-material";
 import Diversity1Icon from "@mui/icons-material/Diversity1";
-import MyLocationIcon from '@mui/icons-material/MyLocation';
+import MyLocationIcon from "@mui/icons-material/MyLocation";
 
 //
 
@@ -107,7 +108,7 @@ export default function MapPage() {
 
   const containerStyle = {
     width: "100vw",
-    height: "70vh",
+    height: "75vh",
     // borderRadius: "10px",
     // border: "3px solid #2669ba ",
   };
@@ -134,163 +135,216 @@ export default function MapPage() {
   return (
     <div>
       {/* <h2>WATER FINDER</h2> */}
-      <div className="mapcontainer">
-        <LoadScript
-          libraries={libraries}
-          googleMapsApiKey={process.env.REACT_APP_MAP_API_KEY}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Card
+          elevation={3}
+          style={{ marginTop: "10px", borderRadius: "20px", width: "98vw" }}
         >
-          <GoogleMap
-            mapContainerStyle={containerStyle}
-            center={goBack ? {lat:lat, lng:lng} : clickSomewhere ? {lat: newLat, lng: newLng} : newCenter ? newPlace : (center.lat ? center : defaultCenter )}
-            zoom={currentZoom}
-            // onCenterChanged={handleZoom}
-            onClick={mapClicked}
-            options={{
-              mapTypeControl: false,
-              streetViewControl: true,
-            }}
-          >
-           
-            <StandaloneSearchBox
-              onLoad={onLoad}
-              onPlacesChanged={onPlacesChanged}
+          <div className="mapcontainer">
+            <LoadScript
+              libraries={libraries}
+              googleMapsApiKey={process.env.REACT_APP_MAP_API_KEY}
             >
-              <input
-                onChange={(e) => setValue(e.target.value)}
-                value={value}
-                type="text"
-                placeholder="Search"
+              <GoogleMap
+                mapContainerStyle={containerStyle}
+                center={
+                  goBack
+                    ? { lat: lat, lng: lng }
+                    : clickSomewhere
+                    ? { lat: newLat, lng: newLng }
+                    : newCenter
+                    ? newPlace
+                    : center.lat
+                    ? center
+                    : defaultCenter
+                }
+                zoom={currentZoom}
+                // onCenterChanged={handleZoom}
+                onClick={mapClicked}
+                options={{
+                  mapTypeControl: false,
+                  streetViewControl: true,
+                }}
+              >
+                <StandaloneSearchBox
+                  onLoad={onLoad}
+                  onPlacesChanged={onPlacesChanged}
+                >
+                  <input
+                    onChange={(e) => setValue(e.target.value)}
+                    value={value}
+                    type="text"
+                    placeholder="Search"
+                    style={{
+                      boxSizing: `border-box`,
+                      border: `1px solid transparent`,
+                      width: `200px`,
+                      maxWidth: "400px",
+                      height: `40px`,
+                      padding: `0 12px`,
+                      borderRadius: `3px`,
+                      boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
+                      fontSize: `14px`,
+                      outline: `none`,
+                      textOverflow: `ellipses`,
+                      position: "absolute",
+                      left: "10px",
+                      opacity: "90%",
+                    }}
+                  />
+                </StandaloneSearchBox>
+                <IconButton
+                  onClick={handleGoBack}
+                  style={{
+                    position: "absolut",
+                    marginLeft: "210px",
+                    marginTop: "10px",
+                  }}
+                >
+                  <MyLocationIcon />
+                </IconButton>
+                <Marker
+                  icon={process.env.PUBLIC_URL + "/resources/person.png"}
+                  position={center}
+                />
+                {locale?.map((lo, index) => (
+                  <Marker
+                    key={lo._id}
+                    position={{ lat: lo.lat, lng: lo.lng }}
+                    onClick={(e) => markerClicked(lo, index)}
+                    onDragEnd={(e) => markerDragEnd(e, index)}
+                    icon={process.env.PUBLIC_URL + "/resources/mdi_drop.svg"}
+                  >
+                    {activeInfoWindow === index && !clickSomewhere && (
+                      <InfoWindow
+                        onLoad={onLoad}
+                        position={{ lat: lo.lat, lng: lo.lng }}
+                      >
+                        <div>
+                          <h2>Info</h2>
+                          {lo.url ? (
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <img
+                                src={lo.url}
+                                alt={lo.title}
+                                style={{ width: "200px" }}
+                              />
+                            </div>
+                          ) : null}
+                          <p>Tittle: {lo.title}</p>
+                          <p>Creator: {lo.creator}</p>
+                          <p>Address: {lo?.address}</p>
+                          <p>Description: {lo.description}</p>
+                          <a
+                            className="google-link"
+                            href={`https://www.google.com/maps?z=12&t=m&q=loc:${lo.lat}+${lo.lng}`}
+                          >
+                            {" "}
+                            Search on GoogleMap
+                          </a>
+                          {lo.verified != true ? (
+                            <Button disabled="true">Not Verified</Button>
+                          ) : (
+                            <Button>Verified</Button>
+                          )}
+                        </div>
+                      </InfoWindow>
+                    )}
+                  </Marker>
+                ))}
+                {/* {newCenter && !clickSomewhere && <Marker position={newPlace} />}
+          {clickSomewhere && (
+            <Marker position={{ lat: newLat, lng: newLng }} />
+          )} */}
+              </GoogleMap>
+            </LoadScript>
+          </div>
+        </Card>
+
+        {token !== null && (
+          <Card
+            elevation={3}
+            sx={{ marginTop: "10px", borderRadius: "20px", width: "98vw" }}
+          >
+            <p
+              style={{
+                textAlign: "center",
+                paddingBottom: "0",
+                color: "#2669ba",
+                fontWeight: "bold",
+              }}
+            >
+              Spread water throughout your community{" "}
+              <Diversity1Icon
                 style={{
-                  boxSizing: `border-box`,
-                  border: `1px solid transparent`,
-                  width: `200px`,
-                  maxWidth: "400px",
-                  height: `40px`,
-                  padding: `0 12px`,
-                  borderRadius: `3px`,
-                  boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
-                  fontSize: `14px`,
-                  outline: `none`,
-                  textOverflow: `ellipses`,
-                  position: "absolute",
-                  left: "10px",
-                  opacity: "90%",
+                  position: "relative",
+                  top: "5px",
                 }}
               />
-            </StandaloneSearchBox>
-            <IconButton onClick={handleGoBack} style={{position:"absolut", marginLeft:"210px", marginTop:"10px" }}>
-              <MyLocationIcon/>
-            </IconButton>
-            <Marker
-              icon={process.env.PUBLIC_URL + "/resources/person.png"}
-              position={center}
-            />
-            {locale?.map((lo, index) => (
-              <Marker key={lo._id} 
-              position={{ lat: lo.lat, lng: lo.lng }} 
-              onClick={e=>markerClicked(lo, index)}
-              onDragEnd={e=>markerDragEnd(e, index)}
-              icon={process.env.PUBLIC_URL + '/resources/mdi_drop.svg'}
-              >
-                {activeInfoWindow === index && !clickSomewhere && (
-                  <InfoWindow
-                    onLoad={onLoad}
-                    position={{ lat: lo.lat, lng: lo.lng }}
+            </p>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                paddingTop: "0",
+              }}
+            >
+              <div style={{ padding: "10px" }}>
+                <Link to="/addnewlocation">
+                  <Button
+                    style={{
+                      width: "auto",
+                      height: "40px",
+                    }}
+                    variant="outlined"
                   >
-                    <div>
-                      <h2>Info</h2>
-                      {lo.url? <div style={{ display:"flex", justifyContent:"center"}}><img src={lo.url} alt={lo.title} style={{width:"200px"}}/></div> : null}
-                      <p>Tittle: {lo.title}</p>
-                      <p>Creator: {lo.creator}</p>
-                      <p>Address: {lo?.address}</p>
-                      <p>Description: {lo.description}</p>
-                      <a
-                        className="google-link"
-                        href={`https://www.google.com/maps?z=12&t=m&q=loc:${lo.lat}+${lo.lng}`}
-                      >
-                        {" "}
-                        Search on GoogleMap
-                      </a>
-                      {lo.verified != true ? (
-                        <Button disabled="true">Not Verified</Button>
-                      ) : (
-                        <Button>Verified</Button>
-                      )}
-                    </div>
-                  </InfoWindow>
-                )}
-              </Marker>
-            ))}
-            {/* {newCenter && !clickSomewhere && <Marker position={newPlace} />}
-            {clickSomewhere && (
-              <Marker position={{ lat: newLat, lng: newLng }} />
-            )} */}
-          </GoogleMap>
-        </LoadScript>
-      </div>
-      {token !== null && (
-        <>
-          <p
-            style={{
-              textAlign: "center",
-              paddingBottom: "15px",
-              color: "#2669ba",
-              fontWeight: "bold",
-            }}
-          >
-            Spread water throughout your community{" "}
-            <Diversity1Icon
-              style={{
-                position: "relative",
-                top: "5px",
-              }}
-            />
-          </p>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              paddingTop: "5px",
-            }}
-          >
-            <div style={{ padding: "10px" }}>
-              <Link to="/addnewlocation">
-                <Button
-                  style={{
-                    width: "auto",
-                    height: "40px",
-                  }}
-                  variant="outlined"
-                >
-                  <AddLocationAltRoundedIcon />
-                  add new water point
-                </Button>
-              </Link>
+                    <AddLocationAltRoundedIcon />
+                    add new water point
+                  </Button>
+                </Link>
+              </div>
             </div>
-          </div>
-        </>
-      )}
-      {token === null && (
-        <div>
-          <p
-            style={{
-              textAlign: "center",
-              paddingBottom: "15px",
-              color: "#2669ba",
-              fontWeight: "bold",
-            }}
+          </Card>
+        )}
+        {token === null && (
+          <Card
+            elevation={3}
+            sx={{ marginTop: "10px", borderRadius: "20px", width: "98vw" }}
           >
-            Spread water throughout your community{" "}
-            <Diversity1Icon
-              style={{
-                position: "relative",
-                top: "5px",
-              }}
-            />
-          </p>
-          <AddNewLocationModal />
-        </div>
-      )}
+            <div>
+              {" "}
+              <p
+                style={{
+                  textAlign: "center",
+                  paddingBottom: "0",
+                  color: "#2669ba",
+                  fontWeight: "bold",
+                }}
+              >
+                Spread water throughout your community{" "}
+                <Diversity1Icon
+                  style={{
+                    position: "relative",
+                    top: "5px",
+                  }}
+                />
+              </p>
+            </div>
+            <AddNewLocationModal />
+          </Card>
+        )}
+      </div>
     </div>
   );
 }

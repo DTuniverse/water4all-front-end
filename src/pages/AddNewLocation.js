@@ -9,18 +9,31 @@ import {
 import { getGeocode, getLatLng } from "use-places-autocomplete";
 import { AuthContext } from "../context/authContext";
 import { useJwt } from "react-jwt";
-import { Button, FormControl, Box, Input, TextField, Switch, FormControlLabel, Modal, Checkbox, IconButton } from "@mui/material";
+import {
+  Button,
+  FormControl,
+  Box,
+  Input,
+  TextField,
+  Switch,
+  FormControlLabel,
+  Modal,
+  Checkbox,
+  IconButton,
+} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import "./Map.css";
-import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import AddLocationAltRoundedIcon from "@mui/icons-material/AddLocationAltRounded";
 import TouchAppRoundedIcon from "@mui/icons-material/TouchAppRounded";
 import Diversity1Icon from "@mui/icons-material/Diversity1";
 import TouchAppOutlinedIcon from "@mui/icons-material/TouchAppOutlined";
 import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
 import { Add } from "@mui/icons-material";
-import InfoIcon from '@mui/icons-material/Info';
-import MyLocationIcon from '@mui/icons-material/MyLocation';
+import InfoIcon from "@mui/icons-material/Info";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import MyLocationIcon from "@mui/icons-material/MyLocation";
 
 export default function AddNewLocation() {
   // const google = window.google;
@@ -80,37 +93,40 @@ export default function AddNewLocation() {
   };
 
   //upload photo
-  const onSubmit = async(e)=>{
-      e.preventDefault();
-      try{
-          const formData = new FormData();
-          formData.append('picture', image, image.name);
-          //(field, state image, file name)
-          console.log(`formData ${formData}`)
-          let res = await fetch('https://water4all-backend.onrender.com/api/upload', {
-            method: "POST",
-            headers:{
-              Authorization: `Bearer ${token}`,
-            },
-            body: formData
-          });
-          setUploaded(true);
-          setError(false);
-          handleUrl();
-          setPhotoAdded(true);
-      }catch(err){
-        setError(err)
-      }
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const formData = new FormData();
+      formData.append("picture", image, image.name);
+      //(field, state image, file name)
+      console.log(`formData ${formData}`);
+      let res = await fetch(
+        "https://water4all-backend.onrender.com/api/upload",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        }
+      );
+      setUploaded(true);
+      setError(false);
+      handleUrl();
+      setPhotoAdded(true);
+    } catch (err) {
+      setError(err);
+    }
   };
 
-  const fileData = ()=>{
-    if(image){
-      return(
+  const fileData = () => {
+    if (image) {
+      return (
         <h5>
           <em>{image.name}</em>
         </h5>
-      )
-      return null
+      );
+      return null;
     }
   };
 
@@ -173,11 +189,10 @@ export default function AddNewLocation() {
   useEffect(() => {
     getNewLocation();
   }, [isAdded]);
- 
 
   const containerStyle = {
     width: "100vw",
-    height: "70vh",
+    height: "75vh",
     // borderRadius: "10px",
     // border: "3px solid #2669ba ",
   };
@@ -230,16 +245,18 @@ export default function AddNewLocation() {
   console.log(`username : ${decodedToken?._id}`);
 
   // picture URL
-  const handleUrl = async() => {
-    try{
-      const res = await fetch("https://water4all-backend.onrender.com/api/image");
+  const handleUrl = async () => {
+    try {
+      const res = await fetch(
+        "https://water4all-backend.onrender.com/api/image"
+      );
       const data = await res.json();
-      const imageUrl = data.image.slice(-1)[0].url
+      const imageUrl = data.image.slice(-1)[0].url;
       setImgUrl(imageUrl);
       setOpen(false);
-    }catch(err){
-    console.log(err)
-  };
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   console.log(`imgUrl ${imgUrl}`);
@@ -257,7 +274,7 @@ export default function AddNewLocation() {
       user_id: decodedToken?._id,
       url: imgUrl,
     };
-    
+
     console.log("CONSOLE LOG NEW POST", newPost);
     try {
       const res = await fetch("https://water4all-backend.onrender.com/posts", {
@@ -293,11 +310,10 @@ export default function AddNewLocation() {
     console.log(event.latLng.lat());
     console.log(event.latLng.lng());
   };
-  
+
   const handleGoBack = () => {
     setGoBack(true);
   };
-
 
   console.log(`zoom: ${currentZoom}`);
   // console.log(`description: ${addDescription}`)
@@ -305,143 +321,203 @@ export default function AddNewLocation() {
   // console.log("NEWPLACE ", newPlace )
   // console.log("CENTER ", center )
 
-
   return (
     <>
-      <div className="mapcontainer">
-        <LoadScript
-          libraries={libraries}
-          googleMapsApiKey={process.env.REACT_APP_MAP_API_KEY}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Card
+          elevation={3}
+          style={{ marginTop: "10px", borderRadius: "20px", width: "98vw" }}
         >
-          <GoogleMap
-            mapContainerStyle={containerStyle}
-            center={goBack ? {lat:lat, lng:lng} : addLocation? {lat: newLat, lng: newLng} : newCenter ? newPlace : center.lat ? center : defaultCenter}
-            zoom={currentZoom}
-            // onCenterChanged={handleZoom}
-            onClick={mapClicked}
-            options={{
-              mapTypeControl: false,
-              streetViewControl: true,
-            }}
-          >
-            <StandaloneSearchBox
-              onLoad={onLoad}
-              onPlacesChanged={onPlacesChanged}
+          <div className="mapcontainer">
+            <LoadScript
+              libraries={libraries}
+              googleMapsApiKey={process.env.REACT_APP_MAP_API_KEY}
             >
-              <input
-                onChange={(e) => setValue(e.target.value)}
-                value={value}
-                type="text"
-                placeholder="Search"
-                style={{
-                  boxSizing: `border-box`,
-                  border: `1px solid transparent`,
-                  width: `200px`,
-                  maxWidth: "400px",
-                  height: `40px`,
-                  padding: `0 12px`,
-                  borderRadius: `3px`,
-                  boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
-                  fontSize: `14px`,
-                  outline: `none`,
-                  textOverflow: `ellipses`,
-                  position: "absolute",
-                  left: "10px",
-                  opacity: "90%",
-                }}
-              />
-            </StandaloneSearchBox>
-            <IconButton onClick={handleGoBack} style={{position:"absolut", marginLeft:"210px", marginTop:"10px" }}>
-              <MyLocationIcon/>
-            </IconButton>
-            <Marker
-              icon={process.env.PUBLIC_URL + "/resources/person.png"}
-              position={center}
-            />
-            {locale?.map((lo, index) => (
-              <Marker
-                key={lo._id}
-                position={{ lat: lo.lat, lng: lo.lng }}
-                onClick={(e) => markerClicked(lo, index)}
-                onDragEnd={(e) => markerDragEnd(e, index)}
-                icon={
-                  process.env.PUBLIC_URL + "/resources/mdi_drop.svg"
+              <GoogleMap
+                mapContainerStyle={containerStyle}
+                center={
+                  goBack
+                    ? { lat: lat, lng: lng }
+                    : addLocation
+                    ? { lat: newLat, lng: newLng }
+                    : newCenter
+                    ? newPlace
+                    : center.lat
+                    ? center
+                    : defaultCenter
                 }
+                zoom={currentZoom}
+                // onCenterChanged={handleZoom}
+                onClick={mapClicked}
+                options={{
+                  mapTypeControl: false,
+                  streetViewControl: true,
+                }}
               >
-                {activeInfoWindow === index && (
-                  <InfoWindow
-                    onLoad={onLoad}
-                    position={{ lat: lo.lat, lng: lo.lng }}
-                  >
-                    <div>
-                      <h2>Information</h2>
-                      {lo.url? <div style={{ display:"flex", justifyContent:"center"}}><img src={lo.url} alt={lo.title} style={{width:"200px", borderRadius:"10px"}}/></div> : null}
-                      {lo.verified != true ? (
-                        <Button disabled>Not Verified</Button>
-                      ) : (
-                        <Button>Verified</Button>
-                      )}
-                      <div style={{width:"200px", height:"200px", display:"flex", flexDirection:"column", justifyContent:"space-between"}}>
-                      <p><strong>Tittle: </strong>{lo.title}</p>
-                      <p><strong>Creator: </strong>{lo.creator}</p>
-                      <p><strong>Description: </strong>{lo.description}</p>
-                      <p><strong>Address: </strong>{lo.address}</p>
-                      <a
-                        className="google-link"
-                        href={`https://www.google.com/maps?z=12&t=m&q=loc:${lo.lat}+${lo.lng}`}
-                      >
-                        {" "}
-                        Search on GoogleMap
-                      </a>
-                      </div>
-                    </div>
-                  </InfoWindow>
-                )}
-              </Marker>
-            ))}
-            {newCenter && !clickSomewhere && (
-              <Marker onClick={() => setAddSearch(true)} position={newPlace} />
-            )}
-            {addLocation && !addSearch && (
-              <Marker
-                onClick={() => setAddLocation(true)}
-                position={{ lat: newLat, lng: newLng }}
-              />
-            )}
-            {addLocation && (
-              <Box
-                position="absolute"
-                bottom="23px"
-                left="10px"
-                width="200px"
-                noValidate
-                autoComplete="off"
-              >
-                <FormControl
-                  sx={{
-                    backgroundColor: "white",
-                    opacity: "90%",
-                  }}
+                <StandaloneSearchBox
+                  onLoad={onLoad}
+                  onPlacesChanged={onPlacesChanged}
                 >
-               
                   <input
-                    onChange={(e) => setAddTittle(e.target.value)}
-                    value={addTittle}
+                    onChange={(e) => setValue(e.target.value)}
+                    value={value}
                     type="text"
-                    placeholder="Name / Type"
+                    placeholder="Search"
                     style={{
+                      boxSizing: `border-box`,
+                      border: `1px solid transparent`,
                       width: `200px`,
-                      height: `60px`,
+                      maxWidth: "400px",
+                      height: `40px`,
                       padding: `0 12px`,
-                      margin: "0",
                       borderRadius: `3px`,
-
+                      boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
                       fontSize: `14px`,
                       outline: `none`,
                       textOverflow: `ellipses`,
+                      position: "absolute",
+                      left: "10px",
+                      opacity: "90%",
                     }}
                   />
-                  {/* <TextField
+                </StandaloneSearchBox>
+                <IconButton
+                  onClick={handleGoBack}
+                  style={{
+                    position: "absolut",
+                    marginLeft: "210px",
+                    marginTop: "10px",
+                  }}
+                >
+                  <MyLocationIcon />
+                </IconButton>
+                <Marker
+                  icon={process.env.PUBLIC_URL + "/resources/person.png"}
+                  position={center}
+                />
+                {locale?.map((lo, index) => (
+                  <Marker
+                    key={lo._id}
+                    position={{ lat: lo.lat, lng: lo.lng }}
+                    onClick={(e) => markerClicked(lo, index)}
+                    onDragEnd={(e) => markerDragEnd(e, index)}
+                    icon={process.env.PUBLIC_URL + "/resources/mdi_drop.svg"}
+                  >
+                    {activeInfoWindow === index && (
+                      <InfoWindow
+                        onLoad={onLoad}
+                        position={{ lat: lo.lat, lng: lo.lng }}
+                      >
+                        <div>
+                          <h2>Information</h2>
+                          {lo.url ? (
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <img
+                                src={lo.url}
+                                alt={lo.title}
+                                style={{ width: "200px", borderRadius: "10px" }}
+                              />
+                            </div>
+                          ) : null}
+                          {lo.verified != true ? (
+                            <Button disabled>Not Verified</Button>
+                          ) : (
+                            <Button>Verified</Button>
+                          )}
+                          <div
+                            style={{
+                              width: "200px",
+                              height: "200px",
+                              display: "flex",
+                              flexDirection: "column",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <p>
+                              <strong>Tittle: </strong>
+                              {lo.title}
+                            </p>
+                            <p>
+                              <strong>Creator: </strong>
+                              {lo.creator}
+                            </p>
+                            <p>
+                              <strong>Description: </strong>
+                              {lo.description}
+                            </p>
+                            <p>
+                              <strong>Address: </strong>
+                              {lo.address}
+                            </p>
+                            <a
+                              className="google-link"
+                              href={`https://www.google.com/maps?z=12&t=m&q=loc:${lo.lat}+${lo.lng}`}
+                            >
+                              {" "}
+                              Search on GoogleMap
+                            </a>
+                          </div>
+                        </div>
+                      </InfoWindow>
+                    )}
+                  </Marker>
+                ))}
+                {newCenter && !clickSomewhere && (
+                  <Marker
+                    onClick={() => setAddSearch(true)}
+                    position={newPlace}
+                  />
+                )}
+                {addLocation && !addSearch && (
+                  <Marker
+                    onClick={() => setAddLocation(true)}
+                    position={{ lat: newLat, lng: newLng }}
+                  />
+                )}
+                {addLocation && (
+                  <Box
+                    position="absolute"
+                    bottom="23px"
+                    left="10px"
+                    width="200px"
+                    noValidate
+                    autoComplete="off"
+                  >
+                    <FormControl
+                      sx={{
+                        backgroundColor: "white",
+                        opacity: "90%",
+                      }}
+                    >
+                      <input
+                        onChange={(e) => setAddTittle(e.target.value)}
+                        value={addTittle}
+                        type="text"
+                        placeholder="Name / Type"
+                        style={{
+                          width: `200px`,
+                          height: `60px`,
+                          padding: `0 12px`,
+                          margin: "0",
+                          borderRadius: `3px`,
+
+                          fontSize: `14px`,
+                          outline: `none`,
+                          textOverflow: `ellipses`,
+                        }}
+                      />
+                      {/* <TextField
                     label="Name/Type: "
                     value={addTittle}
                     onChange={(e) => setAddTittle(e.target.value)}
@@ -452,90 +528,141 @@ export default function AddNewLocation() {
                       },
                     }}
                   /> */}
-                  {/* <Input label="User Name: " disabled="true" value={username} /> */}
-                  {/* <Input disabled="true" value={newLat} />
+                      {/* <Input label="User Name: " disabled="true" value={username} /> */}
+                      {/* <Input disabled="true" value={newLat} />
                 <Input disabled="true" value={newLng} /> */}
-                  <TextField
-                    label="Address: "
-                    value={address}
-                    disabled="true"
-                    inputProps={{
-                      style: {
-                        height: "32px",
-                        padding: "0 10px",
-                        background: "transparent",
-                        fontSize:"14px"
-                      },
-                    }}
-                    maxRows={2}
-                    variant="filled"
-                    multiline
-                  />
-                  <input
-                    onChange={(e) => setAddDescription(e.target.value)}
-                    value={addDescription}
-                    type="text"
-                    placeholder="Description"
-                    style={{
-                      width: `200px`,
-                      height: `60px`,
-                      padding: `0 12px`,
-                      margin: "0",
-                      borderRadius: `3px`,
-                      fontSize: `14px`,
-                      outline: `none`,
-                      textOverflow: `ellipses`,
-                    }}
-                  />
-                    {photoAdded? <FormControlLabel style={{display:"flex", justifyContent:"center"}} control={<Checkbox defaultChecked />} disabled label="Photo Added" /> : <Button style={{height:"60px"}} startIcon={<AddPhotoAlternateIcon />} onClick={handleOpen}>Add Photo</Button>}
-                 {wantPhoto?
-                 <div>
-                     <Modal
-                        open={open}
-                        onClose={uploaded && handleClose}
-                        aria-labelledby="child-modal-title"
-                        aria-describedby="child-modal-description"
-                      >
-                      <Box sx={{ ...style, width: "80vw" }}>
+                      <TextField
+                        label="Address: "
+                        value={address}
+                        disabled="true"
+                        inputProps={{
+                          style: {
+                            height: "32px",
+                            padding: "0 10px",
+                            background: "transparent",
+                            fontSize: "14px",
+                          },
+                        }}
+                        maxRows={2}
+                        variant="filled"
+                        multiline
+                      />
+                      <input
+                        onChange={(e) => setAddDescription(e.target.value)}
+                        value={addDescription}
+                        type="text"
+                        placeholder="Description"
+                        style={{
+                          width: `200px`,
+                          height: `60px`,
+                          padding: `0 12px`,
+                          margin: "0",
+                          borderRadius: `3px`,
+                          fontSize: `14px`,
+                          outline: `none`,
+                          textOverflow: `ellipses`,
+                        }}
+                      />
+                      {photoAdded ? (
+                        <FormControlLabel
+                          style={{ display: "flex", justifyContent: "center" }}
+                          control={<Checkbox defaultChecked />}
+                          disabled
+                          label="Photo Added"
+                        />
+                      ) : (
+                        <Button
+                          style={{ height: "60px" }}
+                          startIcon={<AddPhotoAlternateIcon />}
+                          onClick={handleOpen}
+                        >
+                          Add Photo
+                        </Button>
+                      )}
+                      {wantPhoto ? (
                         <div>
-                        <h2 style={{display:"flex", justifyContent:"center"}}>Upload Image</h2>
-                        <form onSubmit={onSubmit}>
-                              <div className="form-group">
-                                <div className="custom-file">
-                                  <input
-                                    type="file"
-                                    onChange={(e) => setImage(e.target.files[0])}
-                                    className="custom-file-input"
-                                    id="image"
-                                  />
+                          <Modal
+                            open={open}
+                            onClose={uploaded && handleClose}
+                            aria-labelledby="child-modal-title"
+                            aria-describedby="child-modal-description"
+                          >
+                            <Box sx={{ ...style, width: "80vw" }}>
+                              <div>
+                                <h2
+                                  style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                  }}
+                                >
+                                  Upload Image
+                                </h2>
+                                <form onSubmit={onSubmit}>
+                                  <div className="form-group">
+                                    <div className="custom-file">
+                                      <input
+                                        type="file"
+                                        onChange={(e) =>
+                                          setImage(e.target.files[0])
+                                        }
+                                        className="custom-file-input"
+                                        id="image"
+                                      />
 
-                              <label style={{fontSize:"smaller", marginBottom:"30px", marginLeft:"10px"}} htmlFor="image">
-                                {image ? fileData() : "Choose File"}
-                              </label>
-                            </div>
-                          </div>
+                                      <label
+                                        style={{
+                                          fontSize: "smaller",
+                                          marginBottom: "30px",
+                                          marginLeft: "10px",
+                                        }}
+                                        htmlFor="image"
+                                      >
+                                        {image ? fileData() : "Choose File"}
+                                      </label>
+                                    </div>
+                                  </div>
 
-                              <Button sx={{marginLeft:"10px", marginRight:"10px"}} variant="contained" color="error" onClick={handleClose}>
-                                Cancel
-                              </Button>
-                              <Button variant="contained"   onClick={onSubmit}>
-                                Upload
-                              </Button>
-                            
+                                  <Button
+                                    sx={{
+                                      marginLeft: "10px",
+                                      marginRight: "10px",
+                                    }}
+                                    variant="contained"
+                                    color="error"
+                                    onClick={handleClose}
+                                  >
+                                    Cancel
+                                  </Button>
+                                  <Button
+                                    variant="contained"
+                                    onClick={onSubmit}
+                                  >
+                                    Upload
+                                  </Button>
 
-                              {uploaded? <p style={{marginTop:"30px", fontSize:"smaller"}}>Upload Successfully!!!</p> : error ? (
-                                <div className="text-danger">
-                                  An error occurred uploading the file
-                                </div>
-                              ) : null}
-                            </form>
+                                  {uploaded ? (
+                                    <p
+                                      style={{
+                                        marginTop: "30px",
+                                        fontSize: "smaller",
+                                      }}
+                                    >
+                                      Upload Successfully!!!
+                                    </p>
+                                  ) : error ? (
+                                    <div className="text-danger">
+                                      An error occurred uploading the file
+                                    </div>
+                                  ) : null}
+                                </form>
+                              </div>
+                              {/* <FormControlLabel required disabled={!uploaded} control={<Switch onChange={handleUrl} />} label="Photo Added" /> */}
+                            </Box>
+                          </Modal>
                         </div>
-                        {/* <FormControlLabel required disabled={!uploaded} control={<Switch onChange={handleUrl} />} label="Photo Added" /> */}
-                        </Box>
-                    </Modal>
-                  </div> : null}
+                      ) : null}
 
-                  {/* <TextField
+                      {/* <TextField
                     label="Description: "
                     value={addDescription}
                     onChange={(e) => setAddDescription(e.target.value)}
@@ -547,194 +674,248 @@ export default function AddNewLocation() {
                     }}
                     variant="filled"
                   /> */}
-                  <div className="button-container">
-                    <Button
-                      style={{
-                        width: "60px",
-                        height: "60px",
-                        lineHeight: "40px",
+                      <div className="button-container">
+                        <Button
+                          style={{
+                            width: "60px",
+                            height: "60px",
+                            lineHeight: "40px",
+                          }}
+                          variant="contained"
+                          color="error"
+                          onClick={() => setAddLocation(false)}
+                        >
+                          <CloseIcon />
+                        </Button>
+                        <Button
+                          style={{
+                            width: "136px",
+                            height: "60px",
+                            lineHeight: "40px",
+                          }}
+                          variant="contained"
+                          color="success"
+                          disabled={
+                            !token ||
+                            addTittle === null ||
+                            addDescription === null
+                          }
+                          onClick={handleAdding}
+                        >
+                          <AddLocationAltRoundedIcon />
+                          Add
+                        </Button>
+                      </div>
+                    </FormControl>
+                  </Box>
+                )}
+                {addSearch && !clickSomewhere && (
+                  <Box
+                    position="absolute"
+                    bottom="23px"
+                    left="10px"
+                    width="200px"
+                    noValidate
+                    autoComplete="off"
+                  >
+                    <FormControl
+                      sx={{
+                        backgroundColor: "white",
+                        opacity: "90%",
                       }}
-                      variant="contained"
-                      color="error"
-                      onClick={() => setAddLocation(false)}
                     >
-                      <CloseIcon />
-                    </Button>
-                    <Button
-                      style={{
-                        width: "136px",
-                        height: "60px",
-                        lineHeight: "40px",
-                      }}
-                      variant="contained"
-                      color="success"
-                      disabled={
-                        !token || addTittle === null || addDescription === null
-                      }
-                      onClick={handleAdding}
-                    >
-                      <AddLocationAltRoundedIcon />
-                      Add
-                    </Button>
-                  </div>
-                </FormControl>
-              </Box>
-            )}
-            {addSearch && !clickSomewhere && (
-              <Box
-              position="absolute"
-              bottom="23px"
-              left="10px"
-              width="200px"
-              noValidate
-              autoComplete="off"
-              >
-                <FormControl
-                  sx={{
-                    backgroundColor: "white",
-                    opacity: "90%",
-                  }}
-                >
+                      <input
+                        onChange={(e) => setAddTittle(e.target.value)}
+                        value={addTittle}
+                        type="text"
+                        placeholder="Name / Type"
+                        style={{
+                          width: `200px`,
+                          height: `60px`,
+                          padding: `0 12px`,
+                          margin: "0",
+                          borderRadius: `3px`,
 
-                  <input
-                    onChange={(e) => setAddTittle(e.target.value)}
-                    value={addTittle}
-                    type="text"
-                    placeholder="Name / Type"
-                    style={{
-                      width: `200px`,
-                      height: `60px`,
-                      padding: `0 12px`,
-                      margin: "0",
-                      borderRadius: `3px`,
-
-                      fontSize: `14px`,
-                      outline: `none`,
-                      textOverflow: `ellipses`,
-                    }}
-                  />
-                  {/* <TextField
+                          fontSize: `14px`,
+                          outline: `none`,
+                          textOverflow: `ellipses`,
+                        }}
+                      />
+                      {/* <TextField
                     label="Tittle: "
                     value={addTittle}
                     onChange={(e) => setAddTittle(e.target.value)}
                   /> */}
-                  <TextField
-                    label="Address: "
-                    value={searchAddress}
-                    disabled="true"
-                    inputProps={{
-                      style: {
-                        height: "32px",
-                        padding: "0 12px",
-                        background: "transparent",
-                        fontSize:"14px"
-                      },
-                    }}
-                    maxRows={2}
-                    variant="filled"
-                    multiline
-                  />
-                  <input
-                    onChange={(e) => setAddDescription(e.target.value)}
-                    value={addDescription}
-                    type="text"
-                    placeholder="Description"
-                    style={{
-                      width: `200px`,
-                      height: `60px`,
-                      padding: `0 12px`,
-                      margin: "0",
-                      borderRadius: `3px`,
-                      fontSize: `14px`,
-                      outline: `none`,
-                      textOverflow: `ellipses`,
-                    }}
-                  />
-                  
-                  {photoAdded? <FormControlLabel style={{display:"flex", justifyContent:"center"}} control={<Checkbox defaultChecked />} disabled label="Photo Added" /> : <Button style={{height:"60px"}} startIcon={<AddPhotoAlternateIcon />} onClick={handleOpen}>Add Photo</Button>}
-                 {wantPhoto?
-                 <div>
-                     <Modal
-                        open={open}
-                        onClose={uploaded && handleClose}
-                        aria-labelledby="child-modal-title"
-                        aria-describedby="child-modal-description"
-                      >
-                      <Box sx={{ ...style, width: "80vw" }}>
+                      <TextField
+                        label="Address: "
+                        value={searchAddress}
+                        disabled="true"
+                        inputProps={{
+                          style: {
+                            height: "32px",
+                            padding: "0 12px",
+                            background: "transparent",
+                            fontSize: "14px",
+                          },
+                        }}
+                        maxRows={2}
+                        variant="filled"
+                        multiline
+                      />
+                      <input
+                        onChange={(e) => setAddDescription(e.target.value)}
+                        value={addDescription}
+                        type="text"
+                        placeholder="Description"
+                        style={{
+                          width: `200px`,
+                          height: `60px`,
+                          padding: `0 12px`,
+                          margin: "0",
+                          borderRadius: `3px`,
+                          fontSize: `14px`,
+                          outline: `none`,
+                          textOverflow: `ellipses`,
+                        }}
+                      />
+
+                      {photoAdded ? (
+                        <FormControlLabel
+                          style={{ display: "flex", justifyContent: "center" }}
+                          control={<Checkbox defaultChecked />}
+                          disabled
+                          label="Photo Added"
+                        />
+                      ) : (
+                        <Button
+                          style={{ height: "60px" }}
+                          startIcon={<AddPhotoAlternateIcon />}
+                          onClick={handleOpen}
+                        >
+                          Add Photo
+                        </Button>
+                      )}
+                      {wantPhoto ? (
                         <div>
-                        <h2 style={{display:"flex", justifyContent:"center"}}>Upload Image</h2>
-                        <form onSubmit={onSubmit}>
-                              <div className="form-group">
-                                <div className="custom-file">
-                                  <input
-                                    type="file"
-                                    onChange={(e) => setImage(e.target.files[0])}
-                                    className="custom-file-input"
-                                    id="image"
-                                  />
+                          <Modal
+                            open={open}
+                            onClose={uploaded && handleClose}
+                            aria-labelledby="child-modal-title"
+                            aria-describedby="child-modal-description"
+                          >
+                            <Box sx={{ ...style, width: "80vw" }}>
+                              <div>
+                                <h2
+                                  style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                  }}
+                                >
+                                  Upload Image
+                                </h2>
+                                <form onSubmit={onSubmit}>
+                                  <div className="form-group">
+                                    <div className="custom-file">
+                                      <input
+                                        type="file"
+                                        onChange={(e) =>
+                                          setImage(e.target.files[0])
+                                        }
+                                        className="custom-file-input"
+                                        id="image"
+                                      />
 
-                              <label style={{fontSize:"smaller", marginBottom:"30px", marginLeft:"10px"}} htmlFor="image">
-                                {image ? fileData() : "Choose File"}
-                              </label>
-                            </div>
-                          </div>
+                                      <label
+                                        style={{
+                                          fontSize: "smaller",
+                                          marginBottom: "30px",
+                                          marginLeft: "10px",
+                                        }}
+                                        htmlFor="image"
+                                      >
+                                        {image ? fileData() : "Choose File"}
+                                      </label>
+                                    </div>
+                                  </div>
 
-                              <Button sx={{marginLeft:"10px", marginRight:"10px"}} variant="contained" color="error" onClick={handleClose}>
-                                Cancel
-                              </Button>
-                              <Button variant="contained"   onClick={onSubmit}>
-                                Upload
-                              </Button>
-                            
-                              {uploaded? <p style={{marginTop:"30px", fontSize:"smaller"}}>Upload Successfully!!!</p> : error ? (
-                                <div className="text-danger">
-                                  An error occurred uploading the file
-                                </div>
-                              ) : null}
-                            </form>
+                                  <Button
+                                    sx={{
+                                      marginLeft: "10px",
+                                      marginRight: "10px",
+                                    }}
+                                    variant="contained"
+                                    color="error"
+                                    onClick={handleClose}
+                                  >
+                                    Cancel
+                                  </Button>
+                                  <Button
+                                    variant="contained"
+                                    onClick={onSubmit}
+                                  >
+                                    Upload
+                                  </Button>
+
+                                  {uploaded ? (
+                                    <p
+                                      style={{
+                                        marginTop: "30px",
+                                        fontSize: "smaller",
+                                      }}
+                                    >
+                                      Upload Successfully!!!
+                                    </p>
+                                  ) : error ? (
+                                    <div className="text-danger">
+                                      An error occurred uploading the file
+                                    </div>
+                                  ) : null}
+                                </form>
+                              </div>
+                              {/* <FormControlLabel required disabled={!uploaded} control={<Switch onChange={handleUrl} />} label="Photo Added" /> */}
+                            </Box>
+                          </Modal>
                         </div>
-                        {/* <FormControlLabel required disabled={!uploaded} control={<Switch onChange={handleUrl} />} label="Photo Added" /> */}
-                        </Box>
-                    </Modal>
-                  </div> : null}
+                      ) : null}
 
-
-                  {/* <TextField
+                      {/* <TextField
                     label="Description: "
                     value={addDescription}
                     onChange={(e) => setAddDescription(e.target.value)}
                   /> */}
-                  <div className="button-container">
-                    <Button
-                      style={{
-                        width: "60px",
-                        height: "60px",
-                        lineHeight: "40px",
-                      }}
-                      variant="contained"
-                      color="error"
-                      onClick={() => setAddSearch(false)}
-                    >
-                      <CloseIcon />
-                    </Button>
-                    <Button
-                      style={{
-                        width: "136px",
-                        height: "60px",
-                        lineHeight: "40px",
-                      }}
-                      variant="contained"
-                      color="success"
-                      disabled={
-                        !token || addTittle === null || addDescription === null
-                      }
-                      onClick={handleAdding}
-                    >
-                      <AddLocationAltRoundedIcon />
-                      Add
-                    </Button>
-                  </div>
-                  {/* <Button
+                      <div className="button-container">
+                        <Button
+                          style={{
+                            width: "60px",
+                            height: "60px",
+                            lineHeight: "40px",
+                          }}
+                          variant="contained"
+                          color="error"
+                          onClick={() => setAddSearch(false)}
+                        >
+                          <CloseIcon />
+                        </Button>
+                        <Button
+                          style={{
+                            width: "136px",
+                            height: "60px",
+                            lineHeight: "40px",
+                          }}
+                          variant="contained"
+                          color="success"
+                          disabled={
+                            !token ||
+                            addTittle === null ||
+                            addDescription === null
+                          }
+                          onClick={handleAdding}
+                        >
+                          <AddLocationAltRoundedIcon />
+                          Add
+                        </Button>
+                      </div>
+                      {/* <Button
                     sx={{
                       display: "flex",
                       justifyContent: "start",
@@ -754,38 +935,48 @@ export default function AddNewLocation() {
                   >
                     Add Water Point
                   </Button> */}
-                </FormControl>
-              </Box>
-            )}
-          </GoogleMap>
-        </LoadScript>
-      </div>
-
-      <div>
-        <p
-          style={{
-            textAlign: "center",
-            paddingTop: "15px",
-            color: "#2669ba",
-            fontWeight: "bold",
-          }}
+                    </FormControl>
+                  </Box>
+                )}
+              </GoogleMap>
+            </LoadScript>
+          </div>
+        </Card>
+        <Card
+          elevation={3}
+          sx={{ marginTop: "10px", borderRadius: "20px", width: "98vw" }}
         >
-          To add a new water point please tap{" "}
-          <TouchAppOutlinedIcon
-            style={{
-              position: "relative",
-              top: "2px",
-            }}
-          />
-          on the map or use search bar to look for the required location .
-        </p>
-        <br />
+          <div>
+            {/* <img
+          style={{
+            position: "relative",
+            top: "40px",
+            left: "40px",
+            rotate: "270deg",
+          }}
+          src={process.env.PUBLIC_URL + "/resources/Ellipse 5ellipse10.png"}
+        ></img> */}
+            <p
+              style={{
+                textAlign: "center",
+                paddingTop: "15px",
+                color: "#2669ba",
+                fontWeight: "bold",
+              }}
+            >
+              To add a new water point please tap
+              <TouchAppOutlinedIcon
+                style={{
+                  position: "relative",
+                  top: "2px",
+                }}
+              />
+              on the map or use search bar to look for the required location.
+            </p>
+            <br />
+          </div>
+        </Card>
       </div>
     </>
   );
 }
-
-
-
-
-  
