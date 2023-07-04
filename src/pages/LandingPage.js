@@ -8,7 +8,8 @@ import LandingPageShopCard from "../components/LandingPageShopCard";
 
 export default function LandingPage() {
   return (
-    <div>
+    <div className="mainC">
+      <div className="landingCenterinator">
       <div className="landingHeadlineContainer">
         <span className="landingHeadline">LOCATING FREE</span>
         <span className="landingHeadline"> WATER SOURCES</span>
@@ -27,26 +28,22 @@ export default function LandingPage() {
             <img  className="heroImage" src={process.env.PUBLIC_URL + "/resources/Group 20 (1).svg"} 
             alt="Cartoon people working around a globe"/>
         </div>
-        <div className="missionParentContainer">
             <div className="missionH1Container">
               <h1 className="missionH1" style={{ textAlign: "left" }}>OUR MISSION</h1>
             </div>
-            <div className="missionPContainer">
-              <p className="missionP">
+            <div className="missionPLandingContainer">
+              <p className="missionPLanding">
                 Our mission is to ensure easy access to clean drinking water for everyone.
-                hrough our interactive map, we provide locations 
+                Through our interactive map, we provide locations of 
                 <br />
-                of drinking fountains, restaurants,
-                cafés 
+                drinking fountains, restaurants,
+                cafés and 
                 <br />
-                and other places where people can find
+                other places where people can find free 
+                <br />drinking water.
                 <br />
-                free drinking water.
-                YOU can contribute 
-                <br />
-                by adding more places and ratings to the existing ones.
+                YOU can contribute by adding more places and ratings to the existing ones.
               </p>
-            </div>
         </div>
         <div>
 
@@ -66,6 +63,7 @@ export default function LandingPage() {
                         <LandingPageShopCard />
                     </div>
             </Container>
+      </div>
     </div>    
     )
 } ;
