@@ -9,7 +9,7 @@ import {
 import { getGeocode, getLatLng } from "use-places-autocomplete";
 import { AuthContext } from "../context/authContext";
 import { useJwt } from "react-jwt";
-import { Button, FormControl, Box, Input, TextField, Switch, FormControlLabel, Modal, Checkbox } from "@mui/material";
+import { Button, FormControl, Box, Input, TextField, Switch, FormControlLabel, Modal, Checkbox, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import "./Map.css";
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
@@ -20,6 +20,7 @@ import TouchAppOutlinedIcon from "@mui/icons-material/TouchAppOutlined";
 import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
 import { Add } from "@mui/icons-material";
 import InfoIcon from '@mui/icons-material/Info';
+import MyLocationIcon from '@mui/icons-material/MyLocation';
 
 export default function AddNewLocation() {
   // const google = window.google;
@@ -53,6 +54,7 @@ export default function AddNewLocation() {
   const [error, setError] = useState(false);
   const [open, setOpen] = useState(false);
   const [photoAdded, setPhotoAdded] = useState(false);
+  const [goBack, setGoBack] = useState(false);
 
   // upload photo for new post
   const style = {
@@ -138,6 +140,7 @@ export default function AddNewLocation() {
       setPhotoAdded(false);
       setCurrentZoom(15);
       setActiveInfoWindow(false);
+      setGoBack(false);
       console.log(`new lat: ${newLat}`);
       const geocoder = new window.google.maps.Geocoder();
       geocoder.geocode(
@@ -216,6 +219,7 @@ export default function AddNewLocation() {
     setImage(false);
     setPhotoAdded(false);
     setActiveInfoWindow(false);
+    setGoBack(false);
   };
   console.log(
     `get or not? lat: ${newLat} lng: ${newLng} addLocation: ${addLocation} `,
@@ -289,6 +293,10 @@ export default function AddNewLocation() {
     console.log(event.latLng.lat());
     console.log(event.latLng.lng());
   };
+  
+  const handleGoBack = () => {
+    setGoBack(true);
+  };
 
 
   console.log(`zoom: ${currentZoom}`);
@@ -307,7 +315,7 @@ export default function AddNewLocation() {
         >
           <GoogleMap
             mapContainerStyle={containerStyle}
-            center={addLocation? {lat: newLat, lng: newLng} : newCenter ? newPlace : center.lat ? center : defaultCenter}
+            center={goBack ? {lat:lat, lng:lng} : addLocation? {lat: newLat, lng: newLng} : newCenter ? newPlace : center.lat ? center : defaultCenter}
             zoom={currentZoom}
             // onCenterChanged={handleZoom}
             onClick={mapClicked}
@@ -343,6 +351,9 @@ export default function AddNewLocation() {
                 }}
               />
             </StandaloneSearchBox>
+            <IconButton onClick={handleGoBack} style={{position:"absolut", marginLeft:"210px", marginTop:"10px" }}>
+              <MyLocationIcon/>
+            </IconButton>
             <Marker
               icon={process.env.PUBLIC_URL + "/resources/person.png"}
               position={center}
@@ -371,10 +382,10 @@ export default function AddNewLocation() {
                         <Button>Verified</Button>
                       )}
                       <div style={{width:"200px", height:"200px", display:"flex", flexDirection:"column", justifyContent:"space-between"}}>
-                      <p>Tittle: {lo.title}</p>
-                      <p>Creator: {lo.creator}</p>
-                      <p>Description: {lo.description}</p>
-                      <p>Address: {lo.address}</p>
+                      <p><strong>Tittle: </strong>{lo.title}</p>
+                      <p><strong>Creator: </strong>{lo.creator}</p>
+                      <p><strong>Description: </strong>{lo.description}</p>
+                      <p><strong>Address: </strong>{lo.address}</p>
                       <a
                         className="google-link"
                         href={`https://www.google.com/maps?z=12&t=m&q=loc:${lo.lat}+${lo.lng}`}
