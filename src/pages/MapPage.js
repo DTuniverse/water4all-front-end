@@ -9,15 +9,15 @@ import {
 import { getLatLng } from "use-places-autocomplete";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/authContext";
-import { Button } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import "./Map.css";
 
 //
 import AddNewLocationModal from "../components/AddNewLocationModal";
-import IconButton from "@mui/material/IconButton";
 import AddLocationAltRoundedIcon from "@mui/icons-material/AddLocationAltRounded";
 import { Transform } from "@mui/icons-material";
 import Diversity1Icon from "@mui/icons-material/Diversity1";
+import MyLocationIcon from '@mui/icons-material/MyLocation';
 
 //
 
@@ -38,6 +38,7 @@ export default function MapPage() {
   const center = { lat: lat, lng: lng };
   const defaultCenter = { lat: 52.519432315072166, lng: 13.401147636877893 };
   const libraries = ["places", "streetView"];
+  const [goBack, setGoBack] = useState(false);
 
   // get all added locations
   const getNewLocation = async () => {
@@ -70,6 +71,7 @@ export default function MapPage() {
       setNewCenter(true);
       setNewPlace(result);
       setValue("");
+      setGoBack(false);
     } catch (error) {
       console.error("Error retrieving places", error);
     }
@@ -99,6 +101,7 @@ export default function MapPage() {
     setNewLng(newLng);
     setClickSomewhere(true);
     setCurrentZoom(15);
+    setGoBack(false);
   };
   console.log(`get or not? lat: ${newLat} lng: ${newLng} `);
 
@@ -121,9 +124,10 @@ export default function MapPage() {
     console.log(event.latLng.lng());
   };
 
-  const handleZoom = () => {
-    setCurrentZoom(15);
+  const handleGoBack = () => {
+    setGoBack(true);
   };
+  console.log(`go back ${goBack}`);
   console.log(`zoom: ${currentZoom}`);
   // console.log(Boolean(center.lat))
 
@@ -137,7 +141,7 @@ export default function MapPage() {
         >
           <GoogleMap
             mapContainerStyle={containerStyle}
-            center={clickSomewhere ? {lat: newLat, lng: newLng} : newCenter ? newPlace : (center.lat ? center : defaultCenter )}
+            center={goBack ? {lat:lat, lng:lng} : clickSomewhere ? {lat: newLat, lng: newLng} : newCenter ? newPlace : (center.lat ? center : defaultCenter )}
             zoom={currentZoom}
             // onCenterChanged={handleZoom}
             onClick={mapClicked}
@@ -146,6 +150,7 @@ export default function MapPage() {
               streetViewControl: true,
             }}
           >
+           
             <StandaloneSearchBox
               onLoad={onLoad}
               onPlacesChanged={onPlacesChanged}
@@ -173,6 +178,9 @@ export default function MapPage() {
                 }}
               />
             </StandaloneSearchBox>
+            <IconButton onClick={handleGoBack} style={{position:"absolut", marginLeft:"210px", marginTop:"10px" }}>
+              <MyLocationIcon/>
+            </IconButton>
             <Marker
               icon={process.env.PUBLIC_URL + "/resources/person.png"}
               position={center}

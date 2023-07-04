@@ -1,8 +1,8 @@
 import "../pages/LandingPage.css";
 import React from "react";
-import { Link } from 'react-router-dom';
-import MapPage from './MapPage';
-import Container from '@mui/material/Container';
+import { Link } from "react-router-dom";
+import MapPage from "./MapPage";
+import Container from "@mui/material/Container";
 import LandingPageBlogCard from "../components/LandingPageBlogCard";
 import LandingPageShopCard from "../components/LandingPageShopCard";
 

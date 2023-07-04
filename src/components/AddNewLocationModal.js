@@ -13,7 +13,7 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: 400,
-  bgcolor: "background.paper",
+  bgcolor: "#E9FBFF",
   border: "2px solid #000",
   boxShadow: 24,
   pt: 2,
@@ -32,14 +32,18 @@ function ChildModalLogin() {
 
   return (
     <React.Fragment>
-      <Button onClick={handleOpen}>
+      <Button
+        onClick={handleOpen}
+        style={{ fontSize: "16px", margin: "5px" }}
+        variant="outlined"
+      >
         <LoginRoundedIcon
           style={{
             position: "relative",
             right: "5px",
           }}
         />
-        Login
+        Log In
       </Button>
       <Modal
         open={open}
@@ -49,7 +53,11 @@ function ChildModalLogin() {
       >
         <Box sx={{ ...style, width: "95vw" }}>
           <Login />
-          <Button onClick={handleClose} color="error">
+          <Button
+            style={{ fontSize: "16px" }}
+            onClick={handleClose}
+            color="error"
+          >
             <CloseIcon />
             Close
           </Button>
@@ -69,7 +77,11 @@ function ChildModalSignUp() {
 
   return (
     <React.Fragment>
-      <Button onClick={handleOpen}>
+      <Button
+        style={{ fontSize: "16px", margin: "5px" }}
+        onClick={handleOpen}
+        variant="outlined"
+      >
         {" "}
         <PersonAddAlt1RoundedIcon
           style={{
@@ -77,7 +89,7 @@ function ChildModalSignUp() {
             right: "5px",
           }}
         />{" "}
-        Signup{" "}
+        Sign Up{" "}
       </Button>
       <Modal
         open={open}
@@ -87,7 +99,11 @@ function ChildModalSignUp() {
       >
         <Box sx={{ ...style, width: "95vw" }}>
           <Signup />
-          <Button onClick={handleClose} color="error">
+          <Button
+            style={{ fontSize: "16px" }}
+            onClick={handleClose}
+            color="error"
+          >
             <CloseIcon />
             Close
           </Button>
@@ -145,7 +161,11 @@ export default function NestedModal() {
           {/* <h2 id="parent-modal-title">Please login</h2> */}
           <ChildModalLogin />
           <ChildModalSignUp />
-          <Button onClick={handleClose} color="error">
+          <Button
+            style={{ fontSize: "16px", margin: "5px" }}
+            onClick={handleClose}
+            color="error"
+          >
             <CloseIcon />
             Close
           </Button>
