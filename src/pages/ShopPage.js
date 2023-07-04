@@ -28,191 +28,123 @@ export default function ShopPage() {
   // };
   return (
     <div className="generalwrapper">
-      <Container>
-        <div>
-          {/* <h1
-              style={{
-                textAlign: "center",
-                color: "#2669ba",
-                paddingTop: "50px",
-              }}
-            >
-              WATER SHOP
-            </h1> */}
-          <p
-            style={{
-              textAlign: "center",
-              paddingTop: "15px",
-              paddingBottom: "10px",
-            }}
-          >
-            Owning a refillable bottle means you always have a drink with you,
-            wherever you go.
-          </p>
-        </div>
-        <ShopCard />
-        <div>
-          <div>
-            <h3
-              style={{
-                textAlign: "center",
-                paddingTop: "50px",
-                paddingBottom: "25px",
-                color: "#2669ba",
-              }}
-            >
-              Why should you choose our bottle?
-            </h3>
-          </div>
-          <Card elevation={3}>
-            <CardContent>
-              <h4>Support water access for everyone</h4>
-              <br />
-              <Typography variant="body3" color="text.secondary">
-                By buying our branded bottles you support this site running and
-                make sure EVERYONE gets easy access to clean drinking water,
-                regardless of the individual challenges some might face.
-              </Typography>
-            </CardContent>
-          </Card>
-          <Card elevation={3} sx={{ marginTop: "25px" }}>
-            <CardContent>
-              <h4>UV Filter</h4>
-              <br />
-              <Typography variant="body3" color="text.secondary">
-                Specially developed to be reusable and with a UV filter, which
-                protects water from light, guaranteeing its properties.
-              </Typography>
-            </CardContent>
-          </Card>
-          <Card elevation={3} sx={{ marginTop: "25px" }}>
-            <CardContent>
-              <h4>Premium materials</h4>
-              <br />
-              <Typography variant="body3" color="text.secondary">
-                Aluminum keeps your drinks cold, does not leach harmful
-                chemicals, and doesn't risk a spill.
-              </Typography>
-            </CardContent>
-          </Card>
-          <Card elevation={3} sx={{ marginTop: "25px" }}>
-            <CardContent>
-              <h4>Environmental Advantages</h4>
-              <br />
-              <Typography variant="body3" color="text.secondary">
-                Less emissions in the production of bottles. Less emissions in
-                the transport of bottles. Fewer bottles as waste in landfills.
-                Fewer bottles in the oceans. Reuse it more than once and you're
-                already saving the environment!
-              </Typography>
-            </CardContent>
-          </Card>
-          {/* <div
-            style={{
-              textAlign: "center",
-              paddingTop: "25px",
-            }}
-          >
-            <BuyModal />
-          </div> */}
-
-          {/* <div className="accordion">
-            <Accordion
-              expanded={true}
-              // expanded={expanded === "panel1"}
-              onChange={handleChange("panel1")}
-            >
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1bh-content"
-                id="panel1bh-header"
+          <div className="shopPageFlexboxContainer">
+            <ShopCard />
+            <div>
+              <h3
+                style={{
+                  fontSize: "30px",
+                  textAlign: "center",
+                  paddingTop: "50px",
+                  paddingBottom: "25px",
+                  paddingLeft: "3px",
+                  paddingRight: "3px",
+                  color: "#2669ba",
+                }}
               >
-                <Typography sx={{ width: "33%", flexShrink: 0 }}>1</Typography>
-                <Typography sx={{ color: "text.secondary" }}>
-                  Support water access
+                Why should you choose our bottle?
+              </h3>
+            </div>
+            <Card sx={{
+            width: "98vw",
+            height: "auto",
+            borderRadius: "20px"
+            }} 
+            elevation={3}>
+              <CardContent>
+                <h4>Support water access for everyone</h4>
+                <br />
+                <Typography 
+                  style={{
+                    textAlign: "center",
+                    fontSize: "18px",
+                    paddingTop: "15px",
+                    paddingBottom: "15px",
+                  }}
+                  variant="body3" color="text.secondary">
+                  By buying our branded bottles you support this site running and
+                  make sure EVERYONE gets easy access to clean drinking water,
+                  regardless of the individual challenges some might face.
                 </Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Typography>
-                  By buying our branded bottles you support this site running
-                  and make sure EVERYONE gets easy access to clean drinking
-                  water, regardless of the individual challenges some might
-                  face.
-                </Typography>
-              </AccordionDetails>
-            </Accordion>
-            <Accordion
-              expanded={true}
-              // expanded={expanded === "panel2"}
-              onChange={handleChange("panel2")}
-            >
-              <AccordionSummary
-                // expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel2bh-content"
-                id="panel2bh-header"
-              >
-                <Typography sx={{ width: "33%", flexShrink: 0 }}>2</Typography>
-                <Typography sx={{ color: "text.secondary" }}>
-                  UV Filter
-                </Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Typography>
+              </CardContent>
+            </Card>
+            <Card 
+                sx={{
+                width: "98vw",
+                height: "auto",
+                borderRadius: "20px",
+                marginTop: "25px"
+                }} 
+                elevation={3} >
+              <CardContent>
+                <h4>UV Filter</h4>
+                <br />
+                <Typography 
+                  style={{
+                    textAlign: "center",
+                    fontSize: "18px",
+                    paddingTop: "15px",
+                    paddingBottom: "15px",
+                  }}
+                  variant="body3" color="text.secondary">
                   Specially developed to be reusable and with a UV filter, which
                   protects water from light, guaranteeing its properties.
                 </Typography>
-              </AccordionDetails>
-            </Accordion>
-            <Accordion
-              expanded={true}
-              // expanded={expanded === "panel3"}
-              onChange={handleChange("panel3")}
-            >
-              <AccordionSummary
-                // expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel3bh-content"
-                id="panel3bh-header"
-              >
-                <Typography sx={{ width: "33%", flexShrink: 0 }}>3</Typography>
-                <Typography sx={{ color: "text.secondary" }}>
-                  Premium materials
+              </CardContent>
+            </Card>
+            <Card sx={{
+                width: "98vw",
+                height: "auto",
+                borderRadius: "20px",
+                marginTop: "25px"
+                }} 
+                elevation={3}>
+              <CardContent>
+                <h4>Premium materials</h4>
+                <br />
+                <Typography 
+                  style={{
+                    textAlign: "center",
+                    fontSize: "18px",
+                    paddingTop: "15px",
+                    paddingBottom: "15px",
+                  }}
+                  variant="body3" color="text.secondary">
+                  Aluminum keeps your drinks cold, does not leach harmful
+                  chemicals, and doesn't risk a spill.
                 </Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Typography>
-                  Resistant, made of PET (BPA Free), they have a distinctive
-                  design and color.
-                </Typography>
-              </AccordionDetails>
-            </Accordion>
-            <Accordion
-              expanded={true}
-              // expanded={expanded === "panel4"}
-              onChange={handleChange("panel4")}
-            >
-              <AccordionSummary
-                // expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel4bh-content"
-                id="panel4bh-header"
-              >
-                <Typography sx={{ width: "33%", flexShrink: 0 }}>4</Typography>
-                <Typography sx={{ color: "text.secondary" }}>
-                  Environmental Advantages
-                </Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Typography>
+              </CardContent>
+            </Card>
+            <Card 
+            sx={{
+              width: "98vw",
+              height: "auto",
+              borderRadius: "20px",
+              marginTop: "25px"
+              }} 
+            elevation={3} >
+              <CardContent>
+                <h4>Environmental Advantages</h4>
+                <br />
+                <Typography 
+                  style={{
+                    textAlign: "center",
+                    fontSize: "18px",
+                    paddingTop: "15px",
+                    paddingBottom: "15px",
+                  }}
+                  variant="body3" color="text.secondary">
                   Less emissions in the production of bottles. Less emissions in
                   the transport of bottles. Fewer bottles as waste in landfills.
-                  Fewer bottles in the oceans. Reuse it more than once and
-                  you're already saving the environment!
+                  Fewer bottles in the oceans. Reuse it more than once and you're
+                  already saving the environment!
                 </Typography>
-              </AccordionDetails>
-            </Accordion>
-          </div> */}
-        </div>
-      </Container>
+              </CardContent>
+            </Card>
+            
+
+            
+          </div>
     </div>
-    // </div>
   );
 }

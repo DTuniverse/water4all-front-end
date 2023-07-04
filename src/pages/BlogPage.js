@@ -21,11 +21,11 @@ export default function BlogPage() {
                 <span className="blogHeadline">WATER HUB</span>
             </div>
             <div className="blogHeroSpanContainer">
-                <span className="blogHeroSpan">Discover the fascinating world of water and </span>
-                <span className="blogHeroSpan">explore its wonders on our insightful hub. </span>
-                <span className="blogHeroSpan">Dive into captivating articles, tips for </span>
-                <span className="blogHeroSpan">conservation, and the latest discoveries </span>
-                <span className="blogHeroSpan">in water-related topics.</span>
+                <p className="blogHeroSpan">Discover the fascinating world of water and 
+                explore its wonders on our insightful hub.
+                Dive into captivating articles, tips for
+                conservation, and the latest discoveries
+                in water-related topics.</p>
             </div>
                 <Container maxWidth="md" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     <div className="cardWrapper">

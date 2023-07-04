@@ -21,12 +21,24 @@ export default function ShopCard() {
       <Card
         elevation={3}
         sx={{
-          width: "100vw",
+          width: "98vw",
           height: "auto",
           minHeight: "400px",
           marginTop: "15px",
+          borderRadius: "20px"
         }}
       >
+        <p
+            style={{
+              textAlign: "center",
+              fontSize: "18px",
+              paddingTop: "20px",
+              paddingBottom: "15px",
+            }}
+          >
+            Owning a refillable bottle means you always have a drink with you,
+            wherever you go.
+          </p>
         <div className="imgs-container">
           <Slider {...settings}>
             <div className="image-parent">
@@ -68,7 +80,7 @@ export default function ShopCard() {
             alignItems: "center",
             height: "auto",
             width: "auto",
-            padding: "30px 0 10px 0",
+            padding: "30px 0 5px 0",
           }}
         >
           <div className="buymodal-flex-container">
