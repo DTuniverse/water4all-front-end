@@ -6,6 +6,7 @@ import Login from "./Login";
 import Signup from "./Signup";
 import LoginRoundedIcon from "@mui/icons-material/LoginRounded";
 import CloseIcon from "@mui/icons-material/Close";
+import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import PersonAddAlt1RoundedIcon from "@mui/icons-material/PersonAddAlt1Rounded";
 const style = {
   position: "absolute",
@@ -136,6 +137,7 @@ export default function NestedModal() {
           style={{
             width: "auto",
             height: "40px",
+            margin: "5px",
           }}
           variant="outlined"
         >
