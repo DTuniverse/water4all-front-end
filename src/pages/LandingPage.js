@@ -35,12 +35,8 @@ export default function LandingPage() {
               <p className="missionPLanding">
                 Our mission is to ensure easy access to clean drinking water for everyone.
                 Through our interactive map, we provide locations of 
-                <br />
-                drinking fountains, restaurants,
-                cafés and 
-                <br />
-                other places where people can find free 
-                <br />drinking water.
+                drinking fountains, restaurants, cafés and other places 
+                where people can find free drinking water.
                 <br />
                 YOU can contribute by adding more places and ratings to the existing ones.
               </p>
