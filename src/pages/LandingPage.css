@@ -18,7 +18,6 @@
 .heroP {
     display: flex;
     justify-content: center;
-    font-weight: 405;
     font-size: medium;
 }
 
@@ -43,7 +42,7 @@
 }
     
 .heroImage {
-    max-width: 100%;
+    width: 100%;
     height: auto;
     display: block;
     margin-left: auto;
@@ -73,22 +72,29 @@
 .blueButton:focus::before {
     transform: translateY(0);
 }
-
-.missionParentContainer {
+.missionH1Container {
+    display: flex;
+    justify-content: center;
     padding-top: 100px;
-    padding-left: 20px;
+    padding-bottom: 10px;
+
+    max-width: 925px;
 }
 
 .missionH1 {
-    padding-bottom: 20px;
     color: #2669BA;
     font-weight: bold;
     font-size: xx-large;
-    
 }
 
-.missionP {
-    font-weight: 405;
+.missionPLandingContainer {
+    display: flex;
+    justify-content: center;
+    padding-left: 20px;
+    max-width: 625px;
+}
+
+.missionPLanding {
     font-size: medium;
 }
 
@@ -128,3 +134,16 @@
     display: block;
     margin-bottom: 1em;
   }
+
+  .mainC {
+    width: 100%;
+  }
+
+  .landingCenterinator {
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  /* if we have enough time: add media queries for landingCenterinator!! */
+  /* inluding this for missionP: 
+  padding-left: 220px; */
