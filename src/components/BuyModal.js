@@ -15,7 +15,7 @@ const style = {
   transform: "translate(-50%, -50%)",
   width: "90vw",
   height: "auto",
-  bgcolor: "background.paper",
+  bgcolor: "#E9FBFF",
   border: "2px solid #000",
   boxShadow: 24,
   p: 4,
@@ -35,7 +35,7 @@ export default function BuyModal() {
   const [comment, setComment] = useState("");
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isOrdered, setIsOrdered] = useState(true);
+  // const [isOrdered, setIsOrdered] = useState(true);
   const { decodedToken } = useJwt(token);
   console.log(token);
   const handleSubmit = async (e) => {
@@ -50,21 +50,31 @@ export default function BuyModal() {
     };
     setIsLoading(true);
     setError(null);
-    setIsOrdered(false);
-    try {
-      const response = await fetch(
-        "https://water4all-backend.onrender.com/order",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newOrder),
-        }
-      );
-      console.log(response);
+    // setIsOrdered(false);
+    // try {
+    const response = await fetch(
+      "https://water4all-backend.onrender.com/order",
+      {
+        method: "POST",
+        headers: {
+          // Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newOrder),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
       setIsLoading(false);
+      setError(data.error);
+      console.log(response);
+    }
+
+    if (response.ok) {
+      setIsLoading(false);
+      console.log(response);
       setOpenAlert(true);
       setOpen(false);
       setAddress(null);
@@ -72,11 +82,22 @@ export default function BuyModal() {
       setEmail(null);
       setFirstName(null);
       setLastName(null);
-    } catch (err) {
-      setIsLoading(false);
-      setError(err);
     }
   };
+
+  // console.log(response);
+  // setIsLoading(false);
+  // setOpenAlert(true);
+  // setOpen(false);
+  // setAddress(null);
+  // setComment(null);
+  // setEmail(null);
+  // setFirstName(null);
+  // setLastName(null);
+  // } catch (err) {
+  //   setIsLoading(false);
+  //   setError(err);
+  // }
 
   return (
     <div>
@@ -156,7 +177,10 @@ export default function BuyModal() {
                 />
 
                 <Button
-                  onClick={handleClose}
+                  onClick={() => {
+                    handleClose();
+                    setError(null);
+                  }}
                   color="error"
                   sx={{ marginTop: "10px" }}
                 >
