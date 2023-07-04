@@ -9,7 +9,7 @@ import {
 import { getLatLng } from "use-places-autocomplete";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/authContext";
-import { Button, IconButton } from "@mui/material";
+import { Button, IconButton, Snackbar, Alert } from "@mui/material";
 import "./Map.css";
 import Card from "@mui/material/Card";
 
@@ -18,7 +18,7 @@ import AddNewLocationModal from "../components/AddNewLocationModal";
 import AddLocationAltRoundedIcon from "@mui/icons-material/AddLocationAltRounded";
 import { Transform } from "@mui/icons-material";
 import Diversity1Icon from "@mui/icons-material/Diversity1";
-import MyLocationIcon from "@mui/icons-material/MyLocation";
+import MyLocationIcon from '@mui/icons-material/MyLocation';
 
 //
 
@@ -40,6 +40,8 @@ export default function MapPage() {
   const defaultCenter = { lat: 52.519432315072166, lng: 13.401147636877893 };
   const libraries = ["places", "streetView"];
   const [goBack, setGoBack] = useState(false);
+  const [ pleaseSelect, setPleaseSelect ] = useState(false);
+  const [ pleaseRefresh, setPleaseRefresh ] = useState(false);
 
   // get all added locations
   const getNewLocation = async () => {
@@ -58,6 +60,7 @@ export default function MapPage() {
 
   // google search bar
   const searchBoxRef = useRef(null);
+  console.log(`searchBoxRef.current: ${searchBoxRef.current}`);
   const onLoad = (ref) => {
     searchBoxRef.current = ref;
   };
@@ -75,6 +78,12 @@ export default function MapPage() {
       setGoBack(false);
     } catch (error) {
       console.error("Error retrieving places", error);
+      if(error.message === "Cannot read properties of undefined (reading 'geometry')"){
+        setPleaseSelect(true);
+      };
+      if(error.message === "searchBoxRef.current.getPlaces is not a function"){
+        setPleaseRefresh(true);
+      }
     }
   };
 
@@ -127,10 +136,12 @@ export default function MapPage() {
 
   const handleGoBack = () => {
     setGoBack(true);
+    setCurrentZoom(15);
   };
   console.log(`go back ${goBack}`);
   console.log(`zoom: ${currentZoom}`);
   // console.log(Boolean(center.lat))
+  console.log(`pleaseSelect ${pleaseSelect}`);
 
   return (
     <div>
@@ -165,8 +176,7 @@ export default function MapPage() {
                     : defaultCenter
                 }
                 zoom={currentZoom}
-                // onCenterChanged={handleZoom}
-                onClick={mapClicked}
+                    onClick={mapClicked}
                 options={{
                   mapTypeControl: false,
                   streetViewControl: true,
@@ -199,7 +209,25 @@ export default function MapPage() {
                     }}
                   />
                 </StandaloneSearchBox>
-                <IconButton
+                {pleaseSelect? <Snackbar
+                open={pleaseSelect}
+                autoHideDuration={3000}
+                onClose={() => setPleaseSelect(false)}
+              >
+                <Alert onClose={() => setPleaseSelect(false)} severity="error">
+                  Please Select Location from List!
+                </Alert>
+              </Snackbar> : 
+              pleaseRefresh ? <Snackbar
+              open={pleaseRefresh}
+              autoHideDuration={3000}
+              onClose={() => setPleaseRefresh(false)}
+            >
+              <Alert onClose={() => setPleaseRefresh(false)} severity="error">
+               Something Went Wrong, Please Refresh Page!
+              </Alert>
+            </Snackbar> : null}
+            <IconButton
                   onClick={handleGoBack}
                   style={{
                     position: "absolut",

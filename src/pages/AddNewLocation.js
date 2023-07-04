@@ -9,18 +9,7 @@ import {
 import { getGeocode, getLatLng } from "use-places-autocomplete";
 import { AuthContext } from "../context/authContext";
 import { useJwt } from "react-jwt";
-import {
-  Button,
-  FormControl,
-  Box,
-  Input,
-  TextField,
-  Switch,
-  FormControlLabel,
-  Modal,
-  Checkbox,
-  IconButton,
-} from "@mui/material";
+import { Button, FormControl, Box, Input, TextField, Switch, FormControlLabel, Modal, Checkbox, IconButton, Snackbar, Alert } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import "./Map.css";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
@@ -68,6 +57,12 @@ export default function AddNewLocation() {
   const [open, setOpen] = useState(false);
   const [photoAdded, setPhotoAdded] = useState(false);
   const [goBack, setGoBack] = useState(false);
+  const [ pleaseSelect, setPleaseSelect ] = useState(false);
+  const [ pleaseRefresh, setPleaseRefresh ] = useState(false);
+  const [ AddedLocation, setAddedLocation] = useState([]);
+  const [ goAdded, setGoAdded] = useState(false);
+  const [AddedLat, setAddedLat] = useState(null);
+  const [addedLng, setAddedLng] = useState(null);
 
   // upload photo for new post
   const style = {
@@ -157,6 +152,7 @@ export default function AddNewLocation() {
       setCurrentZoom(15);
       setActiveInfoWindow(false);
       setGoBack(false);
+      setGoAdded(false);
       console.log(`new lat: ${newLat}`);
       const geocoder = new window.google.maps.Geocoder();
       geocoder.geocode(
@@ -169,9 +165,30 @@ export default function AddNewLocation() {
       );
       console.log(`searchAddress: ${searchAddress}`);
     } catch (error) {
-      console.error("Error retrieving places", error);
+      console.error("Error retrieving places", error.message);
+      if(error.message === "Cannot read properties of undefined (reading 'geometry')"){
+        setPleaseSelect(true);
+      };
+      if(error.message === "searchBoxRef.current.getPlaces is not a function"){
+        setPleaseRefresh(true);
+      }
     }
   };
+
+  // put center to new added location
+  // useEffect(()=>{
+  //   const goAddedLocation = async() => {
+  //     try{
+  //       const res = await fetch("https://water4all-backend.onrender.com/posts");
+  //       const data = await res.json();
+  //       setAddedLocation(data);
+  //       console.log(` goAddedLocation ${AddedLocation}`);
+  //     }catch(err){
+  //       console.log(err);
+  //     }
+  //   }; 
+  //   goAddedLocation();
+  // },[goAdded])
 
   // get exist water point
   const getNewLocation = async () => {
@@ -181,6 +198,9 @@ export default function AddNewLocation() {
       const data = await res.json();
       setLocale(data.data);
       console.log(locale);
+      setAddedLat(data.data.slice(-1)[0].lat);
+      setAddedLng(data.data.slice(-1)[0].lng);
+      setGoAdded(true);
     } catch (err) {
       console.log(err);
     }
@@ -235,6 +255,7 @@ export default function AddNewLocation() {
     setPhotoAdded(false);
     setActiveInfoWindow(false);
     setGoBack(false);
+    setGoAdded(false);
   };
   console.log(
     `get or not? lat: ${newLat} lng: ${newLng} addLocation: ${addLocation} `,
@@ -294,6 +315,7 @@ export default function AddNewLocation() {
       setImgUrl(null);
       setWantPhoto(false);
       setImage(false);
+      setGoAdded(true);
     } catch (err) {
       console.log(err);
     }
@@ -313,7 +335,9 @@ export default function AddNewLocation() {
 
   const handleGoBack = () => {
     setGoBack(true);
+    setCurrentZoom(15);
   };
+console.log(`goBack ${goBack}`)
 
   console.log(`zoom: ${currentZoom}`);
   // console.log(`description: ${addDescription}`)
@@ -323,7 +347,7 @@ export default function AddNewLocation() {
 
   return (
     <>
-      <div
+     <div
         style={{
           display: "flex",
           flexDirection: "column",
@@ -334,183 +358,152 @@ export default function AddNewLocation() {
           elevation={3}
           style={{ marginTop: "10px", borderRadius: "20px", width: "98vw" }}
         >
-          <div className="mapcontainer">
-            <LoadScript
-              libraries={libraries}
-              googleMapsApiKey={process.env.REACT_APP_MAP_API_KEY}
+      <div className="mapcontainer">
+        <LoadScript
+          libraries={libraries}
+          googleMapsApiKey={process.env.REACT_APP_MAP_API_KEY}
+        >
+          <GoogleMap
+            mapContainerStyle={containerStyle}
+            center={ goAdded ? { lat: newLat, lng: newLng } : goBack ? {lat:lat, lng:lng} : addLocation? {lat: newLat, lng: newLng} : newCenter ? newPlace : center.lat ? center : defaultCenter}
+            zoom={currentZoom}
+            // onCenterChanged={handleZoom}
+            onClick={mapClicked}
+            options={{
+              mapTypeControl: false,
+              streetViewControl: true,
+            }}
+          >
+            <StandaloneSearchBox
+              onLoad={onLoad}
+              onPlacesChanged={onPlacesChanged}
             >
-              <GoogleMap
-                mapContainerStyle={containerStyle}
-                center={
-                  goBack
-                    ? { lat: lat, lng: lng }
-                    : addLocation
-                    ? { lat: newLat, lng: newLng }
-                    : newCenter
-                    ? newPlace
-                    : center.lat
-                    ? center
-                    : defaultCenter
-                }
-                zoom={currentZoom}
-                // onCenterChanged={handleZoom}
-                onClick={mapClicked}
-                options={{
-                  mapTypeControl: false,
-                  streetViewControl: true,
+              <input
+                onChange={(e) => setValue(e.target.value)}
+                value={value}
+                type="text"
+                placeholder="Search"
+                style={{
+                  boxSizing: `border-box`,
+                  border: `1px solid transparent`,
+                  width: `200px`,
+                  maxWidth: "400px",
+                  height: `40px`,
+                  padding: `0 12px`,
+                  borderRadius: `3px`,
+                  boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
+                  fontSize: `14px`,
+                  outline: `none`,
+                  textOverflow: `ellipses`,
+                  position: "absolute",
+                  left: "10px",
+                  opacity: "90%",
                 }}
+              />
+            </StandaloneSearchBox>
+            {pleaseSelect? <Snackbar
+                open={pleaseSelect}
+                autoHideDuration={3000}
+                onClose={() => setPleaseSelect(false)}
               >
-                <StandaloneSearchBox
-                  onLoad={onLoad}
-                  onPlacesChanged={onPlacesChanged}
-                >
-                  <input
-                    onChange={(e) => setValue(e.target.value)}
-                    value={value}
-                    type="text"
-                    placeholder="Search"
-                    style={{
-                      boxSizing: `border-box`,
-                      border: `1px solid transparent`,
-                      width: `200px`,
-                      maxWidth: "400px",
-                      height: `40px`,
-                      padding: `0 12px`,
-                      borderRadius: `3px`,
-                      boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
-                      fontSize: `14px`,
-                      outline: `none`,
-                      textOverflow: `ellipses`,
-                      position: "absolute",
-                      left: "10px",
-                      opacity: "90%",
-                    }}
-                  />
-                </StandaloneSearchBox>
-                <IconButton
-                  onClick={handleGoBack}
-                  style={{
-                    position: "absolut",
-                    marginLeft: "210px",
-                    marginTop: "10px",
+                <Alert onClose={() => setPleaseSelect(false)} severity="error">
+                  Please Select Location from List!
+                </Alert>
+              </Snackbar> : 
+              pleaseRefresh ? <Snackbar
+              open={pleaseRefresh}
+              autoHideDuration={3000}
+              onClose={() => setPleaseRefresh(false)}
+            >
+              <Alert onClose={() => setPleaseRefresh(false)} severity="error">
+               Something Went Wrong, Please Refresh Page!
+              </Alert>
+            </Snackbar> :
+              null}
+            <IconButton onClick={handleGoBack} style={{position:"absolut", marginLeft:"210px", marginTop:"10px" }}>
+              <MyLocationIcon/>
+            </IconButton>
+            <Marker
+              icon={process.env.PUBLIC_URL + "/resources/person.png"}
+              position={center}
+            />
+            {locale?.map((lo, index) => (
+              <Marker
+                key={lo._id}
+                position={{ lat: lo.lat, lng: lo.lng }}
+                onClick={(e) => markerClicked(lo, index)}
+                onDragEnd={(e) => markerDragEnd(e, index)}
+                icon={
+                  process.env.PUBLIC_URL + "/resources/mdi_drop.svg"
+                }
+              >
+                {activeInfoWindow === index && (
+                  <InfoWindow
+                    onLoad={onLoad}
+                    position={{ lat: lo.lat, lng: lo.lng }}
+                  >
+                    <div>
+                      <h2>Information</h2>
+                      {lo.url? <div style={{ display:"flex", justifyContent:"center"}}><img src={lo.url} alt={lo.title} style={{width:"200px", borderRadius:"10px"}}/></div> : null}
+                      {lo.verified != true ? (
+                        <Button disabled>Not Verified</Button>
+                      ) : (
+                        <Button>Verified</Button>
+                      )}
+                      <div style={{width:"200px", height:"200px", display:"flex", flexDirection:"column", justifyContent:"space-between"}}>
+                      <p><strong>Tittle: </strong>{lo.title}</p>
+                      <p><strong>Creator: </strong>{lo.creator}</p>
+                      <p><strong>Description: </strong>{lo.description}</p>
+                      <p><strong>Address: </strong>{lo.address}</p>
+                      <a
+                        className="google-link"
+                        href={`https://www.google.com/maps?z=12&t=m&q=loc:${lo.lat}+${lo.lng}`}
+                      >
+                        {" "}
+                        Search on GoogleMap
+                      </a>
+                      </div>
+                    </div>
+                  </InfoWindow>
+                )}
+              </Marker>
+            ))}
+            {newCenter && !clickSomewhere && (
+              <Marker onClick={() => setAddSearch(true)} position={newPlace} />
+            )}
+            {addLocation && !addSearch && (
+              <Marker
+                onClick={() => setAddLocation(true)}
+                position={{ lat: newLat, lng: newLng }}
+              />
+            )}
+            {addLocation && (
+              <Box
+                position="absolute"
+                bottom="23px"
+                left="10px"
+                width="200px"
+                noValidate
+                autoComplete="off"
+              >
+                <FormControl
+                  sx={{
+                    backgroundColor: "white",
+                    opacity: "90%",
                   }}
                 >
-                  <MyLocationIcon />
-                </IconButton>
-                <Marker
-                  icon={process.env.PUBLIC_URL + "/resources/person.png"}
-                  position={center}
-                />
-                {locale?.map((lo, index) => (
-                  <Marker
-                    key={lo._id}
-                    position={{ lat: lo.lat, lng: lo.lng }}
-                    onClick={(e) => markerClicked(lo, index)}
-                    onDragEnd={(e) => markerDragEnd(e, index)}
-                    icon={process.env.PUBLIC_URL + "/resources/mdi_drop.svg"}
-                  >
-                    {activeInfoWindow === index && (
-                      <InfoWindow
-                        onLoad={onLoad}
-                        position={{ lat: lo.lat, lng: lo.lng }}
-                      >
-                        <div>
-                          <h2>Information</h2>
-                          {lo.url ? (
-                            <div
-                              style={{
-                                display: "flex",
-                                justifyContent: "center",
-                              }}
-                            >
-                              <img
-                                src={lo.url}
-                                alt={lo.title}
-                                style={{ width: "200px", borderRadius: "10px" }}
-                              />
-                            </div>
-                          ) : null}
-                          {lo.verified != true ? (
-                            <Button disabled>Not Verified</Button>
-                          ) : (
-                            <Button>Verified</Button>
-                          )}
-                          <div
-                            style={{
-                              width: "200px",
-                              height: "200px",
-                              display: "flex",
-                              flexDirection: "column",
-                              justifyContent: "space-between",
-                            }}
-                          >
-                            <p>
-                              <strong>Tittle: </strong>
-                              {lo.title}
-                            </p>
-                            <p>
-                              <strong>Creator: </strong>
-                              {lo.creator}
-                            </p>
-                            <p>
-                              <strong>Description: </strong>
-                              {lo.description}
-                            </p>
-                            <p>
-                              <strong>Address: </strong>
-                              {lo.address}
-                            </p>
-                            <a
-                              className="google-link"
-                              href={`https://www.google.com/maps?z=12&t=m&q=loc:${lo.lat}+${lo.lng}`}
-                            >
-                              {" "}
-                              Search on GoogleMap
-                            </a>
-                          </div>
-                        </div>
-                      </InfoWindow>
-                    )}
-                  </Marker>
-                ))}
-                {newCenter && !clickSomewhere && (
-                  <Marker
-                    onClick={() => setAddSearch(true)}
-                    position={newPlace}
-                  />
-                )}
-                {addLocation && !addSearch && (
-                  <Marker
-                    onClick={() => setAddLocation(true)}
-                    position={{ lat: newLat, lng: newLng }}
-                  />
-                )}
-                {addLocation && (
-                  <Box
-                    position="absolute"
-                    bottom="23px"
-                    left="10px"
-                    width="200px"
-                    noValidate
-                    autoComplete="off"
-                  >
-                    <FormControl
-                      sx={{
-                        backgroundColor: "white",
-                        opacity: "90%",
-                      }}
-                    >
-                      <input
-                        onChange={(e) => setAddTittle(e.target.value)}
-                        value={addTittle}
-                        type="text"
-                        placeholder="Name / Type"
-                        style={{
-                          width: `200px`,
-                          height: `60px`,
-                          padding: `0 12px`,
-                          margin: "0",
-                          borderRadius: `3px`,
+               
+                  <input
+                    onChange={(e) => setAddTittle(e.target.value)}
+                    value={addTittle}
+                    type="text"
+                    placeholder="Name / Type"
+                    style={{
+                      width: `200px`,
+                      height: `60px`,
+                      padding: `0 12px`,
+                      margin: "0",
+                      borderRadius: `3px`,
 
                           fontSize: `14px`,
                           outline: `none`,
