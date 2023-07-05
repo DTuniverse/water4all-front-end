@@ -63,6 +63,7 @@ export default function AddNewLocation() {
   const [ goAdded, setGoAdded] = useState(false);
   const [AddedLat, setAddedLat] = useState(null);
   const [addedLng, setAddedLng] = useState(null);
+  const [checked, setChecked] = useState(true);
 
   // upload photo for new post
   const style = {
@@ -344,6 +345,13 @@ console.log(`goBack ${goBack}`)
   // console.log("NEWCENTER ", newCenter )
   // console.log("NEWPLACE ", newPlace )
   // console.log("CENTER ", center )
+  console.log(`isAdded ${isAdded}`);
+
+  
+
+  const handleChange = (event) => {
+    setChecked(true);
+  };
 
   return (
     <>
@@ -359,7 +367,7 @@ console.log(`goBack ${goBack}`)
           style={{ marginTop: "10px", borderRadius: "20px", width: "98vw" }}
         >
       <div className="mapcontainer">
-        <LoadScript
+      <LoadScript
           libraries={libraries}
           googleMapsApiKey={process.env.REACT_APP_MAP_API_KEY}
         >
@@ -403,6 +411,7 @@ console.log(`goBack ${goBack}`)
             </StandaloneSearchBox>
             {pleaseSelect? <Snackbar
                 open={pleaseSelect}
+                anchorOrigin={ {horizontal: 'center', vertical: 'top'} }
                 autoHideDuration={3000}
                 onClose={() => setPleaseSelect(false)}
               >
@@ -412,14 +421,25 @@ console.log(`goBack ${goBack}`)
               </Snackbar> : 
               pleaseRefresh ? <Snackbar
               open={pleaseRefresh}
+              anchorOrigin={ {horizontal: 'center', vertical: 'top'} }
               autoHideDuration={3000}
               onClose={() => setPleaseRefresh(false)}
             >
               <Alert onClose={() => setPleaseRefresh(false)} severity="error">
                Something Went Wrong, Please Refresh Page!
               </Alert>
-            </Snackbar> :
-              null}
+            </Snackbar> : isAdded? <Snackbar
+                // anchorOrigin={{ vertical, horizontal }}
+                open={isAdded}
+                autoHideDuration={3000}
+                anchorOrigin={ {horizontal: 'center', vertical: 'top'} }
+                onClose={() => setIsAdded(false)}
+              >
+                <Alert onClose={() => setIsAdded(false)} severity="success">
+                 Location Added Successfully!
+                </Alert>
+              </Snackbar> : null
+                }
             <IconButton onClick={handleGoBack} style={{position:"absolut", marginLeft:"210px", marginTop:"10px" }}>
               <MyLocationIcon/>
             </IconButton>
@@ -443,12 +463,12 @@ console.log(`goBack ${goBack}`)
                     position={{ lat: lo.lat, lng: lo.lng }}
                   >
                     <div>
-                      <h2>Information</h2>
+                      <h2 style={{margin:"10px"}}>Information</h2>
                       {lo.url? <div style={{ display:"flex", justifyContent:"center"}}><img src={lo.url} alt={lo.title} style={{width:"200px", borderRadius:"10px"}}/></div> : null}
                       {lo.verified != true ? (
-                        <Button disabled>Not Verified</Button>
+                        <FormControlLabel disabled control={<Checkbox />} label="Not Verified" />
                       ) : (
-                        <Button>Verified</Button>
+                        <FormControlLabel control={<Checkbox checked={checked} onChange={handleChange} defaultChecked />} label="Verified" />
                       )}
                       <div style={{width:"200px", height:"200px", display:"flex", flexDirection:"column", justifyContent:"space-between"}}>
                       <p><strong>Tittle: </strong>{lo.title}</p>
@@ -932,7 +952,7 @@ console.log(`goBack ${goBack}`)
                   </Box>
                 )}
               </GoogleMap>
-            </LoadScript>
+            </LoadScript> 
           </div>
         </Card>
         <Card

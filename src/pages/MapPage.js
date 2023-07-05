@@ -9,7 +9,7 @@ import {
 import { getLatLng } from "use-places-autocomplete";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/authContext";
-import { Button, IconButton, Snackbar, Alert } from "@mui/material";
+import { Button, IconButton, Snackbar, Alert, FormControlLabel, Checkbox } from "@mui/material";
 import "./Map.css";
 import Card from "@mui/material/Card";
 
@@ -42,6 +42,7 @@ export default function MapPage() {
   const [goBack, setGoBack] = useState(false);
   const [ pleaseSelect, setPleaseSelect ] = useState(false);
   const [ pleaseRefresh, setPleaseRefresh ] = useState(false);
+  const [checked, setChecked] = useState(true);
 
   // get all added locations
   const getNewLocation = async () => {
@@ -143,6 +144,10 @@ export default function MapPage() {
   // console.log(Boolean(center.lat))
   console.log(`pleaseSelect ${pleaseSelect}`);
 
+  const handleChange = (event) => {
+    setChecked(true);
+  };
+
   return (
     <div>
       {/* <h2>WATER FINDER</h2> */}
@@ -158,7 +163,7 @@ export default function MapPage() {
           style={{ marginTop: "10px", borderRadius: "20px", width: "98vw" }}
         >
           <div className="mapcontainer">
-            <LoadScript
+          <LoadScript
               libraries={libraries}
               googleMapsApiKey={process.env.REACT_APP_MAP_API_KEY}
             >
@@ -210,15 +215,17 @@ export default function MapPage() {
                   />
                 </StandaloneSearchBox>
                 {pleaseSelect? <Snackbar
+                anchorOrigin={ {horizontal: 'center', vertical: 'top'} }
                 open={pleaseSelect}
                 autoHideDuration={3000}
                 onClose={() => setPleaseSelect(false)}
               >
-                <Alert onClose={() => setPleaseSelect(false)} severity="error">
+                <Alert onClose={() => setPleaseSelect(false)} severity="info">
                   Please Select Location from List!
                 </Alert>
               </Snackbar> : 
               pleaseRefresh ? <Snackbar
+              anchorOrigin={ {horizontal: 'center', vertical: 'top'} }
               open={pleaseRefresh}
               autoHideDuration={3000}
               onClose={() => setPleaseRefresh(false)}
@@ -227,6 +234,7 @@ export default function MapPage() {
                Something Went Wrong, Please Refresh Page!
               </Alert>
             </Snackbar> : null}
+            
             <IconButton
                   onClick={handleGoBack}
                   style={{
@@ -255,7 +263,7 @@ export default function MapPage() {
                         position={{ lat: lo.lat, lng: lo.lng }}
                       >
                         <div>
-                          <h2>Info</h2>
+                          <h2 style={{margin:"10px"}}>Information</h2>
                           {lo.url ? (
                             <div
                               style={{
@@ -266,10 +274,16 @@ export default function MapPage() {
                               <img
                                 src={lo.url}
                                 alt={lo.title}
-                                style={{ width: "200px" }}
+                                style={{width:"200px", borderRadius:"10px"}}
                               />
                             </div>
                           ) : null}
+                            {lo.verified != true ? (
+                             <FormControlLabel disabled control={<Checkbox />} label="Not Verified" />
+                          ) : (
+                            <FormControlLabel control={<Checkbox checked={checked} onChange={handleChange} defaultChecked />} label="Verified" />
+                          )}
+                           <div style={{width:"200px", height:"200px", display:"flex", flexDirection:"column", justifyContent:"space-between"}}>
                           <p>Tittle: {lo.title}</p>
                           <p>Creator: {lo.creator}</p>
                           <p>Address: {lo?.address}</p>
@@ -281,11 +295,7 @@ export default function MapPage() {
                             {" "}
                             Search on GoogleMap
                           </a>
-                          {lo.verified != true ? (
-                            <Button disabled="true">Not Verified</Button>
-                          ) : (
-                            <Button>Verified</Button>
-                          )}
+                          </div>
                         </div>
                       </InfoWindow>
                     )}
