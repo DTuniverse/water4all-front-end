@@ -14,8 +14,8 @@ export default function BlogArticleFuture() {
             <div>
                 <img  
                 className="articleHeroImage" 
-                src={process.env.PUBLIC_URL + "/resources/articleImage.svg"} 
-                alt="hands catching and holding water"/>
+                src={process.env.PUBLIC_URL + "/resources/handInWater.svg"} 
+                alt="a hand touching the water surface"/>
             </div>
             <div className="articleHeadlineContainer">
                 <span className="articleHeadline">PROTECTING CLEAN DRINKING WATER:</span>
