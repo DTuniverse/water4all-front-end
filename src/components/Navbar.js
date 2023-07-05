@@ -53,7 +53,7 @@ function ResponsiveAppBar() {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Avatar
-            src={process.env.PUBLIC_URL + "/resources/mdi_drop.svg"}
+            src={process.env.PUBLIC_URL + "/Water4AllLogo.svg"}
             sx={{
               display: { xs: "none", md: "flex" },
               mr: 1,
@@ -65,16 +65,16 @@ function ResponsiveAppBar() {
             variant="h6"
             noWrap
             // component="a"
-            // href=""
+            href="/"
             component={Link}
-            to="/"
+            // to="/"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
               fontFamily: "roboto",
               fontWeight: 700,
               letterSpacing: ".3rem",
-              color: "#1DA2D2",
+              color: "#2669BA",
               textDecoration: "none",
             }}
           >
@@ -177,12 +177,13 @@ function ResponsiveAppBar() {
             </Menu>
           </Box>
           <Avatar
-            src={process.env.PUBLIC_URL + "/resources/mdi_drop.svg"}
+            src={process.env.PUBLIC_URL + "/Water4AllLogo.svg"}
             sx={{
               display: { xs: "flex", md: "none" },
               mr: 0,
               width: "24px",
               height: "24px",
+              marginRight: "5px",
             }}
           />
           <Typography
@@ -200,22 +201,88 @@ function ResponsiveAppBar() {
               fontWeight: 700,
               fontSize: "1rem",
               letterSpacing: ".3rem",
-              color: "#1DA2D2",
+              color: "#2669BA",
               textDecoration: "none",
             }}
           >
             WATER4ALL
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
+
+          <Box sx={{ display: { xs: "none", md: "flex" } }}>
+            <Button
+              onClick={handleCloseNavMenu}
+              sx={{ my: 2, color: "#2669BA", display: "block" }}
+            >
+              <NavLink
+                to="/"
+                className="navlink"
+                activeClassName="active"
+                style={{
+                  textDecoration: "none",
+                  color: "inherit",
+                  padding: "6px 16px",
+                }}
               >
-                {page}
-              </Button>
-            ))}
+                Home
+              </NavLink>
+            </Button>
+          </Box>
+          <Box sx={{ display: { xs: "none", md: "flex" } }}>
+            <Button
+              onClick={handleCloseNavMenu}
+              sx={{ my: 2, color: "#2669BA", display: "block" }}
+            >
+              <NavLink
+                to="/mappage"
+                className="navlink"
+                activeClassName="active"
+                style={{
+                  textDecoration: "none",
+                  color: "inherit",
+                  padding: "6px 16px",
+                }}
+              >
+                Water Map
+              </NavLink>
+            </Button>
+          </Box>
+          <Box sx={{ display: { xs: "none", md: "flex" } }}>
+            <Button
+              onClick={handleCloseNavMenu}
+              sx={{ my: 2, color: "#2669BA", display: "block" }}
+            >
+              <NavLink
+                to="/blogpage"
+                className="navlink"
+                activeClassName="active"
+                style={{
+                  textDecoration: "none",
+                  color: "inherit",
+                  padding: "6px 16px",
+                }}
+              >
+                Water Hub
+              </NavLink>
+            </Button>
+          </Box>
+          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+            <Button
+              onClick={handleCloseNavMenu}
+              sx={{ my: 2, color: "#2669BA", display: "block" }}
+            >
+              <NavLink
+                to="/shoppage"
+                className="navlink"
+                activeClassName="active"
+                style={{
+                  textDecoration: "none",
+                  color: "inherit",
+                  padding: "6px 16px",
+                }}
+              >
+                Water Shop
+              </NavLink>
+            </Button>
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
@@ -308,53 +375,3 @@ function ResponsiveAppBar() {
   );
 }
 export default ResponsiveAppBar;
-
-// import { useContext } from "react";
-// import { AuthContext } from "../context/authContext";
-// import { Link } from "react-router-dom";
-// import { useJwt } from "react-jwt";
-
-/* // export default function Navbar() {
-//   const { logout, token } = useContext(AuthContext);
-
-//   const handleClick = () => {
-//     localStorage.removeItem("token");
-//     logout();
-//   };
-
-//   const { decodedToken } = useJwt(token);
-
-//   return (
-//     <div className="container">
-//       <div className="title">
-//         <Link to="/">My Cool Blog</Link>
-//       </div>
-//       <nav>
-//         {token !== null && (
-//           <div>
-//             <span style={{ padding: "10px" }}>Hello, {decodedToken?.name}</span>
-//             <button onClick={handleClick}>Log out</button>
-//           </div>
-//         )}
-//         {token === null && (
-//           <div>
-//             <Link to="login">Login</Link>
-//             <Link to="signup">Signup</Link>
-//           </div>
-//         )}
-//       </nav>
-//     </div>
-//   );
-// }
-
-
-  {/* {settings.map((setting) => (
-                <MenuItem
-                  key={setting}
-                  onClick={() => {
-                    handleCloseUserMenu();
-                    handleClick();
-                  }}
-                >
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem> */
