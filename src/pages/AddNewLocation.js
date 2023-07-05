@@ -634,25 +634,33 @@ console.log(`goBack ${goBack}`)
                                       </label>
                                     </div>
                                   </div>
-
-                                  <Button
-                                    sx={{
-                                      marginLeft: "10px",
-                                      marginRight: "10px",
-                                    }}
-                                    variant="contained"
-                                    color="error"
-                                    onClick={handleClose}
-                                  >
-                                    Cancel
-                                  </Button>
-                                  <Button
-                                    variant="contained"
-                                    onClick={onSubmit}
-                                  >
-                                    Upload
-                                  </Button>
-
+                                  <div style={{display: "flex", justifyContent: "space-between"}}>
+                                    <Button
+                                      style={{ fontSize: "16px" }}
+                                      onClick={handleClose}
+                                      color="error"
+                                    >
+                                      <CloseIcon />
+                                      Close
+                                    </Button>
+                                    {/* <Button
+                                      sx={{
+                                        marginLeft: "10px",
+                                        marginRight: "10px",
+                                      }}
+                                      variant="contained"
+                                      color="error"
+                                      onClick={handleClose}
+                                    >
+                                      Cancel
+                                    </Button> */}
+                                    <Button
+                                      variant="contained"
+                                      onClick={onSubmit}
+                                    >
+                                      Upload
+                                    </Button>
+                                  </div>
                                   {uploaded ? (
                                     <p
                                       style={{
